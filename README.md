@@ -2,7 +2,7 @@
 Voordat je begint met het project, lees je eerst de volgende informatie goed door.
 Dit bestand beschrijft hoe je code aan dit project kunt toevoegen, en hoe de code is opgebouwd.
 
-Dit project is beheerd door: Robine 
+Dit project is beheerd door: Robine Teun
 
 ## Het toevoegen van code
 
