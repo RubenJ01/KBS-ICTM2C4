@@ -27,7 +27,6 @@ klik dan op de knop "VCS" en selecteer "Get from Version Control", dit is hetzel
 ![img.png](src/main/resources/readmeImages/clone.png)
 In het menu dat nu opent, plak je de link die je hebt gekopieerd in het veld "URL".
 ![img.png](src/main/resources/readmeImages/cloneurl.png)
-Persoonlijk raad ik je aan dit project in je htdocs te plaatsen, zodat je het makkelijk kan testen.
 Klik op de knop "Clone" en wacht tot de repository is gekloond.
 Zodra dit gedaan is, kun je het project openen.
 
@@ -45,7 +44,7 @@ In het menu dat nu opent, klik je op het plusje linksboven.
 
 In het menu dat nu opent, vul je de volgende gegevens in:
 - Name: upstream 
-- URL: het url van de originele repository. Dit is: https://github.com/RubenJ01/NerdyGadgets.git
+- URL: het url van de originele repository. Dit is: https://github.com/RubenJ01/KBS-ICTM2C4.git
 
 Dat ziet er ongeveer zo uit: 
 
@@ -103,3 +102,17 @@ Zodra je klaar bent, klik je op de knop "Create pull request".
 ![img.png](src/main/resources/readmeImages/createPr.png)
 
 Nu is je pull request aangemaakt, en moet je wachten tot iemand jou wijzigingen heeft goedgekeurd.
+
+# Code conventions
+
+Variabelen en functies worden altijd geschreven met lower camel case, dit betekend dat elk woord dat na het eerste woord 
+komt met een hoofdletter begint.
+```java
+int highestNumber = 5;
+String multipleWordsHere = "";
+
+public void someRandomFunction(){
+    
+}
+```
+
