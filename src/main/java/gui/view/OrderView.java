@@ -1,17 +1,28 @@
 package gui.view;
 
-import gui.MainFrame;
+import gui.ViewBuilder;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class OrderView extends JPanel {
+public class OrderView extends JPanel implements ViewBuilder {
 
-    private final MainFrame container;
+    private final CardLayout cardLayout;
+    private final JPanel root;
 
-    public OrderView(MainFrame container) {
-        this.container = container;
+    public OrderView(CardLayout layout, JPanel root) {
+        this.cardLayout = layout;
+        this.root = root;
+        buildAndShowView();
+    }
+
+    @Override
+    public void buildAndShowView() {
         this.setSize(500, 500);
-        this.add(new JButton("test"));
+
+        JButton pfiew = new JButton("pfiew");
+        pfiew.addActionListener(e -> cardLayout.show(root, "main"));
+        this.add(pfiew);
 
         this.setVisible(true);
     }
