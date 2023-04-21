@@ -4,6 +4,8 @@ Dit bestand beschrijft hoe je code aan dit project kunt toevoegen, en hoe de cod
 
 Dit project is beheerd door: Robine, Teun, Sam, Guus
 
+Voordat je begint met programmeren lees [dit](beforeCoding.md) document.
+
 ## Het toevoegen van code
 
 ### Stap 1 - Het maken van een fork

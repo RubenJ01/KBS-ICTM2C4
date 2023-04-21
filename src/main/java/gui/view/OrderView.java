@@ -7,22 +7,20 @@ import java.awt.*;
 
 public class OrderView extends JPanel implements ViewBuilder {
 
-    private final CardLayout cardLayout;
-    private final JPanel root;
+    private final NavbarView navbarView;
 
-    public OrderView(CardLayout layout, JPanel root) {
-        this.cardLayout = layout;
-        this.root = root;
+    public OrderView(CardLayout layout, JPanel root, NavbarView navbarView) {
+        this.navbarView = navbarView;
         buildAndShowView();
     }
 
     @Override
     public void buildAndShowView() {
-        this.setSize(500, 500);
+        this.setLayout(new BorderLayout());
 
-        JButton pfiew = new JButton("pfiew");
-        pfiew.addActionListener(e -> cardLayout.show(root, "main"));
-        this.add(pfiew);
+        this.add(navbarView, BorderLayout.NORTH);
+
+        this.add(new JLabel("test"), BorderLayout.CENTER);
 
         this.setVisible(true);
     }
