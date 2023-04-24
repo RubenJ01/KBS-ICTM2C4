@@ -38,6 +38,7 @@ public class MainFrame implements ViewBuilder {
                 .getDefaultConfiguration().getBounds();
         Constants.SCREEN_WIDTH = bounds.width;
         Constants.SCREEN_HEIGHT = bounds.height;
+        Constants.SCREEN_DIMENSIONS = new Dimension(bounds.width, bounds.height);
     }
 
     /**
@@ -55,11 +56,10 @@ public class MainFrame implements ViewBuilder {
 
         root.setLayout(cardLayout);
 
-        NavbarView navbarView = new NavbarView(cardLayout, root);
 
         // the first panel added to the card cardLayout will be the first to be visible
-        root.add("main", new MainWindow(cardLayout, root, navbarView));
-        root.add("orderView", new OrderView(cardLayout, root, navbarView));
+        root.add("main", new MainWindow(cardLayout, root));
+        root.add("orderView", new OrderView(cardLayout, root));
 
         return splitPane;
     }
