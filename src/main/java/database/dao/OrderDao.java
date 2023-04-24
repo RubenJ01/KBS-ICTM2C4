@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderDao {
 
@@ -61,6 +63,42 @@ public class OrderDao {
                 }
             }
         }
+    }
+
+    /**
+     * Retrieves all orders from the database.
+     * @param con the database connection object.
+     * @return a List of all orders in the database.
+     * @throws SQLException if the query failed.
+     */
+    public List<Order> getAllOrders(Connection con) throws SQLException {
+        String query = "SELECT * FROM orders";
+        List<Order> orders = new ArrayList<>();
+        try(PreparedStatement ps = con.prepareStatement(query)) {
+            try(ResultSet rs = ps.executeQuery()) {
+                while(rs.next()) {
+                    orders.add(new Order(
+                            rs.getInt("OrderID"),
+                            rs.getInt("CustomerID"),
+                            rs.getInt("SalespersonPersonID"),
+                            rs.getInt("PickedByPersonID"),
+                            rs.getInt("ContactPersonID"),
+                            rs.getInt("BackorderOrderID"),
+                            rs.getDate("OrderDate"),
+                            rs.getDate("ExpectedDeliveryDate"),
+                            rs.getString("CustomerPurchaseOrderNumber"),
+                            rs.getInt("IsUndersupplyBackordered"),
+                            rs.getString("Comments"),
+                            rs.getString("DeliveryInstructions"),
+                            rs.getString("InternalComments"),
+                            rs.getDate("PickingCompletedWhen"),
+                            rs.getInt("LastEditedBy"),
+                            rs.getDate("LastEditedWhen")
+                    ));
+                }
+            }
+        }
+        return orders;
     }
 
 }
