@@ -1,0 +1,4 @@
+# database
+connectionUrl: "jdbc:mysql://localhost/nerdygadgets"
+user: "root"
+password: ""
