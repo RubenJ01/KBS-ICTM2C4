@@ -1,5 +1,8 @@
 package gui.controller;
 
-public class Stockcontroller {
+import javax.swing.*;
+
+public class StockController extends JFrame{
+
 
 }
