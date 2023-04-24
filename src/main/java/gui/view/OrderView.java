@@ -9,8 +9,8 @@ public class OrderView extends JPanel implements ViewBuilder {
 
     private final NavbarView navbarView;
 
-    public OrderView(CardLayout layout, JPanel root, NavbarView navbarView) {
-        this.navbarView = navbarView;
+    public OrderView(CardLayout layout, JPanel root) {
+        this.navbarView = new NavbarView(layout, root);
         buildAndShowView();
     }
 
