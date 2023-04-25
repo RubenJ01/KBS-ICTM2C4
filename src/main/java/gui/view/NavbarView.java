@@ -22,16 +22,20 @@ public class NavbarView extends JPanel implements ViewBuilder {
         this.setLayout(new FlowLayout(FlowLayout.LEFT));
         this.setBorder(BorderFactory.createMatteBorder(0,0,1,0, Color.BLACK));
 
-        JButton homeButton = new JButton("home");
+        JButton homeButton = new JButton("Thuis");
         homeButton.addActionListener(navbarController::homeButton);
         this.add(homeButton);
 
-        JButton settingsButton = new JButton("settings");
+        JButton settingsButton = new JButton("Instellingen");
         this.add(settingsButton);
 
-        JButton orderButton = new JButton("orders");
+        JButton orderButton = new JButton("Orders");
         orderButton.addActionListener(navbarController::orderButton);
         this.add(orderButton);
+
+        JButton stockButton = new JButton("Voorraad");
+        stockButton.addActionListener(navbarController::stockButton);
+        this.add(stockButton);
 
         this.setVisible(true);
     }

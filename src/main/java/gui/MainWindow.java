@@ -28,11 +28,8 @@ public class MainWindow extends JPanel implements ViewBuilder {
     @Override
     public void buildAndShowView() {
         this.setLayout(new BorderLayout());
-
         this.add(navbarView, BorderLayout.NORTH);
-
         this.add(new JLabel("home window"), BorderLayout.CENTER);
-
         this.setVisible(true);
     }
 }
