@@ -2,6 +2,7 @@ package gui;
 
 import constants.Constants;
 import gui.view.NavbarView;
+import gui.view.RackView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,6 @@ import java.awt.*;
 public class MainWindow extends JPanel implements ViewBuilder {
 
     private final NavbarView navbarView;
-
     /**
      * @param layout CardLayout we pass the CardLayout to every panel,
      *               so we can easily swap between panels.
@@ -29,7 +29,14 @@ public class MainWindow extends JPanel implements ViewBuilder {
     public void buildAndShowView() {
         this.setLayout(new BorderLayout());
         this.add(navbarView, BorderLayout.NORTH);
-        this.add(new JLabel("home window"), BorderLayout.CENTER);
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension( Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT));
+        panel.setBackground(Color.gray);
+        add(panel);
         this.setVisible(true);
+
+    }
+    public void paintComponent(Graphics g) {
+
     }
 }

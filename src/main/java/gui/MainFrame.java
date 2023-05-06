@@ -3,6 +3,7 @@ package gui;
 import constants.Constants;
 import gui.view.OrderView;
 import gui.view.StockView;
+import gui.view.LoadView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,6 +62,7 @@ public class MainFrame implements ViewBuilder {
         root.add("main", new MainWindow(cardLayout, root));
         root.add("orderView", new OrderView(cardLayout, root));
         root.add("stockView", new StockView(cardLayout, root));
+        root.add("loadView", new LoadView(cardLayout, root));
         return splitPane;
     }
 }
