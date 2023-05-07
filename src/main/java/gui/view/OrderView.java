@@ -19,8 +19,6 @@ import java.util.List;
 public class OrderView extends JPanel implements ViewBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderView.class);
-
-
     private final NavbarView navbarView;
     private final OrderDao orderDao;
     private final OrderController orderController;

@@ -34,6 +34,7 @@ public class NavbarController {
 
     public void stockButton(ActionEvent e) {
         cardLayout.show(root, "stockView");
+
     }
 
 }
