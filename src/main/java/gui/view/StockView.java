@@ -12,8 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -27,7 +31,6 @@ public class StockView extends JPanel implements ViewBuilder {
     private StockModel stockModel;
     private final StockitemsDao stockitemsDao;
     private StockController stockController;
-    private int yProduct;
 
     public StockView(CardLayout layout, JPanel root) {
         this.navbarView = new NavbarView(layout, root);
@@ -49,9 +52,71 @@ public class StockView extends JPanel implements ViewBuilder {
             logger.error("Error", e);
 
         }
+        JPanel stockBottomBar = new JPanel();
+        stockBottomBar.setLayout(new FlowLayout(FlowLayout.LEFT));
+        stockBottomBar.setSize(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT/10);
+        this.add(stockBottomBar, BorderLayout.SOUTH);
 
-        JTable table = new JTable(new VoorraadModel(allStocks));
-        table.setAutoCreateRowSorter(true);
+        JLabel jl_StockItemID = new JLabel("Zoek op ID");
+        stockBottomBar.add(jl_StockItemID);
+
+        JTextField searchStockItemID = new JTextField(15);
+        stockBottomBar.add(searchStockItemID, BorderLayout.CENTER);
+
+        JLabel jl_StockItemName = new JLabel("Zoek op naam");
+        stockBottomBar.add(jl_StockItemName);
+
+        JTextField searchStockItemName = new JTextField(15);
+        stockBottomBar.add(searchStockItemName, BorderLayout.CENTER);
+
+
+        VoorraadModel voorraadModel = new VoorraadModel(allStocks);
+        JTable table = new JTable(voorraadModel);
+        TableRowSorter<VoorraadModel> sorter = new TableRowSorter<>(voorraadModel);
+        searchStockItemID.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                search(searchStockItemID.getText());
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                search(searchStockItemID.getText());
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                search(searchStockItemID.getText());
+            }
+            public void search(String str) {
+                if (str.length() == 0) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.numberFilter(RowFilter.ComparisonType.EQUAL, Integer.valueOf(str),0));
+                }
+            }
+        });
+        searchStockItemName.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                search(searchStockItemName.getText());
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                search(searchStockItemName.getText());
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                search(searchStockItemName.getText());
+            }
+            public void search(String str) {
+                if (str.length() == 0) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter(str, 1));
+                }
+            }
+        });
+
+        table.setRowSorter(sorter);
         //https://www.codejava.net/java-se/swing/setting-column-width-and-row-height-for-jtable
         table.setRowHeight(Constants.SCREEN_HEIGHT/27);
 
@@ -60,7 +125,7 @@ public class StockView extends JPanel implements ViewBuilder {
 
 
         JScrollPane scrollpane = new JScrollPane(table);
-        this.add(scrollpane);
+        this.add(scrollpane, BorderLayout.CENTER);
 
         this.setVisible(true);
     }
