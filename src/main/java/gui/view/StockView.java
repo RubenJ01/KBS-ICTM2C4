@@ -2,12 +2,10 @@ package gui.view;
 
 import constants.Constants;
 import gui.ViewBuilder;
-import gui.model.StockModel;
 import gui.controller.StockController;
-import org.yaml.snakeyaml.scanner.Constant;
+import gui.model.StockModel;
 
 import javax.swing.*;
-import javax.swing.text.View;
 import java.awt.*;
 
 public class StockView extends JPanel implements ViewBuilder {
