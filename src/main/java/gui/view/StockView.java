@@ -2,7 +2,6 @@ package gui.view;
 
 import constants.Constants;
 import gui.ViewBuilder;
-import gui.controller.StockController;
 import gui.model.StockModel;
 
 import javax.swing.*;
@@ -12,7 +11,6 @@ public class StockView extends JPanel implements ViewBuilder {
 
     private final NavbarView navbarView;
     private StockModel stockModel;
-    private StockController stockController;
     private int yID, yStock;
 
     public StockView(CardLayout layout, JPanel root) {
