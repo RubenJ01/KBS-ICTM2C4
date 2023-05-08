@@ -37,4 +37,8 @@ public class NavbarController {
         cardLayout.show(root, "stockView");
     }
 
+    public void loadButton(ActionEvent e) {
+        cardLayout.show(root, "loadView");
+    }
+
 }
