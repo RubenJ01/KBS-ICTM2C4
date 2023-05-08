@@ -26,16 +26,16 @@ public class SerialCommunication {
 
     //sends the locations to the robot
     public void sendData() {
-        Executors.newSingleThreadExecutor(r -> {
+        Executors.newSingleThreadExecutor().execute(() -> {
             if (port.openPort()) {
                 try {
                     //needs to be changed into the location of products
-                    byte[] data = { 1, 5 };
+                    byte[] data = {1, 5};
                     // ^ change into locations
                     port.getOutputStream().write(data);
                     port.getOutputStream().flush();
                     //this is here to ensure that there is enough time to effectively send the bites (DO NOT REMOVE)
-                    Thread.sleep(9000);
+                    Thread.sleep(2000);
                     port.writeBytes(data, data.length);
                     //just to check if the information is sent and received back
                     byte[] buffer = new byte[2];
@@ -52,8 +52,7 @@ public class SerialCommunication {
             } else {
                 System.out.println("Failed to open port");
             }
-            return null;
         });
-
     }
+
 }

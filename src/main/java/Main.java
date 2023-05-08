@@ -1,9 +1,5 @@
-
 import gui.MainFrame;
 import serial.SerialCommunication;
-
-import java.io.IOException;
-import java.util.concurrent.Executors;
 
 public class Main {
 

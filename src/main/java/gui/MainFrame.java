@@ -56,11 +56,11 @@ public class MainFrame implements ViewBuilder {
 
         root.setLayout(cardLayout);
 
-
         // the first panel added to the card cardLayout will be the first to be visible
         root.add("main", new MainWindow(cardLayout, root));
         root.add("orderView", new OrderView(cardLayout, root));
         root.add("stockView", new StockView(cardLayout, root));
+
         return splitPane;
     }
 }
