@@ -3,6 +3,8 @@ package gui.controller;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
+import java.util.function.Consumer;
 
 public class NavbarController {
 
@@ -31,7 +33,6 @@ public class NavbarController {
     /**
      * Methode die aangeroepen wordt als de knop wordt ingedrukt
      */
-
     public void stockButton(ActionEvent e) {
         cardLayout.show(root, "stockView");
     }

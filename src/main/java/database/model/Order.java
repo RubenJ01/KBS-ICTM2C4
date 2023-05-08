@@ -1,7 +1,6 @@
 package database.model;
 
 import java.sql.Date;
-import java.time.Instant;
 
 public class Order {
 
@@ -170,23 +169,6 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" +
-                "orderId=" + orderId +
-                ", customerId=" + customerId +
-                ", salespersonPersonId=" + salespersonPersonId +
-                ", pickedByPersonId=" + pickedByPersonId +
-                ", contactPersonId=" + contactPersonId +
-                ", backorderOrderId=" + backorderOrderId +
-                ", orderDate=" + orderDate +
-                ", expectedDeliveryDate=" + expectedDeliveryDate +
-                ", customerPurchaseOrderNumber='" + customerPurchaseOrderNumber + '\'' +
-                ", isUndersupplyBackordered=" + isUndersupplyBackordered +
-                ", comments='" + comments + '\'' +
-                ", deliveryInstructions='" + deliveryInstructions + '\'' +
-                ", internalComments='" + internalComments + '\'' +
-                ", pickingCompletedWhen=" + pickingCompletedWhen +
-                ", lastEditedBy=" + lastEditedBy +
-                ", lastEditedWhen=" + lastEditedWhen +
-                '}';
+        return String.format("Order ID: %d - Order Date: %s", orderId, orderDate);
     }
 }

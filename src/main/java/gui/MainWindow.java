@@ -1,6 +1,5 @@
 package gui;
 
-import constants.Constants;
 import gui.view.NavbarView;
 
 import javax.swing.*;
