@@ -1,7 +1,5 @@
 package gui.model;
 
-import gui.view.LoadView;
-
 import java.awt.*;
 
 public class LoadModel {
@@ -11,16 +9,16 @@ public class LoadModel {
 
     private Color color;
 
-    public LoadModel(int locationY,int locationX,int itemnummer){
-        this.locationY= locationY;
-        this.locationX= locationX;
-        this.itemnummer=itemnummer;
+    public LoadModel(int locationY, int locationX, int itemnummer) {
+        this.locationY = locationY;
+        this.locationX = locationX;
+        this.itemnummer = itemnummer;
 
     }
 
 
     public String toString() {
-        return "itemnummer: "+itemnummer+" X: "+locationX+" Y: "+locationY;
+        return "itemnummer: " + itemnummer + " X: " + locationX + " Y: " + locationY;
     }
 }
 

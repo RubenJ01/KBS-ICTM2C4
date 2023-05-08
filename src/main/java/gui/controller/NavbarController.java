@@ -3,8 +3,6 @@ package gui.controller;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
-import java.util.function.Consumer;
 
 public class NavbarController {
 

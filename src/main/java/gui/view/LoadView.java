@@ -1,13 +1,8 @@
 package gui.view;
 
 import constants.Constants;
-import database.dao.OrderDao;
-import database.model.Order;
 import gui.ViewBuilder;
 import gui.controller.LoadController;
-import gui.controller.OrderController;
-import gui.model.LoadModel;
-import gui.model.LoadQueue;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,15 +10,20 @@ import java.awt.*;
 public class LoadView extends JPanel implements ViewBuilder {
 
 
+    public static JTextField itemnummerInput;
+    public static JTextField YInput;
+    public static JTextField XInput;
+    public static JLabel Error = new JLabel("");
+    public static DefaultListModel<String> model = new DefaultListModel<>();
     private final NavbarView navbarView;
     private final LoadController loadController;
 
-    public static JTextField itemnummerInput;
-    public static JTextField YInput;
-    public  static JTextField XInput;
-    public static JLabel Error=new JLabel("");
-    public static DefaultListModel<String> model = new DefaultListModel<>();
 
+    public LoadView(CardLayout layout, JPanel root) {
+        this.navbarView = new NavbarView(layout, root);
+        this.loadController = new LoadController(layout, root);
+        buildAndShowView();
+    }
 
     public void buildAndShowView() {
         this.setLayout(new BorderLayout());
@@ -60,22 +60,20 @@ public class LoadView extends JPanel implements ViewBuilder {
         loadInput.add(YInput);
 
 
-
         JPanel loadBottomBar = new JPanel();
         loadBottomBar.setLayout(new FlowLayout(FlowLayout.LEFT));
         loadBottomBar.setSize(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT / 10);
 
-        JButton addLoad=new  JButton("Toevoegen");
+        JButton addLoad = new JButton("Toevoegen");
         addLoad.addActionListener(loadController::addLoadButton);
         loadBottomBar.add(addLoad);
 
-        JPanel loadQueue=new JPanel();
+        JPanel loadQueue = new JPanel();
         loadQueue.setBorder(BorderFactory.createLineBorder(Color.black));
         loadQueue.setLayout(new BorderLayout());
 
         JLabel wachtrijTxt = new JLabel("Wachtrij");
-        loadQueue.add(wachtrijTxt,BorderLayout.NORTH);
-
+        loadQueue.add(wachtrijTxt, BorderLayout.NORTH);
 
 
         JList<String> loadList = new JList<>(model);
@@ -84,25 +82,19 @@ public class LoadView extends JPanel implements ViewBuilder {
         loadQueue.add(scrollPane, BorderLayout.CENTER);
 
         JLabel wachtrijTitle = new JLabel("NR:");
-        loadList.add(wachtrijTitle,BorderLayout.NORTH);
+        loadList.add(wachtrijTitle, BorderLayout.NORTH);
 
-        JButton cancelLoad=new  JButton("Stop");
+        JButton cancelLoad = new JButton("Stop");
         cancelLoad.addActionListener(loadController::CancelLoadButton);
-        loadQueue.add(cancelLoad,BorderLayout.SOUTH);
+        loadQueue.add(cancelLoad, BorderLayout.SOUTH);
 
         // wachtrij inladen
-        this.add(loadQueue,BorderLayout.EAST);
+        this.add(loadQueue, BorderLayout.EAST);
 
         //input panel
-        this.add(loadInput,BorderLayout.WEST);
+        this.add(loadInput, BorderLayout.WEST);
 
-        this.add(loadBottomBar,BorderLayout.SOUTH);
+        this.add(loadBottomBar, BorderLayout.SOUTH);
 
-    }
-
-    public LoadView(CardLayout layout, JPanel root) {
-        this.navbarView = new NavbarView(layout, root);
-        this.loadController = new LoadController(layout, root);
-        buildAndShowView();
     }
 }

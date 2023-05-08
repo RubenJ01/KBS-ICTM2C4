@@ -1,13 +1,13 @@
 package serial;
-import com.fazecast.jSerialComm.*;
-import java.io.IOException;
+
+import com.fazecast.jSerialComm.SerialPort;
+
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 public class SerialCommunication {
 
-    private final SerialPort port;
     private static SerialCommunication instance = null;
+    private final SerialPort port;
 
     //initializes the SerialPort with the right COM (you need to change the COM to the correct one in the main)
     private SerialCommunication(String portName) {
@@ -18,8 +18,8 @@ public class SerialCommunication {
     }
 
     public static SerialCommunication getInstance() {
-        if(instance == null) {
-           instance = new SerialCommunication("COM3");
+        if (instance == null) {
+            instance = new SerialCommunication("COM3");
         }
         return instance;
     }
