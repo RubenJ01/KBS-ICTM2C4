@@ -2,15 +2,14 @@ package gui.view;
 
 import constants.Constants;
 import gui.ViewBuilder;
-import gui.model.StockModel;
 import gui.controller.StockController;
-import org.yaml.snakeyaml.scanner.Constant;
+import gui.model.StockModel;
 
 import javax.swing.*;
-import javax.swing.text.View;
 import java.awt.*;
 
 public class StockView extends JPanel implements ViewBuilder {
+
     private final NavbarView navbarView;
     private StockModel stockModel;
     private StockController stockController;
@@ -34,6 +33,7 @@ public class StockView extends JPanel implements ViewBuilder {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        yID = 150;
         g2.setStroke(new BasicStroke(2));
         g2.drawLine(0, (Constants.SCREEN_HEIGHT/8), Constants.SCREEN_WIDTH, (Constants.SCREEN_HEIGHT/8));
         g2.setFont(new Font("default", Font.PLAIN, 14));
@@ -42,6 +42,7 @@ public class StockView extends JPanel implements ViewBuilder {
         g2.drawLine(Constants.SCREEN_WIDTH/4, (Constants.SCREEN_HEIGHT/8), Constants.SCREEN_WIDTH/4, Constants.SCREEN_HEIGHT);
         drawProducts(g2);
     }
+
 
     /**
      * zowel het productID als de voorraad op het scherm zetten
