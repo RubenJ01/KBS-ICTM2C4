@@ -1,12 +1,16 @@
-import gui.MainFrame;
-import gui.view.StockView;
 
-import java.sql.SQLException;
+import gui.MainFrame;
+import serial.SerialCommunication;
+
+import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         new MainFrame();
-        //StockView stockView = new StockView();
+        //this is for sending the locations of the products to the robot.
+        SerialCommunication serial = new SerialCommunication("COM3");
+        serial.sendData();
+        //sending product location ends here.
     }
 }
