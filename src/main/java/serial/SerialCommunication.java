@@ -1,14 +1,13 @@
 package serial;
-import com.fazecast.jSerialComm.*;
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
+
+import com.fazecast.jSerialComm.SerialPort;
+
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 public class SerialCommunication {
 
-    private final SerialPort port;
     private static SerialCommunication instance = null;
+    private final SerialPort port;
 
     //initializes the SerialPort with the right COM (you need to change the COM to the correct one in the main)
     private SerialCommunication(String portName) {
@@ -19,8 +18,8 @@ public class SerialCommunication {
     }
 
     public static SerialCommunication getInstance() {
-        if(instance == null) {
-           instance = new SerialCommunication("COM3");
+        if (instance == null) {
+            instance = new SerialCommunication("COM3");
         }
         return instance;
     }
@@ -36,7 +35,7 @@ public class SerialCommunication {
                     port.getOutputStream().write(data);
                     port.getOutputStream().flush();
                     //this is here to ensure that there is enough time to effectively send the bites (DO NOT REMOVE)
-                    Thread.sleep(5000);
+                    Thread.sleep(2000);
                     port.writeBytes(data, data.length);
                     //just to check if the information is sent and received back
                     byte[] buffer = new byte[2];
@@ -55,4 +54,5 @@ public class SerialCommunication {
             }
         });
     }
+
 }

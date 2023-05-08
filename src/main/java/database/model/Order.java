@@ -51,116 +51,116 @@ public class Order {
         return customerId;
     }
 
-    public int getSalespersonPersonId() {
-        return salespersonPersonId;
-    }
-
-    public int getPickedByPersonId() {
-        return pickedByPersonId;
-    }
-
-    public int getContactPersonId() {
-        return contactPersonId;
-    }
-
-    public int getBackorderOrderId() {
-        return backorderOrderId;
-    }
-
-    public Date getOrderDate() {
-        return orderDate;
-    }
-
-    public Date getExpectedDeliveryDate() {
-        return expectedDeliveryDate;
-    }
-
-    public String getCustomerPurchaseOrderNumber() {
-        return customerPurchaseOrderNumber;
-    }
-
-    public int getIsUndersupplyBackordered() {
-        return isUndersupplyBackordered;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public String getDeliveryInstructions() {
-        return deliveryInstructions;
-    }
-
-    public String getInternalComments() {
-        return internalComments;
-    }
-
-    public Date getPickingCompletedWhen() {
-        return pickingCompletedWhen;
-    }
-
-    public int getLastEditedBy() {
-        return lastEditedBy;
-    }
-
-    public Date getLastEditedWhen() {
-        return lastEditedWhen;
-    }
-
     public void setCustomerId(int customerId) {
         this.customerId = customerId;
+    }
+
+    public int getSalespersonPersonId() {
+        return salespersonPersonId;
     }
 
     public void setSalespersonPersonId(int salespersonPersonId) {
         this.salespersonPersonId = salespersonPersonId;
     }
 
+    public int getPickedByPersonId() {
+        return pickedByPersonId;
+    }
+
     public void setPickedByPersonId(int pickedByPersonId) {
         this.pickedByPersonId = pickedByPersonId;
+    }
+
+    public int getContactPersonId() {
+        return contactPersonId;
     }
 
     public void setContactPersonId(int contactPersonId) {
         this.contactPersonId = contactPersonId;
     }
 
+    public int getBackorderOrderId() {
+        return backorderOrderId;
+    }
+
     public void setBackorderOrderId(int backorderOrderId) {
         this.backorderOrderId = backorderOrderId;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
     }
 
     public void setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
     }
 
+    public Date getExpectedDeliveryDate() {
+        return expectedDeliveryDate;
+    }
+
     public void setExpectedDeliveryDate(Date expectedDeliveryDate) {
         this.expectedDeliveryDate = expectedDeliveryDate;
+    }
+
+    public String getCustomerPurchaseOrderNumber() {
+        return customerPurchaseOrderNumber;
     }
 
     public void setCustomerPurchaseOrderNumber(String customerPurchaseOrderNumber) {
         this.customerPurchaseOrderNumber = customerPurchaseOrderNumber;
     }
 
+    public int getIsUndersupplyBackordered() {
+        return isUndersupplyBackordered;
+    }
+
     public void setIsUndersupplyBackordered(int isUndersupplyBackordered) {
         this.isUndersupplyBackordered = isUndersupplyBackordered;
+    }
+
+    public String getComments() {
+        return comments;
     }
 
     public void setComments(String comments) {
         this.comments = comments;
     }
 
+    public String getDeliveryInstructions() {
+        return deliveryInstructions;
+    }
+
     public void setDeliveryInstructions(String deliveryInstructions) {
         this.deliveryInstructions = deliveryInstructions;
+    }
+
+    public String getInternalComments() {
+        return internalComments;
     }
 
     public void setInternalComments(String internalComments) {
         this.internalComments = internalComments;
     }
 
+    public Date getPickingCompletedWhen() {
+        return pickingCompletedWhen;
+    }
+
     public void setPickingCompletedWhen(Date pickingCompletedWhen) {
         this.pickingCompletedWhen = pickingCompletedWhen;
     }
 
+    public int getLastEditedBy() {
+        return lastEditedBy;
+    }
+
     public void setLastEditedBy(int lastEditedBy) {
         this.lastEditedBy = lastEditedBy;
+    }
+
+    public Date getLastEditedWhen() {
+        return lastEditedWhen;
     }
 
     public void setLastEditedWhen(Date lastEditedWhen) {

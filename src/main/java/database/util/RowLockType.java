@@ -8,6 +8,7 @@ public enum RowLockType {
 
     /**
      * Appends a lock to the end of the query.
+     *
      * @param query the query you want to append the lock to.
      * @return the query with the lock appended to it.
      */

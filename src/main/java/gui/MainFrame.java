@@ -1,6 +1,7 @@
 package gui;
 
 import constants.Constants;
+import gui.view.LoadView;
 import gui.view.OrderView;
 import gui.view.StockView;
 
@@ -14,6 +15,18 @@ public class MainFrame implements ViewBuilder {
 
     public MainFrame() {
         buildAndShowView();
+    }
+
+    /**
+     * Gets the default screenWidth and screenHeight for the device the application is run on.
+     * The screenWidth and screenHeight are then saved in the constants, so they can easily be accessed elsewhere.
+     */
+    private static void getBounds() {
+        Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+                .getDefaultConfiguration().getBounds();
+        Constants.SCREEN_WIDTH = bounds.width;
+        Constants.SCREEN_HEIGHT = bounds.height;
+        Constants.SCREEN_DIMENSIONS = new Dimension(bounds.width, bounds.height);
     }
 
     @Override
@@ -30,20 +43,9 @@ public class MainFrame implements ViewBuilder {
     }
 
     /**
-     * Gets the default screenWidth and screenHeight for the device the application is run on.
-     * The screenWidth and screenHeight are then saved in the constants, so they can easily be accessed elsewhere.
-     */
-    private static void getBounds() {
-        Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-                .getDefaultConfiguration().getBounds();
-        Constants.SCREEN_WIDTH = bounds.width;
-        Constants.SCREEN_HEIGHT = bounds.height;
-        Constants.SCREEN_DIMENSIONS = new Dimension(bounds.width, bounds.height);
-    }
-
-    /**
      * In this method we create a CardLayout which holds all the JPanels in our applications.
      * Every new JPanel will be initialized in this method.
+     *
      * @return JSplitPane
      */
     private JSplitPane addViews() {
@@ -56,11 +58,12 @@ public class MainFrame implements ViewBuilder {
 
         root.setLayout(cardLayout);
 
-
         // the first panel added to the card cardLayout will be the first to be visible
         root.add("main", new MainWindow(cardLayout, root));
         root.add("orderView", new OrderView(cardLayout, root));
         root.add("stockView", new StockView(cardLayout, root));
+        root.add("loadView", new LoadView(cardLayout, root));
+
         return splitPane;
     }
 }
