@@ -20,7 +20,7 @@ public class NavbarView extends JPanel implements ViewBuilder {
     public void buildAndShowView() {
         this.setSize(new Dimension(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT / 90));
         this.setLayout(new FlowLayout(FlowLayout.LEFT));
-        this.setBorder(BorderFactory.createMatteBorder(0,0,1,0, Color.BLACK));
+        this.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
 
         JButton homeButton = new JButton("Thuis");
         homeButton.addActionListener(navbarController::homeButton);

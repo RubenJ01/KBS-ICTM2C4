@@ -1,6 +1,7 @@
 package gui.controller;
 
 import database.model.Order;
+import gui.view.dialog.AddOrderDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,10 +13,12 @@ public class OrderController {
 
     private final CardLayout layout;
     private final JPanel root;
+    private final JDialog addOrderDialog;
 
     public OrderController(CardLayout layout, JPanel root) {
         this.layout = layout;
         this.root = root;
+        this.addOrderDialog = new AddOrderDialog();
     }
 
     public void editButton(ActionEvent e) {
@@ -23,23 +26,27 @@ public class OrderController {
     }
 
     public void addButton(ActionEvent e) {
-
+        if (!this.addOrderDialog.isActive()) {
+            this.addOrderDialog.setVisible(true);
+        }
     }
 
     /**
      * Handles searching for a specific order id in the list of orders.
-     * @param e the actionevent.
+     *
+     * @param e         the actionevent.
      * @param orderList the JList with all the orders.
      * @param allOrders the list with all the order objects.
      * @see Order
      */
     public void searchTextField(ActionEvent e, JList<Order> orderList, List<Order> allOrders) {
+        orderList.getSelectedIndex();
         JTextField textField = (JTextField) e.getSource();
         try {
             int orderId = Integer.parseInt(textField.getText());
             Optional<Integer> listIndex = Optional.empty();
-            for(int i=0; i < allOrders.size(); i++) {
-                if(allOrders.get(i).getOrderId() == orderId) {
+            for (int i = 0; i < allOrders.size(); i++) {
+                if (allOrders.get(i).getOrderId() == orderId) {
                     listIndex = Optional.of(i);
                 }
             }

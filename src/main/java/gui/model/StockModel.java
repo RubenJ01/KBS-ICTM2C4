@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class StockModel {
     private ArrayList<Integer> productStock;
 
-    public StockModel(){
+    public StockModel() {
         this.productStock = new ArrayList<>();
         this.productStock.add(0, 10);
         this.productStock.add(1, 20);
@@ -17,7 +17,8 @@ public class StockModel {
         this.productStock.add(6, 5);
         this.productStock.add(7, 56);
     }
-    public ArrayList<Integer> getProductStock(){
+
+    public ArrayList<Integer> getProductStock() {
         return productStock;
     }
 }

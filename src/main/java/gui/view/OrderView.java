@@ -38,10 +38,11 @@ public class OrderView extends JPanel implements ViewBuilder {
         this.add(navbarView, BorderLayout.NORTH);
 
         List<Order> allOrders = new ArrayList<>();
-        try(Connection con = DatabaseConnection.getConnection()) {
+        try (Connection con = DatabaseConnection.getConnection()) {
             allOrders.addAll(this.orderDao.getAllOrders(con));
         } catch (SQLException e) {
-           logger.error(e.getMessage());
+            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         JList<Order> orderList = new JList<>(allOrders.toArray(new Order[0]));

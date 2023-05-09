@@ -6,6 +6,7 @@ This document describes how this application is build and how each of its compon
 ## Code Conventions
 
 The following code conventions should be followed at all times:
+
 - Classes should be written in upper camel case: ExampleClass.
 - Methods and variables should be written in camel case: exampleVariable.
 - Constants should be written in screaming snake case: EXAMPLE_CONSTANT.
@@ -23,12 +24,13 @@ Make sure to also inform your fellow group members.
 
 ### Accessing configuration data
 
-The Config.java class is a [singleton](https://www.baeldung.com/java-singleton), and thus we can retrieve the instance of this class by calling its getInstance() method:
+The Config.java class is a [singleton](https://www.baeldung.com/java-singleton), and thus we can retrieve the instance
+of this class by calling its getInstance() method:
+
 ```java
 Config config = Config.getInstance();
 config.getPassword();
 ```
-
 
 ## Database
 
