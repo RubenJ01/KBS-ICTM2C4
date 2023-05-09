@@ -2,7 +2,6 @@ package gui.controller;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 public class StockController{
 
@@ -13,10 +12,5 @@ public class StockController{
         this.layout = layout;
         this.root = root;
     }
-    public void editButton(ActionEvent e) {
 
-    }
-    public void addButton(ActionEvent e) {
-
-    }
 }

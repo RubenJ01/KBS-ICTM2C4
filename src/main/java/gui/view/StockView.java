@@ -2,12 +2,11 @@ package gui.view;
 
 import constants.Constants;
 import database.dao.StockitemsDao;
-import database.model.Stockitemholdings;
 import database.model.Stockitems;
 import database.util.DatabaseConnection;
 import gui.ViewBuilder;
-import gui.model.StockModel;
 import gui.controller.StockController;
+import gui.model.StockModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.sql.Connection;
@@ -45,17 +43,13 @@ public class StockView extends JPanel implements ViewBuilder {
         this.setLayout(new BorderLayout());
         this.add(navbarView, BorderLayout.NORTH);
 
-        List<Stockitems> allStocks = new ArrayList<>();
-        try(Connection con = DatabaseConnection.getConnection()) {
-            allStocks.addAll(this.stockitemsDao.getAllStockItemHoldings(con));
-        } catch (SQLException e) {
-            logger.error("Error", e);
+        List<Stockitems> allStocks = getStockitemsFromDatabase();
 
-        }
+        //zoekpanel
         JPanel stockBottomBar = new JPanel();
         stockBottomBar.setLayout(new FlowLayout(FlowLayout.LEFT));
         stockBottomBar.setSize(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT/10);
-        this.add(stockBottomBar, BorderLayout.SOUTH);
+        add(stockBottomBar, BorderLayout.SOUTH);
 
         JLabel jl_StockItemID = new JLabel("Zoek op ID");
         stockBottomBar.add(jl_StockItemID);
@@ -70,43 +64,48 @@ public class StockView extends JPanel implements ViewBuilder {
         stockBottomBar.add(searchStockItemName, BorderLayout.CENTER);
 
 
+        //sorteren en zoeken
         VoorraadModel voorraadModel = new VoorraadModel(allStocks);
         JTable table = new JTable(voorraadModel);
+
         TableRowSorter<VoorraadModel> sorter = new TableRowSorter<>(voorraadModel);
-        searchStockItemID.getDocument().addDocumentListener(new DocumentListener() {
+        searchStockItemID.getDocument().addDocumentListener(getDocumentListenerStockItemID(searchStockItemID, sorter));
+        searchStockItemName.getDocument().addDocumentListener(getDocumentListenerStockItemName(searchStockItemName, sorter));
+        table.setRowSorter(sorter);
+
+
+        //https://www.codejava.net/java-se/swing/setting-column-width-and-row-height-for-jtable
+        //rijhoogtes en alignments van kolommen
+        table.setRowHeight(Constants.SCREEN_HEIGHT/27);
+
+        table.getColumnModel().getColumn(0).setCellRenderer(new LeftTableCellRenderer());
+        table.getColumnModel().getColumn(2).setCellRenderer(new MiddleTableCellRenderer());
+
+        //tabel pane
+        JScrollPane scrollpane = new JScrollPane(table);
+        this.add(scrollpane, BorderLayout.CENTER);
+
+        this.setVisible(true);
+    }
+
+    private DocumentListener getDocumentListenerStockItemName(JTextField searchStockItemName, TableRowSorter<VoorraadModel> sorter) {
+        return new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                search(searchStockItemID.getText());
-            }
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                search(searchStockItemID.getText());
-            }
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                search(searchStockItemID.getText());
-            }
-            public void search(String str) {
-                if (str.length() == 0) {
-                    sorter.setRowFilter(null);
-                } else {
-                    sorter.setRowFilter(RowFilter.numberFilter(RowFilter.ComparisonType.EQUAL, Integer.valueOf(str),0));
-                }
-            }
-        });
-        searchStockItemName.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
                 search(searchStockItemName.getText());
+
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
                 search(searchStockItemName.getText());
             }
+
             @Override
             public void changedUpdate(DocumentEvent e) {
                 search(searchStockItemName.getText());
             }
+
             public void search(String str) {
                 if (str.length() == 0) {
                     sorter.setRowFilter(null);
@@ -114,20 +113,45 @@ public class StockView extends JPanel implements ViewBuilder {
                     sorter.setRowFilter(RowFilter.regexFilter(str, 1));
                 }
             }
-        });
+        };
+    }
 
-        table.setRowSorter(sorter);
-        //https://www.codejava.net/java-se/swing/setting-column-width-and-row-height-for-jtable
-        table.setRowHeight(Constants.SCREEN_HEIGHT/27);
+    private DocumentListener getDocumentListenerStockItemID(JTextField searchStockItemID, TableRowSorter<VoorraadModel> sorter) {
+        return new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                search(searchStockItemID.getText());
+            }
 
-        table.getColumnModel().getColumn(0).setCellRenderer(new LeftTableCellRenderer());
-        table.getColumnModel().getColumn(2).setCellRenderer(new MiddleTableCellRenderer());
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                search(searchStockItemID.getText());
+            }
 
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                search(searchStockItemID.getText());
+            }
 
-        JScrollPane scrollpane = new JScrollPane(table);
-        this.add(scrollpane, BorderLayout.CENTER);
+            public void search(String str) {
+                if (str.length() == 0) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.numberFilter(RowFilter.ComparisonType.EQUAL, Integer.valueOf(str), 0));
+                }
+            }
+        };
+    }
 
-        this.setVisible(true);
+    private List<Stockitems> getStockitemsFromDatabase() {
+        List<Stockitems> allStocks = new ArrayList<>();
+        try (Connection con = DatabaseConnection.getConnection()) {
+            allStocks.addAll(this.stockitemsDao.getAllStockItemHoldings(con));
+        } catch (SQLException e) {
+            logger.error("Error", e);
+
+        }
+        return allStocks;
     }
 
     class VoorraadModel extends AbstractTableModel {
