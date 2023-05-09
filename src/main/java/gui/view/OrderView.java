@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,6 +25,8 @@ public class OrderView extends JPanel implements ViewBuilder {
     private final NavbarView navbarView;
     private final OrderDao orderDao;
     private final OrderController orderController;
+
+    ListSelectionEvent e;
 
     public OrderView(CardLayout layout, JPanel root) {
         this.navbarView = new NavbarView(layout, root);
@@ -41,14 +45,23 @@ public class OrderView extends JPanel implements ViewBuilder {
         try(Connection con = DatabaseConnection.getConnection()) {
             allOrders.addAll(this.orderDao.getAllOrders(con));
         } catch (SQLException e) {
-           logger.error(e.getMessage());
+            logger.error(e.getMessage());
         }
 
+        JPanel singleOrder = new JPanel();
+        singleOrder.setBackground(Color.WHITE);
+
         JList<Order> orderList = new JList<>(allOrders.toArray(new Order[0]));
+        orderList.addListSelectionListener(e -> orderController.listSelected(e, orderList, singleOrder));
         orderList.setSelectionBackground(Color.GRAY);
         JScrollPane scrollPane = new JScrollPane(orderList);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        this.add(scrollPane, BorderLayout.CENTER);
+
+        JPanel centralPanel = new JPanel();
+        centralPanel.setLayout(new GridLayout(1, 2));
+        centralPanel.add(scrollPane);
+        this.add(centralPanel, BorderLayout.CENTER);
+        centralPanel.add(singleOrder);
 
         JPanel orderBottomBarButtons = new JPanel();
         orderBottomBarButtons.setLayout(new FlowLayout(FlowLayout.LEFT));
