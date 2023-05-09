@@ -3,6 +3,7 @@ package gui.view;
 import constants.Constants;
 import database.dao.OrderDao;
 import database.model.Order;
+import database.model.OrderLine;
 import database.util.DatabaseConnection;
 import gui.ViewBuilder;
 import gui.controller.OrderController;
@@ -42,6 +43,7 @@ public class OrderView extends JPanel implements ViewBuilder {
         this.add(navbarView, BorderLayout.NORTH);
 
         List<Order> allOrders = new ArrayList<>();
+
         try (Connection con = DatabaseConnection.getConnection()) {
             allOrders.addAll(this.orderDao.getAllOrders(con));
         } catch (SQLException e) {

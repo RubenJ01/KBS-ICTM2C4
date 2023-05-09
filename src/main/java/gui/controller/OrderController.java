@@ -1,6 +1,7 @@
 package gui.controller;
 
 import database.model.Order;
+import database.model.OrderLine;
 import gui.view.dialog.AddOrderDialog;
 
 import javax.swing.*;
@@ -23,12 +24,14 @@ public class OrderController {
         if (selectedIndex >= 0) {
             Order selectedOrder = orderList.getSelectedValue();
             singleOrder.removeAll();
-            singleOrder.add(new JLabel("Persoon: "));
-            singleOrder.add(new JLabel(String.valueOf(selectedOrder.getContactPersonId())));
             singleOrder.add(new JLabel("Order ID: "));
             singleOrder.add(new JLabel(String.valueOf(selectedOrder.getOrderId())));
             singleOrder.add(new JLabel("Datum: "));
             singleOrder.add(new JLabel(selectedOrder.getOrderDate().toString()));
+            singleOrder.add(new JLabel("Productnaam: "));
+            singleOrder.add(new JLabel(String.valueOf(selectedOrder.getOrderLines().get(selectedOrder.getOrderId()).getDescription())));
+            singleOrder.add(new JLabel("Hoeveelheid: "));
+            singleOrder.add(new JLabel(String.valueOf(selectedOrder.getOrderLines().get(selectedOrder.getOrderId()).getQuantity())));
             singleOrder.revalidate();
             singleOrder.repaint();
         }
