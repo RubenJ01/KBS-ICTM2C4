@@ -38,7 +38,7 @@ public class LoadView extends JPanel implements ViewBuilder {
 
         loadInput.add(Error);
 
-        JLabel itemnummerText = new JLabel("Itemnummer: ");
+        JLabel itemnummerText = new JLabel("Product Id: ");
         itemnummerText.setFont(new Font("Calibri", Font.BOLD, 20));
         loadInput.add(itemnummerText);
 

@@ -1,7 +1,8 @@
 package gui.controller;
 
-import gui.model.LoadQueue;
+import gui.model.RobotQueue;
 import gui.view.LoadView;
+import serial.SerialCommunication;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,40 +20,45 @@ public class LoadController {
         this.root = root;
     }
 
-    public static void setErrorMessage(String errorMessage) {
-        LoadView.Error.setText(errorMessage);
-        LoadView.Error.repaint();
-    }
-
-    public void addLoadButton(ActionEvent e) {
+    public void addLoadButton(ActionEvent e){
         try {
 
-            int y = Integer.parseInt(LoadView.YInput.getText());
-            int x = Integer.parseInt(LoadView.XInput.getText());
-            int item = Integer.parseInt(LoadView.itemnummerInput.getText());
-            if (CheckLocationPossession(x, y)) {
+            int y= Integer.parseInt(LoadView.YInput.getText());
+            int x= Integer.parseInt(LoadView.XInput.getText());
+            int item= Integer.parseInt(LoadView.itemnummerInput.getText());
+            if(CheckLocationPossession(x,y)){
                 setErrorMessage("");
-                LoadQueue.addQueue(y, x, item);
-            } else {
+                RobotQueue.addQueue(y,x,item,true);
+
+                //serial comm
+                SerialCommunication.getInstance().sendData();
+            }else{
                 setErrorMessage("Locatie al bezet");
             }
 
 
-        } catch (NumberFormatException error) {
+        }catch (NumberFormatException error) {
             setErrorMessage("Vul in elk veld een getal in");
         }
 
     }
 
-    public void CancelLoadButton(ActionEvent e) {
-        LoadQueue.removeQueue();
+    public void CancelLoadButton(ActionEvent e){
+        RobotQueue.removeQueue();
     }
 
-    public boolean CheckLocationPossession(int x, int y) {
+    public boolean CheckLocationPossession(int x, int y){
         return true;
     }
 
-    public boolean loadpackage() {
+
+    public static void setErrorMessage(String errorMessage) {
+        LoadView.Error.setText(errorMessage);
+        LoadView.Error.repaint();
+    }
+
+    public boolean loadpackage(){
+
         return true;
     }
 

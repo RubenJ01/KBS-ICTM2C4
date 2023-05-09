@@ -1,8 +1,12 @@
 package serial;
 
 import com.fazecast.jSerialComm.SerialPort;
+import gui.model.LoadModel;
 
+import java.util.Arrays;
 import java.util.concurrent.Executors;
+
+import static gui.view.LoadView.model;
 
 public class SerialCommunication {
 
@@ -19,32 +23,26 @@ public class SerialCommunication {
 
     public static SerialCommunication getInstance() {
         if (instance == null) {
-            instance = new SerialCommunication("COM3");
+            instance = new SerialCommunication("COM6");
         }
         return instance;
     }
 
     //sends the locations to the robot
     public void sendData() {
+        //make controller pas als actie is ondernomen voer actie uit
         Executors.newSingleThreadExecutor().execute(() -> {
             if (port.openPort()) {
                 try {
                     //needs to be changed into the location of products
-                    byte[] data = {1, 5};
+                    byte[] data = {(byte) LoadModel.getLocationX(), (byte) LoadModel.getLocationY()};
+                    System.out.println(Arrays.toString(data));
                     // ^ change into locations
                     port.getOutputStream().write(data);
                     port.getOutputStream().flush();
                     //this is here to ensure that there is enough time to effectively send the bites (DO NOT REMOVE)
                     Thread.sleep(2000);
                     port.writeBytes(data, data.length);
-                    //just to check if the information is sent and received back
-                    byte[] buffer = new byte[2];
-                    int numRead = port.readBytes(buffer, buffer.length);
-                    if (numRead == buffer.length && new String(buffer).equals("OK")) {
-                        System.out.println("Byte sent successfully");
-                    } else {
-                        System.out.println("Error sending byte");
-                    }
                     port.closePort();
                 } catch (Exception e) {
                     e.printStackTrace();

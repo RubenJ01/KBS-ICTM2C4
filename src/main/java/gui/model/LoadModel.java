@@ -3,8 +3,8 @@ package gui.model;
 import java.awt.*;
 
 public class LoadModel {
-    private int locationX;
-    private int locationY;
+    private static int locationX;
+    private static int locationY;
     private int itemnummer;
 
     private Color color;
@@ -14,6 +14,13 @@ public class LoadModel {
         this.locationX = locationX;
         this.itemnummer = itemnummer;
 
+    }
+    public static int getLocationX() {
+        return locationX;
+    }
+
+    public static int getLocationY() {
+        return locationY;
     }
 
 
