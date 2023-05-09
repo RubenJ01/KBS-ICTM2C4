@@ -18,9 +18,9 @@ public class NavbarView extends JPanel implements ViewBuilder {
 
     @Override
     public void buildAndShowView() {
-        this.setSize(new Dimension(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT / 10));
+        this.setSize(new Dimension(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT / 90));
         this.setLayout(new FlowLayout(FlowLayout.LEFT));
-        this.setBorder(BorderFactory.createMatteBorder(0,0,1,0, Color.BLACK));
+        this.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
 
         JButton homeButton = new JButton("Thuis");
         homeButton.addActionListener(navbarController::homeButton);
@@ -36,6 +36,10 @@ public class NavbarView extends JPanel implements ViewBuilder {
         JButton stockButton = new JButton("Voorraad");
         stockButton.addActionListener(navbarController::stockButton);
         this.add(stockButton);
+
+        JButton loadButton = new JButton("Inladen");
+        loadButton.addActionListener(navbarController::loadButton);
+        this.add(loadButton);
 
         this.setVisible(true);
     }

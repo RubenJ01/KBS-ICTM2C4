@@ -25,6 +25,7 @@ public class DatabaseConnection {
 
     /**
      * Retrieves the database connection.
+     *
      * @return Connection the database connection.
      * @throws SQLException if a connection could not be established.
      */
