@@ -3,6 +3,7 @@ package gui.model;
 import gui.view.LoadView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class RobotQueue {
     public static ArrayList<LoadModel> queue=new ArrayList<>();
@@ -37,6 +38,8 @@ public class RobotQueue {
         LoadView.model.removeAllElements();
         queue.clear();
     }
+
+
 
 
 

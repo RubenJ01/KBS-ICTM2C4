@@ -29,6 +29,9 @@ public class LoadController {
             if(CheckLocationPossession(x,y)){
                 setErrorMessage("");
                 RobotQueue.addQueue(y,x,item);
+                RobotQueue.addQueue(y,x,item,true);
+
+                //serial comm
                 SerialCommunication.getInstance().sendData();
             }else{
                 setErrorMessage("Locatie al bezet");
