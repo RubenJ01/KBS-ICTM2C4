@@ -1,6 +1,7 @@
 package database.dao;
 
 import database.model.Order;
+import database.model.OrderLine;
 import database.util.RowLockType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,6 @@ public class OrderDao {
 
     /**
      * Retrieves an order from the database.
-     *
      * @param con         the database connection object.
      * @param orderId     the id of the order you want to retrieve.
      * @param rowLockType the type of lock you want the query to use.
@@ -38,10 +38,33 @@ public class OrderDao {
      */
     public Order getOrderByOrderId(Connection con, int orderId, RowLockType rowLockType) throws SQLException {
         String query = rowLockType.getQueryWithLock("SELECT * FROM orders WHERE OrderID = ?");
+        String getAllOrderLines = "SELECT * FROM orderlines WHERE OrderID = ?";
+        List<OrderLine> orderLines = new ArrayList<>();
         try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, orderId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
+                    try(PreparedStatement ps2 = con.prepareStatement(getAllOrderLines)) {
+                        ps2.setInt(1, rs.getInt("OrderID"));
+                        try(ResultSet rs2 = ps2.executeQuery()) {
+                            while(rs2.next()) {
+                                orderLines.add(new OrderLine(
+                                        rs.getInt("OrderLineID"),
+                                        rs.getInt("OrderID"),
+                                        rs.getInt("StockItemID"),
+                                        rs.getString("Description"),
+                                        rs.getInt("PackageTypeID"),
+                                        rs.getInt("Quantity"),
+                                        rs.getFloat("UnitPrice"),
+                                        rs.getFloat("TaxRate"),
+                                        rs.getInt("PickedQuantity"),
+                                        rs.getDate("PickingCompletedWhen"),
+                                        rs.getInt("LastEditedBy"),
+                                        rs.getDate("LastEditedWhen")));
+
+                            }
+                        }
+                    }
                     return new Order(
                             rs.getInt("OrderID"),
                             rs.getInt("CustomerID"),
@@ -58,7 +81,8 @@ public class OrderDao {
                             rs.getString("InternalComments"),
                             rs.getDate("PickingCompletedWhen"),
                             rs.getInt("LastEditedBy"),
-                            rs.getDate("LastEditedWhen")
+                            rs.getDate("LastEditedWhen"),
+                            orderLines
                     );
                 } else {
                     return null;
@@ -75,11 +99,34 @@ public class OrderDao {
      * @throws SQLException if the query failed.
      */
     public List<Order> getAllOrders(Connection con) throws SQLException {
-        String query = "SELECT * FROM orders";
+        String getAllOrders = "SELECT * FROM orders";
         List<Order> orders = new ArrayList<>();
-        try (PreparedStatement ps = con.prepareStatement(query)) {
+        String getAllOrderLines = "SELECT * FROM orderlines WHERE OrderID = ?";
+        List<OrderLine> orderLines = new ArrayList<>();
+        try (PreparedStatement ps = con.prepareStatement(getAllOrders)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    try(PreparedStatement ps2 = con.prepareStatement(getAllOrderLines)) {
+                        ps2.setInt(1, rs.getInt("OrderID"));
+                        try(ResultSet rs2 = ps2.executeQuery()) {
+                            while(rs2.next()) {
+                                orderLines.add(new OrderLine(
+                                        rs.getInt("OrderLineID"),
+                                        rs.getInt("OrderID"),
+                                        rs.getInt("StockItemID"),
+                                        rs.getString("Description"),
+                                        rs.getInt("PackageTypeID"),
+                                        rs.getInt("Quantity"),
+                                        rs.getFloat("UnitPrice"),
+                                        rs.getFloat("TaxRate"),
+                                        rs.getInt("PickedQuantity"),
+                                        rs.getDate("PickingCompletedWhen"),
+                                        rs.getInt("LastEditedBy"),
+                                        rs.getDate("LastEditedWhen")));
+                                System.out.println(orderLines);
+                            }
+                        }
+                    }
                     orders.add(new Order(
                             rs.getInt("OrderID"),
                             rs.getInt("CustomerID"),
@@ -96,7 +143,8 @@ public class OrderDao {
                             rs.getString("InternalComments"),
                             rs.getDate("PickingCompletedWhen"),
                             rs.getInt("LastEditedBy"),
-                            rs.getDate("LastEditedWhen")
+                            rs.getDate("LastEditedWhen"),
+                            orderLines
                     ));
                 }
             }

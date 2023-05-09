@@ -1,6 +1,7 @@
 package database.model;
 
 import java.sql.Date;
+import java.util.List;
 
 public class Order {
 
@@ -20,11 +21,12 @@ public class Order {
     private Date pickingCompletedWhen;
     private int lastEditedBy;
     private Date lastEditedWhen;
+    private List<OrderLine> orderLines;
 
     public Order(int orderId, int customerId, int salespersonPersonId, int pickedByPersonId, int contactPersonId,
                  int backorderOrderId, Date orderDate, Date expectedDeliveryDate, String customerPurchaseOrderNumber,
                  int isUndersupplyBackordered, String comments, String deliveryInstructions, String internalComments,
-                 Date pickingCompletedWhen, int lastEditedBy, Date lastEditedWhen) {
+                 Date pickingCompletedWhen, int lastEditedBy, Date lastEditedWhen, List<OrderLine> orderLines) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.salespersonPersonId = salespersonPersonId;
@@ -41,6 +43,7 @@ public class Order {
         this.pickingCompletedWhen = pickingCompletedWhen;
         this.lastEditedBy = lastEditedBy;
         this.lastEditedWhen = lastEditedWhen;
+        this.orderLines = orderLines;
     }
 
     public int getOrderId() {
