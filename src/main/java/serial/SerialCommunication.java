@@ -41,7 +41,6 @@ public class SerialCommunication {
                     port.getOutputStream().write(data);
                     port.getOutputStream().flush();
                     //this is here to ensure that there is enough time to effectively send the bites (DO NOT REMOVE)
-                    Thread.sleep(7000);
                     Thread.sleep(2000);
                     port.writeBytes(data, data.length);
                     port.closePort();

@@ -21,15 +21,15 @@ public class RobotQueue {
         }
     }
 
-    public static void addQueue(int Y, int X, int Nummer){
-        queue.add(new LoadModel(Y,X,Nummer));
-        printQueue();
-        LoadView.model.removeAllElements();
-        int i=0;
-        for (LoadModel item : queue) {
-            i++;
-            LoadView.model.addElement(i+": "+item);
     public static void addQueue(int Y, int X, int Nummer,boolean inladen){
+        if(inladen){
+            queue.add(new LoadModel(Y,X,Nummer));
+            printQueue();
+            LoadView.model.addElement("Inladen Product Id: "+Nummer+" X:"+X+" Y:"+Y);
+        } else if (!inladen) {
+            queue.add(new LoadModel(Y,X,Nummer));
+            printQueue();
+            LoadView.model.addElement("Inladen Product Id: "+Nummer+" X:"+X+" Y:"+Y);
         }
 
 

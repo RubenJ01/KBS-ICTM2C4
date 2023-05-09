@@ -28,7 +28,6 @@ public class LoadController {
             int item= Integer.parseInt(LoadView.itemnummerInput.getText());
             if(CheckLocationPossession(x,y)){
                 setErrorMessage("");
-                RobotQueue.addQueue(y,x,item);
                 RobotQueue.addQueue(y,x,item,true);
 
                 //serial comm
