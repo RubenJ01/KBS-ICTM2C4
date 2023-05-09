@@ -45,6 +45,7 @@ public class OrderView extends JPanel implements ViewBuilder {
         try (Connection con = DatabaseConnection.getConnection()) {
             allOrders.addAll(this.orderDao.getAllOrders(con));
         } catch (SQLException e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
         }
 

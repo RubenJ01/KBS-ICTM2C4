@@ -49,18 +49,18 @@ public class OrderDao {
                         try(ResultSet rs2 = ps2.executeQuery()) {
                             while(rs2.next()) {
                                 orderLines.add(new OrderLine(
-                                        rs.getInt("OrderLineID"),
-                                        rs.getInt("OrderID"),
-                                        rs.getInt("StockItemID"),
-                                        rs.getString("Description"),
-                                        rs.getInt("PackageTypeID"),
-                                        rs.getInt("Quantity"),
-                                        rs.getFloat("UnitPrice"),
-                                        rs.getFloat("TaxRate"),
-                                        rs.getInt("PickedQuantity"),
-                                        rs.getDate("PickingCompletedWhen"),
-                                        rs.getInt("LastEditedBy"),
-                                        rs.getDate("LastEditedWhen")));
+                                        rs2.getInt("OrderLineID"),
+                                        rs2.getInt("OrderID"),
+                                        rs2.getInt("StockItemID"),
+                                        rs2.getString("Description"),
+                                        rs2.getInt("PackageTypeID"),
+                                        rs2.getInt("Quantity"),
+                                        rs2.getFloat("UnitPrice"),
+                                        rs2.getFloat("TaxRate"),
+                                        rs2.getInt("PickedQuantity"),
+                                        rs2.getDate("PickingCompletedWhen"),
+                                        rs2.getInt("LastEditedBy"),
+                                        rs2.getDate("LastEditedWhen")));
 
                             }
                         }
@@ -99,7 +99,7 @@ public class OrderDao {
      * @throws SQLException if the query failed.
      */
     public List<Order> getAllOrders(Connection con) throws SQLException {
-        String getAllOrders = "SELECT * FROM orders";
+        String getAllOrders = "SELECT * FROM orders LIMIT 1000";
         List<Order> orders = new ArrayList<>();
         String getAllOrderLines = "SELECT * FROM orderlines WHERE OrderID = ?";
         List<OrderLine> orderLines = new ArrayList<>();
@@ -111,19 +111,18 @@ public class OrderDao {
                         try(ResultSet rs2 = ps2.executeQuery()) {
                             while(rs2.next()) {
                                 orderLines.add(new OrderLine(
-                                        rs.getInt("OrderLineID"),
-                                        rs.getInt("OrderID"),
-                                        rs.getInt("StockItemID"),
-                                        rs.getString("Description"),
-                                        rs.getInt("PackageTypeID"),
-                                        rs.getInt("Quantity"),
-                                        rs.getFloat("UnitPrice"),
-                                        rs.getFloat("TaxRate"),
-                                        rs.getInt("PickedQuantity"),
-                                        rs.getDate("PickingCompletedWhen"),
-                                        rs.getInt("LastEditedBy"),
-                                        rs.getDate("LastEditedWhen")));
-                                System.out.println(orderLines);
+                                        rs2.getInt("OrderLineID"),
+                                        rs2.getInt("OrderID"),
+                                        rs2.getInt("StockItemID"),
+                                        rs2.getString("Description"),
+                                        rs2.getInt("PackageTypeID"),
+                                        rs2.getInt("Quantity"),
+                                        rs2.getFloat("UnitPrice"),
+                                        rs2.getFloat("TaxRate"),
+                                        rs2.getInt("PickedQuantity"),
+                                        rs2.getDate("PickingCompletedWhen"),
+                                        rs2.getInt("LastEditedBy"),
+                                        rs2.getDate("LastEditedWhen")));
                             }
                         }
                     }
