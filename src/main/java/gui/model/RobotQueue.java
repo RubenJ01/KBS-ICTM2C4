@@ -29,6 +29,7 @@ public class RobotQueue {
         for (LoadModel item : queue) {
             i++;
             LoadView.model.addElement(i+": "+item);
+    public static void addQueue(int Y, int X, int Nummer,boolean inladen){
         }
 
 
