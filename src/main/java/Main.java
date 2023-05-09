@@ -1,7 +1,7 @@
-import gui.MainFrame;
 
 import gui.model.LoadModel;
-import gui.model.LoadQueue;
+import gui.MainFrame;
+import gui.model.RobotQueue;
 import gui.view.StockView;
 
 import java.sql.SQLException;
@@ -17,7 +17,7 @@ public class Main {
 
 
         //this is for sending the locations of the products to the robot.
-        SerialCommunication.getInstance().sendData();
+
         //sending product location ends here.
     }
 }

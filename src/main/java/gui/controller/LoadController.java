@@ -1,14 +1,12 @@
 package gui.controller;
 
-import database.model.Order;
-import gui.model.LoadModel;
-import gui.model.LoadQueue;
+import gui.model.RobotQueue;
 import gui.view.LoadView;
+import serial.SerialCommunication;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 
 
 public class LoadController {
@@ -30,7 +28,8 @@ public class LoadController {
             int item= Integer.parseInt(LoadView.itemnummerInput.getText());
             if(CheckLocationPossession(x,y)){
                 setErrorMessage("");
-                LoadQueue.addQueue(y,x,item);
+                RobotQueue.addQueue(y,x,item);
+                SerialCommunication.getInstance().sendData();
             }else{
                 setErrorMessage("Locatie al bezet");
             }
@@ -43,7 +42,7 @@ public class LoadController {
     }
 
     public void CancelLoadButton(ActionEvent e){
-        LoadQueue.removeQueue();
+        RobotQueue.removeQueue();
     }
 
     public boolean CheckLocationPossession(int x, int y){
@@ -57,6 +56,7 @@ public class LoadController {
     }
 
     public boolean loadpackage(){
+
         return true;
     }
 

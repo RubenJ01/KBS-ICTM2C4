@@ -1,16 +1,13 @@
 package gui.model;
 
-import database.model.Order;
-import gui.controller.LoadController;
 import gui.view.LoadView;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
-public class LoadQueue {
+public class RobotQueue {
     public static ArrayList<LoadModel> queue=new ArrayList<>();
 
-    public  LoadQueue(){
+    public RobotQueue(){
 
     }
 
@@ -40,5 +37,8 @@ public class LoadQueue {
         LoadView.model.removeAllElements();
         queue.clear();
     }
+
+
+
 
 }

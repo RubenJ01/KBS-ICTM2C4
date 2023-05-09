@@ -1,13 +1,8 @@
 package gui.view;
 
 import constants.Constants;
-import database.dao.OrderDao;
-import database.model.Order;
 import gui.ViewBuilder;
 import gui.controller.LoadController;
-import gui.controller.OrderController;
-import gui.model.LoadModel;
-import gui.model.LoadQueue;
 
 import javax.swing.*;
 import java.awt.*;
