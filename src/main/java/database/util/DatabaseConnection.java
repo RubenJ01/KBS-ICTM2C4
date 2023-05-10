@@ -14,7 +14,6 @@ public class DatabaseConnection {
 
     private static DataSource ds;
 
-
     static {
         Config config = Config.getInstance();
         String url = config.getConnectionUrl();
@@ -26,6 +25,7 @@ public class DatabaseConnection {
 
     /**
      * Retrieves the database connection.
+     *
      * @return Connection the database connection.
      * @throws SQLException if a connection could not be established.
      */

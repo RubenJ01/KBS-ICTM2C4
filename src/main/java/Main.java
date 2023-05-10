@@ -1,10 +1,15 @@
+
+//import gui.model.LoadModel;
 import gui.MainFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+//import gui.model.RobotQueue;
+//import gui.view.StockView;
 
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
+//import serial.SerialCommunication;
 
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -17,5 +22,13 @@ public class Main {
         }
         logger.info("INFO - dit is een test");
         new MainFrame();
+
+        //StockView stockView = new StockView();
+
+
+
+        //this is for sending the locations of the products to the robot.
+
+        //sending product location ends here.
     }
 }

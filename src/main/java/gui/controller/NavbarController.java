@@ -31,10 +31,13 @@ public class NavbarController {
     /**
      * Methode die aangeroepen wordt als de knop wordt ingedrukt
      */
-
     public void stockButton(ActionEvent e) {
         cardLayout.show(root, "stockView");
 
+    }
+
+    public void loadButton(ActionEvent e) {
+        cardLayout.show(root, "loadView");
     }
 
 }
