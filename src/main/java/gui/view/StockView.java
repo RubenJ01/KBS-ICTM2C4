@@ -9,6 +9,7 @@ import gui.controller.StockController;
 import gui.model.StockModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.ls.LSOutput;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -28,7 +29,9 @@ public class StockView extends JPanel implements ViewBuilder {
     private final NavbarView navbarView;
     private StockModel stockModel;
     private final StockitemsDao stockitemsDao;
-    private StockController stockController;
+    private JTextField searchStockItemID, searchStockItemName;
+    private StockController  stockController;
+    private int rowCount;
 
     public StockView(CardLayout layout, JPanel root) {
         this.navbarView = new NavbarView(layout, root);
@@ -44,6 +47,10 @@ public class StockView extends JPanel implements ViewBuilder {
         this.add(navbarView, BorderLayout.NORTH);
 
         List<Stockitems> allStocks = getStockitemsFromDatabase();
+
+        //Table aanmaken
+        VoorraadModel voorraadModel = new VoorraadModel(allStocks);
+        JTable table = new JTable(voorraadModel);
 
         //zoekpanel
         JPanel stockBottomBar = new JPanel();
@@ -65,12 +72,9 @@ public class StockView extends JPanel implements ViewBuilder {
 
 
         //sorteren en zoeken
-        VoorraadModel voorraadModel = new VoorraadModel(allStocks);
-        JTable table = new JTable(voorraadModel);
-
         TableRowSorter<VoorraadModel> sorter = new TableRowSorter<>(voorraadModel);
-        searchStockItemID.getDocument().addDocumentListener(getDocumentListenerStockItemID(searchStockItemID, sorter));
-        searchStockItemName.getDocument().addDocumentListener(getDocumentListenerStockItemName(searchStockItemName, sorter));
+        searchStockItemID.getDocument().addDocumentListener(getDocumentListenerStockItemID(searchStockItemID, table, sorter));
+        searchStockItemName.getDocument().addDocumentListener(getDocumentListenerStockItemName(searchStockItemName, table, sorter));
         table.setRowSorter(sorter);
 
 
@@ -88,22 +92,28 @@ public class StockView extends JPanel implements ViewBuilder {
         this.setVisible(true);
     }
 
-    private DocumentListener getDocumentListenerStockItemName(JTextField searchStockItemName, TableRowSorter<VoorraadModel> sorter) {
+
+    private DocumentListener getDocumentListenerStockItemName(JTextField searchStockItemName, JTable jtable, TableRowSorter<VoorraadModel> sorter) {
         return new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 search(searchStockItemName.getText());
-
+                checkTableEmpty(jtable);
+                setBackgroundColorSearchFields(jtable, searchStockItemName);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 search(searchStockItemName.getText());
+                checkTableEmpty(jtable);
+                setBackgroundColorSearchFields(jtable, searchStockItemName);
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
                 search(searchStockItemName.getText());
+                checkTableEmpty(jtable);
+                setBackgroundColorSearchFields(jtable, searchStockItemName);
             }
 
             public void search(String str) {
@@ -111,29 +121,38 @@ public class StockView extends JPanel implements ViewBuilder {
                     sorter.setRowFilter(null);
                 } else {
                     sorter.setRowFilter(RowFilter.regexFilter(str, 1));
+
                 }
             }
+
         };
     }
 
-    private DocumentListener getDocumentListenerStockItemID(JTextField searchStockItemID, TableRowSorter<VoorraadModel> sorter) {
+    private DocumentListener getDocumentListenerStockItemID(JTextField searchStockItemID, JTable jtable, TableRowSorter<VoorraadModel> sorter) {
         return new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 search(searchStockItemID.getText());
+                checkTableEmpty(jtable);
+                setBackgroundColorSearchFields(jtable, searchStockItemID);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 search(searchStockItemID.getText());
+                checkTableEmpty(jtable);
+                setBackgroundColorSearchFields(jtable, searchStockItemID);
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
                 search(searchStockItemID.getText());
+                checkTableEmpty(jtable);
+                setBackgroundColorSearchFields(jtable, searchStockItemID);
             }
 
             public void search(String str) {
+                System.out.println(str);
                 if (str.length() == 0) {
                     sorter.setRowFilter(null);
                 } else {
@@ -149,9 +168,25 @@ public class StockView extends JPanel implements ViewBuilder {
             allStocks.addAll(this.stockitemsDao.getAllStockItemHoldings(con));
         } catch (SQLException e) {
             logger.error("Error", e);
-
         }
         return allStocks;
+    }
+    private boolean checkTableEmpty(JTable jtable){
+        rowCount = jtable.getRowCount();
+        if(rowCount <= 0){
+            System.out.println(true);
+            return true;
+        }
+        System.out.println(false);
+        return false;
+    }
+    private void setBackgroundColorSearchFields(JTable table, JTextField searchStockItem) {
+        if(checkTableEmpty(table)){
+            searchStockItem.setBackground(new Color(247, 117, 114));
+        }
+        else{
+            searchStockItem.setBackground(Color.WHITE);
+        }
     }
 
     class VoorraadModel extends AbstractTableModel {
@@ -170,7 +205,9 @@ public class StockView extends JPanel implements ViewBuilder {
                 data[i][1] = item.getStockItemName();
                 data[i][2] = item.getStockitemholdings().getQuantityOnHand();
             }
+
         }
+
         //https://stackoverflow.com/questions/6592192/why-does-my-jtable-sort-an-integer-column-incorrectly
         @Override
         public Class getColumnClass(int column) {
