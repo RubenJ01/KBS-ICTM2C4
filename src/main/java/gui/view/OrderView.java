@@ -8,7 +8,6 @@ import gui.ViewBuilder;
 import gui.controller.OrderController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
