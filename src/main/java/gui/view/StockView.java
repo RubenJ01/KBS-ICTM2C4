@@ -27,17 +27,13 @@ public class StockView extends JPanel implements ViewBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(StockView.class);
     private final NavbarView navbarView;
-    private StockModel stockModel;
     private final StockitemsDao stockitemsDao;
     private JTextField searchStockItemID, searchStockItemName;
-    private StockController  stockController;
     private int rowCount;
 
     public StockView(CardLayout layout, JPanel root) {
         this.navbarView = new NavbarView(layout, root);
-        this.stockModel = new StockModel();
         this.stockitemsDao = StockitemsDao.getInstance();
-        this.stockController = new StockController(layout, root);
         buildAndShowView();
     }
 
@@ -61,13 +57,13 @@ public class StockView extends JPanel implements ViewBuilder {
         JLabel jl_StockItemID = new JLabel("Zoek op ID");
         stockBottomBar.add(jl_StockItemID);
 
-        JTextField searchStockItemID = new JTextField(15);
+        searchStockItemID = new JTextField(15);
         stockBottomBar.add(searchStockItemID, BorderLayout.CENTER);
 
         JLabel jl_StockItemName = new JLabel("Zoek op naam");
         stockBottomBar.add(jl_StockItemName);
 
-        JTextField searchStockItemName = new JTextField(15);
+        searchStockItemName = new JTextField(15);
         stockBottomBar.add(searchStockItemName, BorderLayout.CENTER);
 
 
