@@ -150,4 +150,29 @@ public class OrderDao {
         return orders;
     }
 
+    public void addOrder(Connection con, Order order) throws SQLException {
+        String query = "INSERT INTO orders (CustomerID, SalespersonPersonID, PickedByPersonID, ContactPersonID, " +
+                "BackorderOrderID, OrderDate, ExpectedDeliveryDate, CustomerPurchaseOrderNumber, IsUndersupplyBackordered, " +
+                "Comments, DeliveryInstructions, InternalComments, PickingCompletedWhen, LastEditedBy, LastEditedWhen) " +
+                "VALUES (?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?)";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, order.getCustomerId());
+            ps.setInt(2, order.getSalespersonPersonId());
+            ps.setInt(3, order.getPickedByPersonId());
+            ps.setInt(4, order.getContactPersonId());
+            ps.setInt(5, order.getBackorderOrderId());
+            ps.setDate(6, order.getOrderDate());
+            ps.setDate(7, order.getExpectedDeliveryDate());
+            ps.setString(8, order.getCustomerPurchaseOrderNumber());
+            ps.setInt(9, order.getIsUndersupplyBackordered());
+            ps.setString(10, order.getComments());
+            ps.setString(11, order.getDeliveryInstructions());
+            ps.setString(12, order.getInternalComments());
+            ps.setDate(13, order.getPickingCompletedWhen());
+            ps.setInt(14, order.getLastEditedBy());
+            ps.setDate(15, order.getLastEditedWhen());
+            ps.executeUpdate();
+        }
+    }
+
 }

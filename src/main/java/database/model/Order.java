@@ -46,6 +46,10 @@ public class Order {
         this.orderLines = orderLines;
     }
 
+    public Order() {
+        this.orderId = -1;
+    }
+
     public int getOrderId() {
         return orderId;
     }

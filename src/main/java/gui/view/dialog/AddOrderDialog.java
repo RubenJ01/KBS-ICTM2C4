@@ -2,19 +2,24 @@ package gui.view.dialog;
 
 import database.dao.CustomerDao;
 import database.dao.PeopleDao;
+import database.dao.StockItemDao;
 import database.model.Customer;
 import database.model.Person;
+import database.model.StockItem;
 import database.util.DatabaseConnection;
 import gui.ViewBuilder;
 import gui.controller.AddOrderController;
-import org.jdatepicker.JDatePicker;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utility.DateLabelFormatter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,6 +27,8 @@ import java.util.List;
 import java.util.Properties;
 
 public class AddOrderDialog extends JDialog implements ViewBuilder {
+
+    private static final Logger logger = LoggerFactory.getLogger(AddOrderDialog.class);
 
     private final CustomerDao customerDao = CustomerDao.getInstance();
     private final PeopleDao peopleDao = PeopleDao.getInstance();
@@ -35,15 +42,15 @@ public class AddOrderDialog extends JDialog implements ViewBuilder {
     public void buildAndShowView() {
         this.setModal(true);
         this.setLayout(new BorderLayout());
-        this.setSize(new Dimension(375, 280));
+        this.setSize(new Dimension(425, 280));
 
         JLabel header = new JLabel("Order Toevoegen", SwingConstants.CENTER);
-        header.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+        header.setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 0));
         header.setFont(header.getFont().deriveFont(Font.BOLD, 14f));
         this.add(header, BorderLayout.NORTH);
 
         JPanel centerContent = new JPanel();
-        centerContent.setLayout(new GridLayout(6, 2));
+        centerContent.setLayout(new GridLayout(7, 2));
         centerContent.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
         this.add(centerContent, BorderLayout.CENTER);
 
@@ -92,7 +99,13 @@ public class AddOrderDialog extends JDialog implements ViewBuilder {
         centerContent.add(orderDateField);
 
         JLabel expectedDeliveryDateLabel = new JLabel("Verwachte leverdatum:");
-        JDatePickerImpl expectedDeliveryDateField = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+        UtilDateModel model2 = new UtilDateModel();
+        Properties p2 = new Properties();
+        p2.put("text.today", "Today");
+        p2.put("text.month", "Month");
+        p2.put("text.year", "Year");
+        JDatePanelImpl datePanel2 = new JDatePanelImpl(model2, p2);
+        JDatePickerImpl expectedDeliveryDateField = new JDatePickerImpl(datePanel2, new DateLabelFormatter());
 
         centerContent.add(expectedDeliveryDateLabel);
         centerContent.add(expectedDeliveryDateField);
@@ -104,8 +117,14 @@ public class AddOrderDialog extends JDialog implements ViewBuilder {
         centerContent.add(isUndersupplyBackorderedField);
 
         JButton addButton = new JButton("Toevoegen");
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addOrderController.addOrder(e, klantIdField, salesPersonIdField, contactPersonIdField, orderDateField, expectedDeliveryDateField, isUndersupplyBackorderedField);
+            }
+        });
         this.add(addButton, BorderLayout.SOUTH);
 
-
+        this.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - getHeight()/2);
     }
 }

@@ -1,15 +1,12 @@
 package gui.view;
 
 import constants.Constants;
-import database.dao.StockitemsDao;
-import database.model.Stockitems;
+import database.dao.StockItemDao;
+import database.model.StockItem;
 import database.util.DatabaseConnection;
 import gui.ViewBuilder;
-import gui.controller.StockController;
-import gui.model.StockModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.ls.LSOutput;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -27,13 +24,13 @@ public class StockView extends JPanel implements ViewBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(StockView.class);
     private final NavbarView navbarView;
-    private final StockitemsDao stockitemsDao;
+    private final StockItemDao stockItemDao;
     private JTextField searchStockItemID, searchStockItemName;
     private int rowCount;
 
     public StockView(CardLayout layout, JPanel root) {
         this.navbarView = new NavbarView(layout, root);
-        this.stockitemsDao = StockitemsDao.getInstance();
+        this.stockItemDao = StockItemDao.getInstance();
         buildAndShowView();
     }
 
@@ -42,7 +39,7 @@ public class StockView extends JPanel implements ViewBuilder {
         this.setLayout(new BorderLayout());
         this.add(navbarView, BorderLayout.NORTH);
 
-        List<Stockitems> allStocks = getStockitemsFromDatabase();
+        List<StockItem> allStocks = getStockitemsFromDatabase();
 
         //Table aanmaken
         VoorraadModel voorraadModel = new VoorraadModel(allStocks);
@@ -158,10 +155,10 @@ public class StockView extends JPanel implements ViewBuilder {
         };
     }
 
-    private List<Stockitems> getStockitemsFromDatabase() {
-        List<Stockitems> allStocks = new ArrayList<>();
+    private List<StockItem> getStockitemsFromDatabase() {
+        List<StockItem> allStocks = new ArrayList<>();
         try (Connection con = DatabaseConnection.getConnection()) {
-            allStocks.addAll(this.stockitemsDao.getAllStockItemHoldings(con));
+            allStocks.addAll(this.stockItemDao.getAllStockItemHoldings(con));
         } catch (SQLException e) {
             logger.error("Error", e);
         }
@@ -192,11 +189,11 @@ public class StockView extends JPanel implements ViewBuilder {
         private final Object[][] data;
         private final int rowCount;
 
-        private VoorraadModel(List<Stockitems> stockitemsList) {
-            data = new Object[stockitemsList.size()][3];
-            this.rowCount = stockitemsList.size();
-            for(int i = 0; i < stockitemsList.size(); i++) {
-                Stockitems item = stockitemsList.get(i);
+        private VoorraadModel(List<StockItem> stockItemList) {
+            data = new Object[stockItemList.size()][3];
+            this.rowCount = stockItemList.size();
+            for(int i = 0; i < stockItemList.size(); i++) {
+                StockItem item = stockItemList.get(i);
                 data[i][0] = item.getStockItemID();
                 data[i][1] = item.getStockItemName();
                 data[i][2] = item.getStockitemholdings().getQuantityOnHand();
