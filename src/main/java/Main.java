@@ -16,6 +16,7 @@ public class Main {
 
     public static void main(String[] args) throws SQLException {
         //https://stackoverflow.com/questions/17762214/java-jtable-alternate-row-color-not-working
+        // Used to get the table to have an alternating color between rows
         UIDefaults defaults = UIManager.getLookAndFeelDefaults();
         if (defaults.get("Table.alternateRowColor") == null) {
             defaults.put("Table.alternateRowColor", new Color(218, 217, 217));

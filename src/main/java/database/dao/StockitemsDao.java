@@ -29,11 +29,10 @@ public class StockitemsDao {
 
 
     /**
-     * gets stock from item by searching on StockItemID
+     * Funtion to receive stock information by searching on a specific stockItemID
      * @param con
      * @param stockItemID
      * @param rowLockType
-     * @return new Stockitemholdings object
      * @throws SQLException
      */
     public Stockitems getStockByStockItemID(Connection con, int stockItemID, RowLockType rowLockType) throws SQLException {
@@ -57,9 +56,8 @@ public class StockitemsDao {
 
 
     /**
-     *
+     * function to receive all stock information from all products in the database
      * @param con
-     * @return
      * @throws SQLException
      */
     public List<Stockitems> getAllStockItemHoldings(Connection con) throws SQLException {
@@ -77,6 +75,13 @@ public class StockitemsDao {
         }
         return stockitems;
     }
+
+    /**
+     * Function to put a result set in a list
+     * @param rs
+     * @return new StockItem
+     * @throws SQLException
+     */
     private static Stockitems getStockitems(ResultSet rs) throws SQLException {
         Stockitemholdings stockitemholdings = new Stockitemholdings(
                 rs.getInt("StockItemID"),

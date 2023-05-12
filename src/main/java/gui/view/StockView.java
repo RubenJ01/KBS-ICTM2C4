@@ -44,11 +44,11 @@ public class StockView extends JPanel implements ViewBuilder {
 
         List<Stockitems> allStocks = getStockitemsFromDatabase();
 
-        //Table aanmaken
+        //Create Table
         VoorraadModel voorraadModel = new VoorraadModel(allStocks);
         JTable table = new JTable(voorraadModel);
 
-        //zoekpanel
+        //Search panel
         JPanel stockBottomBar = new JPanel();
         stockBottomBar.setLayout(new FlowLayout(FlowLayout.LEFT));
         stockBottomBar.setSize(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT/10);
@@ -67,7 +67,7 @@ public class StockView extends JPanel implements ViewBuilder {
         stockBottomBar.add(searchStockItemName, BorderLayout.CENTER);
 
 
-        //sorteren en zoeken
+        //Sorting and searching
         TableRowSorter<VoorraadModel> sorter = new TableRowSorter<>(voorraadModel);
         searchStockItemID.getDocument().addDocumentListener(getDocumentListenerStockItemID(searchStockItemID, table, sorter));
         searchStockItemName.getDocument().addDocumentListener(getDocumentListenerStockItemName(searchStockItemName, table, sorter));
@@ -75,20 +75,26 @@ public class StockView extends JPanel implements ViewBuilder {
 
 
         //https://www.codejava.net/java-se/swing/setting-column-width-and-row-height-for-jtable
-        //rijhoogtes en alignments van kolommen
+        //Custom rowheights
         table.setRowHeight(Constants.SCREEN_HEIGHT/27);
 
         table.getColumnModel().getColumn(0).setCellRenderer(new LeftTableCellRenderer());
         table.getColumnModel().getColumn(2).setCellRenderer(new MiddleTableCellRenderer());
 
-        //tabel pane
+        //Attach table to scrollpane and add scrollpane to the screen
         JScrollPane scrollpane = new JScrollPane(table);
         this.add(scrollpane, BorderLayout.CENTER);
 
         this.setVisible(true);
     }
 
-
+    /**
+     * Function to search on StockItemName in the table with automatic search results
+     * Also sets textfield background to red if no products were found using the search
+     * @param searchStockItemName
+     * @param jtable
+     * @param sorter
+     */
     private DocumentListener getDocumentListenerStockItemName(JTextField searchStockItemName, JTable jtable, TableRowSorter<VoorraadModel> sorter) {
         return new DocumentListener() {
             @Override
@@ -124,6 +130,13 @@ public class StockView extends JPanel implements ViewBuilder {
         };
     }
 
+    /**
+     * Function to search on StockItemID in the table with automatic search results
+     * Also sets textfield background to red if no products were found using the search
+     * @param searchStockItemID
+     * @param jtable
+     * @param sorter
+     */
     private DocumentListener getDocumentListenerStockItemID(JTextField searchStockItemID, JTable jtable, TableRowSorter<VoorraadModel> sorter) {
         return new DocumentListener() {
             @Override
@@ -158,6 +171,9 @@ public class StockView extends JPanel implements ViewBuilder {
         };
     }
 
+    /**
+     *  Make a list from all the received stock data
+     */
     private List<Stockitems> getStockitemsFromDatabase() {
         List<Stockitems> allStocks = new ArrayList<>();
         try (Connection con = DatabaseConnection.getConnection()) {
@@ -167,15 +183,24 @@ public class StockView extends JPanel implements ViewBuilder {
         }
         return allStocks;
     }
+
+    /**
+     * Function to check if the search result got any results
+     * @param jtable
+     */
     private boolean checkTableEmpty(JTable jtable){
         rowCount = jtable.getRowCount();
         if(rowCount <= 0){
-            System.out.println(true);
             return true;
         }
-        System.out.println(false);
         return false;
     }
+
+    /**
+     * Function to set the textfield background to red if no search results were found
+     * @param table
+     * @param searchStockItem
+     */
     private void setBackgroundColorSearchFields(JTable table, JTextField searchStockItem) {
         if(checkTableEmpty(table)){
             searchStockItem.setBackground(new Color(247, 117, 114));
@@ -185,6 +210,9 @@ public class StockView extends JPanel implements ViewBuilder {
         }
     }
 
+    /**
+     * Class to make a table model with the following data: "Product ID", "Product naam" and "Voorraad"
+     */
     class VoorraadModel extends AbstractTableModel {
 
         private String[] columnNames = {"Product ID", "Product naam", "Voorraad"};
@@ -204,6 +232,12 @@ public class StockView extends JPanel implements ViewBuilder {
 
         }
 
+        /**
+         * Class to get the type of the columns.
+         * Needed for being able to sort correctly
+         * @param column  the column being queried
+         * @return
+         */
         //https://stackoverflow.com/questions/6592192/why-does-my-jtable-sort-an-integer-column-incorrectly
         @Override
         public Class getColumnClass(int column) {
@@ -233,12 +267,19 @@ public class StockView extends JPanel implements ViewBuilder {
         }
     };
 
+    /**
+     * Class to set the alignment of the text in a column to the left
+     */
     //https://stackoverflow.com/questions/3467052/set-right-alignment-in-jtable-column
     public class LeftTableCellRenderer extends DefaultTableCellRenderer {
         protected LeftTableCellRenderer() {
             setHorizontalAlignment(JLabel.LEFT);  }
 
     }
+
+    /**
+     * Class to set the alignment of the text in a column to the center
+     */
     public class MiddleTableCellRenderer extends DefaultTableCellRenderer {
         protected MiddleTableCellRenderer() {
             setHorizontalAlignment(JLabel.CENTER);  }

@@ -19,7 +19,7 @@ public class Stockitemholdings {
 
     }
 
-        public Stockitemholdings(int stockItemID, int quantityOnHand, String binLocation, int lastStocktakeQuantity, double lastCostPrice, int reorderLevel, int targetStockLevel, int lastEditedBy, Date lastEditedWhen) {
+    public Stockitemholdings(int stockItemID, int quantityOnHand, String binLocation, int lastStocktakeQuantity, double lastCostPrice, int reorderLevel, int targetStockLevel, int lastEditedBy, Date lastEditedWhen) {
         this.stockItemID = stockItemID;
         this.quantityOnHand = quantityOnHand;
         this.binLocation = binLocation;
