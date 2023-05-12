@@ -93,7 +93,6 @@ public class OrderDao {
 
     /**
      * Retrieves all orders from the database.
-     *
      * @param con the database connection object.
      * @return a List of all orders in the database.
      * @throws SQLException if the query failed.
