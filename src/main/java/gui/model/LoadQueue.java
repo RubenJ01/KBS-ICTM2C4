@@ -33,6 +33,8 @@ public class LoadQueue {
 
     }
 
+
+
     public static void removeQueue() {
         LoadView.model.removeAllElements();
         queue.clear();

@@ -1,8 +1,12 @@
 package serial;
 
 import com.fazecast.jSerialComm.SerialPort;
+import gui.model.LoadModel;
 
+import java.util.Arrays;
 import java.util.concurrent.Executors;
+
+import static gui.view.LoadView.model;
 
 public class SerialCommunication {
 
@@ -26,16 +30,18 @@ public class SerialCommunication {
 
     //sends the locations to the robot
     public void sendData() {
+        //make controller pas als actie is ondernomen voer actie uit
         Executors.newSingleThreadExecutor().execute(() -> {
             if (port.openPort()) {
                 try {
                     //needs to be changed into the location of products
-                    byte[] data = {1, 5};
+                    byte[] data = {(byte) 1, (byte) 5};
+                    System.out.println(Arrays.toString(data));
                     // ^ change into locations
                     port.getOutputStream().write(data);
                     port.getOutputStream().flush();
                     //this is here to ensure that there is enough time to effectively send the bites (DO NOT REMOVE)
-                    Thread.sleep(2000);
+                    Thread.sleep(7000);
                     port.writeBytes(data, data.length);
                     //just to check if the information is sent and received back
                     byte[] buffer = new byte[2];
@@ -54,5 +60,6 @@ public class SerialCommunication {
             }
         });
     }
+
 
 }
