@@ -1,9 +1,10 @@
 package gui;
 
 import constants.Constants;
-import gui.view.LoadView;
+import gui.view.PackageView;
 import gui.view.OrderView;
 import gui.view.StockView;
+import serial.SerialCommunication;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +13,8 @@ import java.awt.*;
  * This is the MainFrame of our application.
  */
 public class MainFrame implements ViewBuilder {
+
+    public static JFrame mainWindow;
 
     public MainFrame() {
         buildAndShowView();
@@ -31,6 +34,7 @@ public class MainFrame implements ViewBuilder {
 
     @Override
     public void buildAndShowView() {
+
         getBounds();
         JFrame mainWindow = new JFrame();
         mainWindow.setLayout(new BorderLayout());
@@ -62,7 +66,7 @@ public class MainFrame implements ViewBuilder {
         root.add("main", new MainWindow(cardLayout, root));
         root.add("orderView", new OrderView(cardLayout, root));
         root.add("stockView", new StockView(cardLayout, root));
-        root.add("loadView", new LoadView(cardLayout, root));
+        root.add("loadView", new PackageView(cardLayout, root));
 
         return splitPane;
     }

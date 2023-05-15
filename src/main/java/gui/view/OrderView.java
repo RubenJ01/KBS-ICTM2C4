@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -41,7 +43,7 @@ public class OrderView extends JPanel implements ViewBuilder {
         try (Connection con = DatabaseConnection.getConnection()) {
             allOrders.addAll(this.orderDao.getAllOrders(con));
         } catch (SQLException e) {
-            logger.error(e.getMessage());
+            e.printStackTrace();
         }
 
         JList<Order> orderList = new JList<>(allOrders.toArray(new Order[0]));
@@ -69,7 +71,23 @@ public class OrderView extends JPanel implements ViewBuilder {
         JLabel searchOrder = new JLabel("Zoeken:");
         JTextField searchOrderTextField = new JTextField();
         searchOrderTextField.setPreferredSize(new Dimension(Constants.SCREEN_WIDTH / 20, Constants.SCREEN_HEIGHT / 27));
-        searchOrderTextField.addActionListener((e) -> orderController.searchTextField(e, orderList, allOrders));
+        searchOrderTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                searchTextField(orderList, allOrders, searchOrderTextField.getText());
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                searchTextField(orderList, allOrders, searchOrderTextField.getText());
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                searchTextField(orderList, allOrders, searchOrderTextField.getText());
+            }
+            public void searchTextField(JList<Order> orderList, List<Order> allOrders, String search) {
+                orderController.searchTextField(orderList, allOrders, searchOrderTextField.getText());
+            }
+        });
         orderBottomBarButtons.add(searchOrder);
         orderBottomBarButtons.add(searchOrderTextField);
 

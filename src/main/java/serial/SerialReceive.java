@@ -1,6 +1,8 @@
 package serial;
 import com.fazecast.jSerialComm.SerialPort;
 
+import java.util.concurrent.Executors;
+
 public class SerialReceive {
     public static byte readByteFromSerialPort() {
         // Find the serial port with the Arduino connected
@@ -46,4 +48,3 @@ public class SerialReceive {
         }
     }
 }
-
