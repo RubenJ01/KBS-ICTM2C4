@@ -69,8 +69,8 @@ public class StockView extends JPanel implements ViewBuilder {
 
         //Sorting and searching
         TableRowSorter<VoorraadModel> sorter = new TableRowSorter<>(voorraadModel);
-        searchStockItemID.getDocument().addDocumentListener(getDocumentListenerStockItemID(searchStockItemID, table, sorter));
-        searchStockItemName.getDocument().addDocumentListener(getDocumentListenerStockItemName(searchStockItemName, table, sorter));
+        searchStockItemID.getDocument().addDocumentListener(getDocumentListenerStockItemID(table, sorter));
+        searchStockItemName.getDocument().addDocumentListener(getDocumentListenerStockItemName(table, sorter));
         table.setRowSorter(sorter);
 
 
@@ -91,31 +91,30 @@ public class StockView extends JPanel implements ViewBuilder {
     /**
      * Function to search on StockItemName in the table with automatic search results
      * Also sets textfield background to red if no products were found using the search
-     * @param searchStockItemName
      * @param jtable
      * @param sorter
      */
-    private DocumentListener getDocumentListenerStockItemName(JTextField searchStockItemName, JTable jtable, TableRowSorter<VoorraadModel> sorter) {
+    private DocumentListener getDocumentListenerStockItemName(JTable jtable, TableRowSorter<VoorraadModel> sorter) {
         return new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 search(searchStockItemName.getText());
                 checkTableEmpty(jtable);
-                setBackgroundColorSearchFields(jtable, searchStockItemName);
+                setBackgroundColorSearchFields(jtable);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 search(searchStockItemName.getText());
                 checkTableEmpty(jtable);
-                setBackgroundColorSearchFields(jtable, searchStockItemName);
+                setBackgroundColorSearchFields(jtable);
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
                 search(searchStockItemName.getText());
                 checkTableEmpty(jtable);
-                setBackgroundColorSearchFields(jtable, searchStockItemName);
+                setBackgroundColorSearchFields(jtable);
             }
 
             public void search(String str) {
@@ -133,31 +132,30 @@ public class StockView extends JPanel implements ViewBuilder {
     /**
      * Function to search on StockItemID in the table with automatic search results
      * Also sets textfield background to red if no products were found using the search
-     * @param searchStockItemID
      * @param jtable
      * @param sorter
      */
-    private DocumentListener getDocumentListenerStockItemID(JTextField searchStockItemID, JTable jtable, TableRowSorter<VoorraadModel> sorter) {
+    private DocumentListener getDocumentListenerStockItemID(JTable jtable, TableRowSorter<VoorraadModel> sorter) {
         return new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 search(searchStockItemID.getText());
                 checkTableEmpty(jtable);
-                setBackgroundColorSearchFields(jtable, searchStockItemID);
+                setBackgroundColorSearchFields(jtable);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 search(searchStockItemID.getText());
                 checkTableEmpty(jtable);
-                setBackgroundColorSearchFields(jtable, searchStockItemID);
+                setBackgroundColorSearchFields(jtable);
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
                 search(searchStockItemID.getText());
                 checkTableEmpty(jtable);
-                setBackgroundColorSearchFields(jtable, searchStockItemID);
+                setBackgroundColorSearchFields(jtable);
             }
 
             public void search(String str) {
@@ -199,14 +197,15 @@ public class StockView extends JPanel implements ViewBuilder {
     /**
      * Function to set the textfield background to red if no search results were found
      * @param table
-     * @param searchStockItem
      */
-    private void setBackgroundColorSearchFields(JTable table, JTextField searchStockItem) {
+    private void setBackgroundColorSearchFields(JTable table) {
         if(checkTableEmpty(table)){
-            searchStockItem.setBackground(new Color(247, 117, 114));
+            searchStockItemID.setBackground(new Color(247, 117, 114));
+            searchStockItemName.setBackground(new Color(247, 117, 114));
         }
         else{
-            searchStockItem.setBackground(Color.WHITE);
+            searchStockItemID.setBackground(Color.WHITE);
+            searchStockItemName.setBackground(Color.WHITE);
         }
     }
 
