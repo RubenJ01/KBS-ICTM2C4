@@ -1,11 +1,12 @@
 package database.model;
 
-public class Stockitems {
+public class StockItem {
+
     private final Integer stockItemID;
     private final String stockItemName;
-    private final Stockitemholdings stockitemholdings;
+    private final StockItemHolding stockitemholdings;
 
-    public Stockitems(Integer stockItemID, String stockItemName, Stockitemholdings stockitemholdings) {
+    public StockItem(Integer stockItemID, String stockItemName, StockItemHolding stockitemholdings) {
         this.stockItemID = stockItemID;
         this.stockItemName = stockItemName;
         this.stockitemholdings = stockitemholdings;
@@ -19,7 +20,12 @@ public class Stockitems {
         return stockItemName;
     }
 
-    public Stockitemholdings getStockitemholdings() {
+    public StockItemHolding getStockitemholdings() {
         return stockitemholdings;
+    }
+
+    @Override
+    public String toString() {
+        return this.stockItemName;
     }
 }

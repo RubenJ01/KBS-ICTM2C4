@@ -8,12 +8,16 @@ import gui.ViewBuilder;
 import gui.controller.OrderController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class OrderView extends JPanel implements ViewBuilder {
 
@@ -22,29 +26,25 @@ public class OrderView extends JPanel implements ViewBuilder {
     private final NavbarView navbarView;
     private final OrderDao orderDao;
     private final OrderController orderController;
+    private final List<Order> allOrders = new ArrayList<>();
+    private final DefaultListModel<Order> orderListModel;
+    private JLabel totalOrders;
 
     public OrderView(CardLayout layout, JPanel root) {
         this.navbarView = new NavbarView(layout, root);
         this.orderDao = OrderDao.getInstance();
         this.orderController = new OrderController(layout, root);
+        this.orderListModel = new DefaultListModel<>();
         buildAndShowView();
     }
 
     @Override
     public void buildAndShowView() {
         this.setLayout(new BorderLayout());
-
         this.add(navbarView, BorderLayout.NORTH);
 
-        List<Order> allOrders = new ArrayList<>();
-        try (Connection con = DatabaseConnection.getConnection()) {
-            allOrders.addAll(this.orderDao.getAllOrders(con));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-        }
-
-        JList<Order> orderList = new JList<>(allOrders.toArray(new Order[0]));
+        JList<Order> orderList = new JList<>();
+        orderList.setModel(orderListModel);
         orderList.setSelectionBackground(Color.GRAY);
         JScrollPane scrollPane = new JScrollPane(orderList);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -66,14 +66,49 @@ public class OrderView extends JPanel implements ViewBuilder {
         editOrder.addActionListener(orderController::editButton);
         orderBottomBarButtons.add(editOrder);
 
-        JLabel searchOrder = new JLabel("Zoeken:");
+        JLabel filterOrder = new JLabel("Filters:");
+        JCheckBox filterPickedOrder = new JCheckBox("Niet Gepickt");
+        filterPickedOrder.addActionListener(e -> orderController.filterPickedOrder(orderList, filterPickedOrder.isSelected(), orderListModel));
+
         JTextField searchOrderTextField = new JTextField();
+        searchOrderTextField.setText("Zoeken...");
         searchOrderTextField.setPreferredSize(new Dimension(Constants.SCREEN_WIDTH / 20, Constants.SCREEN_HEIGHT / 27));
-        searchOrderTextField.addActionListener((e) -> orderController.searchTextField(e, orderList, allOrders));
-        orderBottomBarButtons.add(searchOrder);
+        searchOrderTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                orderController.searchTextField(orderList, orderListModel, searchOrderTextField.getText(), filterPickedOrder);
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+               orderController.searchTextField(orderList, orderListModel, searchOrderTextField.getText(), filterPickedOrder);
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                orderController.searchTextField(orderList, orderListModel, searchOrderTextField.getText(), filterPickedOrder);
+            }
+        });
+
+        // add a placeholder to the searchOrderTextField
+        searchOrderTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (searchOrderTextField.getText().equals("Zoeken...")) {
+                    searchOrderTextField.setText("");
+                }
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (searchOrderTextField.getText().isEmpty()) {
+                    searchOrderTextField.setText("Zoeken...");
+                }
+            }
+        });
+
         orderBottomBarButtons.add(searchOrderTextField);
 
-        JLabel totalOrders = new JLabel(String.format("Totaal aantal orders: %d", allOrders.size()));
+
+        orderBottomBarButtons.add(filterOrder);
+        orderBottomBarButtons.add(filterPickedOrder);
+
+        this.totalOrders = new JLabel(String.format("Totaal aantal orders: %d", allOrders.size()));
 
         JPanel orderBottomBarText = new JPanel();
         orderBottomBarText.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -83,6 +118,22 @@ public class OrderView extends JPanel implements ViewBuilder {
 
         this.add(orderBottomBar, BorderLayout.SOUTH);
 
+        Executors.newSingleThreadExecutor().execute(() -> {
+            loadAllOrders(orderListModel);
+        });
+
         this.setVisible(true);
     }
+
+    /**
+     * Loads all order objects from the database in a separate thread and adds them to the list.
+     */
+    public void loadAllOrders(DefaultListModel<Order> orderDefaultListModel) {
+        try (Connection con = DatabaseConnection.getConnection()) {
+            this.allOrders.addAll(this.orderDao.getAllOrders(con, orderDefaultListModel, totalOrders));
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
 }

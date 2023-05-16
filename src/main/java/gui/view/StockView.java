@@ -9,7 +9,6 @@ import gui.controller.StockController;
 import gui.model.StockModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.ls.LSOutput;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

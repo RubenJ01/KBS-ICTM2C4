@@ -46,6 +46,10 @@ public class Order {
         this.orderLines = orderLines;
     }
 
+    public Order() {
+        this.orderId = -1;
+    }
+
     public int getOrderId() {
         return orderId;
     }
@@ -168,6 +172,10 @@ public class Order {
 
     public void setLastEditedWhen(Date lastEditedWhen) {
         this.lastEditedWhen = lastEditedWhen;
+    }
+
+    public boolean isPicked() {
+    	return this.pickingCompletedWhen != null;
     }
 
     @Override

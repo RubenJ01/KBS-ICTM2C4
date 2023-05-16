@@ -27,7 +27,6 @@ public class StockitemsDao {
         return instance;
     }
 
-
     /**
      * Funtion to receive stock information by searching on a specific stockItemID
      * @param con
@@ -58,6 +57,7 @@ public class StockitemsDao {
     /**
      * function to receive all stock information from all products in the database
      * @param con
+     * @return
      * @throws SQLException
      */
     public List<Stockitems> getAllStockItemHoldings(Connection con) throws SQLException {
