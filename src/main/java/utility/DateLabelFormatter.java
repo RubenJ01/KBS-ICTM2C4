@@ -5,6 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+/**
+ * This class is used to format the date in the JDatePickerImpl.
+ */
 public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
 
     private final String datePattern = "yyyy-MM-dd";
@@ -15,6 +18,11 @@ public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         return dateFormatter.parseObject(text);
     }
 
+    /**
+     * Converts the value to a string.
+     * @param value Value to convert.
+     * @return String representation of the value.
+     */
     @Override
     public String valueToString(Object value) {
         if (value != null) {

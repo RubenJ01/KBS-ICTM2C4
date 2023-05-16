@@ -174,6 +174,10 @@ public class Order {
         this.lastEditedWhen = lastEditedWhen;
     }
 
+    public boolean isPicked() {
+    	return this.pickingCompletedWhen != null;
+    }
+
     @Override
     public String toString() {
         return String.format("Order ID: %d - Order Date: %s", orderId, orderDate);

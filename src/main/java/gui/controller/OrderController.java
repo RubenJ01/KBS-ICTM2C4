@@ -1,18 +1,15 @@
 package gui.controller;
 
 import database.model.Order;
-import gui.view.OrderView;
 import gui.view.dialog.AddOrderDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class OrderController {
 
@@ -38,31 +35,69 @@ public class OrderController {
     }
 
     /**
-     * Handles searching for a specific order id in the list of orders.
+     * This method is used to search for an order by order id.
      *
-     * @param orderList the JList with all the orders.
-     * @param allOrders the list with all the order objects.
-     * @param search    the search string.
-     * @see Order
+     * @param orderList         JList of orders.
+     * @param orderListModel    DefaultListModel of orders.
+     * @param search            String to search for.
+     * @param filterPickedOrder JCheckBox to filter picked orders.
+     * @see Order for more information about the order.
      */
-    public void searchTextField(JList<Order> orderList, List<Order> allOrders, String search) {
+    public void searchTextField(JList<Order> orderList, DefaultListModel<Order> orderListModel, String search, JCheckBox filterPickedOrder) {
         List<Order> result = new ArrayList<>();
-        try {
-            int orderId = Integer.parseInt(search);
-            for (Order foundOrder : allOrders) {
-                if (String.valueOf(foundOrder.getOrderId()).contains(String.valueOf(orderId))) {
-                    result.add(foundOrder);
+        if (search.equals("Zoeken...") || search.equals("")) {
+            for (int i = 0; i < orderListModel.getSize(); i++) {
+                Order order = orderListModel.getElementAt(i);
+                if (filterPickedOrder.isSelected() && order.getPickingCompletedWhen() != null) {
+                    continue;
                 }
+                result.add(order);
             }
-            if (result.size() > 0) {
-                orderList.setListData(result.toArray(new Order[0]));
-            } else {
-                orderList.setListData(allOrders.toArray(new Order[0]));
+        } else {
+            try {
+                int orderId = Integer.parseInt(search);
+                for (int i = 0; i < orderListModel.getSize(); i++) {
+                    Order order = orderListModel.getElementAt(i);
+                    if (filterPickedOrder.isSelected() && order.getPickingCompletedWhen() != null) {
+                        continue;
+                    }
+                    if (order.getOrderId() == orderId) {
+                        result.add(order);
+                    }
+                }
+            } catch (NumberFormatException ex) {
+                logger.error(ex.getMessage());
             }
-        } catch (NumberFormatException ex) {
-            logger.error(ex.getMessage());
         }
+        orderList.setListData(result.toArray(new Order[0]));
     }
 
 
+    /**
+     * This method is used to filter orders by picked orders.
+     *
+     * @param orderList      JList of orders.
+     * @param isSelected     boolean to check if the checkbox is selected.
+     * @param orderListModel DefaultListModel of orders.
+     * @see Order for more information about the order.
+     */
+    public void filterPickedOrder(JList<Order> orderList, boolean isSelected, DefaultListModel<Order> orderListModel) {
+        if (isSelected) {
+            List<Order> result = new ArrayList<>();
+            for (int i = 0; i < orderListModel.getSize(); i++) {
+                Order order = orderListModel.getElementAt(i);
+                if (order.getPickingCompletedWhen() == null) {
+                    result.add(order);
+                }
+            }
+            orderList.setListData(result.toArray(new Order[0]));
+        } else {
+            List<Order> allOrders = new ArrayList<>();
+            for (int i = 0; i < orderListModel.getSize(); i++) {
+                allOrders.add(orderListModel.getElementAt(i));
+            }
+            orderList.setListData(allOrders.toArray(new Order[0]));
+        }
+    }
 }
+

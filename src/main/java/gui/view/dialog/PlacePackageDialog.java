@@ -27,7 +27,6 @@ public class PlacePackageDialog extends JDialog implements ActionListener {
         cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(this);
 
-
         verderButton = new JButton("Ga verder");
         verderButton.addActionListener(this);
 

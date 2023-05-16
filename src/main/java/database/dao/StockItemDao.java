@@ -76,7 +76,7 @@ public class StockItemDao {
         return stockitems;
     }
 
-    private static StockItem getStockitems(ResultSet rs) throws SQLException {
+    private StockItem getStockitems(ResultSet rs) throws SQLException {
         StockItemHolding stockitemholdings = new StockItemHolding(
                 rs.getInt("StockItemID"),
                 rs.getInt("QuantityOnHand")
