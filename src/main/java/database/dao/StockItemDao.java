@@ -1,7 +1,7 @@
 package database.dao;
 
-import database.model.Stockitemholdings;
-import database.model.Stockitems;
+import database.model.StockItem;
+import database.model.StockItemHolding;
 import database.util.RowLockType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,16 +13,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockitemsDao {
+public class StockItemDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(StockitemsDao.class);
-    private static StockitemsDao instance = null;
+    private static final Logger logger = LoggerFactory.getLogger(StockItemDao.class);
+    private static StockItemDao instance = null;
 
-    private StockitemsDao() {}
+    private StockItemDao() {}
 
-    public static StockitemsDao getInstance() {
+    public static StockItemDao getInstance() {
         if(instance == null) {
-            instance = new StockitemsDao();
+            instance = new StockItemDao();
         }
         return instance;
     }
@@ -34,7 +34,7 @@ public class StockitemsDao {
      * @param rowLockType
      * @throws SQLException
      */
-    public Stockitems getStockByStockItemID(Connection con, int stockItemID, RowLockType rowLockType) throws SQLException {
+    public StockItem getStockByStockItemID(Connection con, int stockItemID, RowLockType rowLockType) throws SQLException {
         String query = rowLockType.getQueryWithLock(
                 "SELECT SI.stockItemID, QuantityOnHand, stockItemName " +
                 "FROM stockitems AS SI " +
@@ -60,12 +60,12 @@ public class StockitemsDao {
      * @return
      * @throws SQLException
      */
-    public List<Stockitems> getAllStockItemHoldings(Connection con) throws SQLException {
+    public List<StockItem> getAllStockItemHoldings(Connection con) throws SQLException {
         String query = "SELECT SI.stockItemID, QuantityOnHand, stockItemName " +
                 "FROM stockitems AS SI " +
                 "LEFT JOIN stockitemholdings AS SIH ON SIH.stockItemID = SI.stockItemID " +
                 "ORDER BY stockItemID";
-        List<Stockitems> stockitems = new ArrayList<>();
+        List<StockItem> stockitems = new ArrayList<>();
         try(PreparedStatement ps = con.prepareStatement(query)) {
             try(ResultSet rs = ps.executeQuery()) {
                 while(rs.next()) {
@@ -82,12 +82,12 @@ public class StockitemsDao {
      * @return new StockItem
      * @throws SQLException
      */
-    private static Stockitems getStockitems(ResultSet rs) throws SQLException {
-        Stockitemholdings stockitemholdings = new Stockitemholdings(
+    private static StockItem getStockitems(ResultSet rs) throws SQLException {
+        StockItemHolding stockitemholdings = new StockItemHolding(
                 rs.getInt("StockItemID"),
                 rs.getInt("QuantityOnHand")
         );
-        return new Stockitems(
+        return new StockItem(
                 rs.getInt("StockItemID"),
                 rs.getString("StockItemName"),
                 stockitemholdings);

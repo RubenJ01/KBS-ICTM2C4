@@ -2,7 +2,7 @@ package database.model;
 
 import java.sql.Date;
 
-public class Stockitemholdings {
+public class StockItemHolding {
     private final int stockItemID;
     private int quantityOnHand;
     private String binLocation;
@@ -13,13 +13,13 @@ public class Stockitemholdings {
     private int lastEditedBy;
     private Date lastEditedWhen;
 
-    public Stockitemholdings(int stockItemID, int quantityOnHand) {
+    public StockItemHolding(int stockItemID, int quantityOnHand) {
         this.stockItemID = stockItemID;
         this.quantityOnHand = quantityOnHand;
 
     }
 
-    public Stockitemholdings(int stockItemID, int quantityOnHand, String binLocation, int lastStocktakeQuantity, double lastCostPrice, int reorderLevel, int targetStockLevel, int lastEditedBy, Date lastEditedWhen) {
+    public StockItemHolding(int stockItemID, int quantityOnHand, String binLocation, int lastStocktakeQuantity, double lastCostPrice, int reorderLevel, int targetStockLevel, int lastEditedBy, Date lastEditedWhen) {
         this.stockItemID = stockItemID;
         this.quantityOnHand = quantityOnHand;
         this.binLocation = binLocation;
