@@ -3,6 +3,7 @@ package gui.view.dialog;
 import database.dao.CustomerDao;
 import database.dao.PeopleDao;
 import database.model.Customer;
+import database.model.Order;
 import database.model.Person;
 import database.util.DatabaseConnection;
 import gui.ViewBuilder;
@@ -28,10 +29,11 @@ public class AddOrderDialog extends JDialog implements ViewBuilder {
 
     private final CustomerDao customerDao = CustomerDao.getInstance();
     private final PeopleDao peopleDao = PeopleDao.getInstance();
-    private final AddOrderController addOrderController = new AddOrderController();
+    private final AddOrderController addOrderController;
 
-    public AddOrderDialog() {
+    public AddOrderDialog(JLabel totalOrders, DefaultListModel<Order> orderListModel) {
         buildAndShowView();
+        this.addOrderController = new AddOrderController(totalOrders, this, orderListModel);
     }
 
     @Override

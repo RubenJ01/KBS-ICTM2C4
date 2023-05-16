@@ -33,8 +33,9 @@ public class OrderView extends JPanel implements ViewBuilder {
     public OrderView(CardLayout layout, JPanel root) {
         this.navbarView = new NavbarView(layout, root);
         this.orderDao = OrderDao.getInstance();
-        this.orderController = new OrderController(layout, root);
+        this.totalOrders = new JLabel();
         this.orderListModel = new DefaultListModel<>();
+        this.orderController = new OrderController(layout, root, totalOrders, orderListModel);
         buildAndShowView();
     }
 
@@ -103,12 +104,10 @@ public class OrderView extends JPanel implements ViewBuilder {
         });
 
         orderBottomBarButtons.add(searchOrderTextField);
-
-
         orderBottomBarButtons.add(filterOrder);
         orderBottomBarButtons.add(filterPickedOrder);
 
-        this.totalOrders = new JLabel(String.format("Totaal aantal orders: %d", allOrders.size()));
+        this.totalOrders.setText(String.format("Totaal aantal orders: %d", allOrders.size()));
 
         JPanel orderBottomBarText = new JPanel();
         orderBottomBarText.setLayout(new FlowLayout(FlowLayout.RIGHT));

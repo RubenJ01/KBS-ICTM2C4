@@ -18,18 +18,26 @@ public class OrderController {
     private final JPanel root;
     private final JDialog addOrderDialog;
 
-    public OrderController(CardLayout layout, JPanel root) {
+    public OrderController(CardLayout layout, JPanel root, JLabel totalOrders, DefaultListModel<Order> orderListModel) {
         this.layout = layout;
         this.root = root;
-        this.addOrderDialog = new AddOrderDialog();
+        this.addOrderDialog = new AddOrderDialog(totalOrders, orderListModel);
     }
 
+    /**
+     *
+     * @param e
+     */
     public void editButton(ActionEvent e) {
 
     }
 
+    /**
+     * This method is used to open the JDialog to add an order.
+     * @param e ActionEvent to check if the button is clicked.
+     */
     public void addButton(ActionEvent e) {
-        if (!this.addOrderDialog.isActive()) {
+        if (!this.addOrderDialog.isActive() || !this.addOrderDialog.isVisible()) {
             this.addOrderDialog.setVisible(true);
         }
     }

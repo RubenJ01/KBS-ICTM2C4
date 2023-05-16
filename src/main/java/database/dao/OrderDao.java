@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +15,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is responsible for all the queries made to the database regarding orders.
+ */
 public class OrderDao {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderDao.class);
@@ -64,9 +68,10 @@ public class OrderDao {
      * Retrieves all orders from the database and adds them to the list model.
      * This method should never be used outside of OrderView.
      * It blocks the EDT for a long time.
-     * @param con the database connection object.
+     *
+     * @param con                   the database connection object.
      * @param orderDefaultListModel the list model to add the orders to.
-     * @param orderAmount the label to set the amount of orders to.
+     * @param orderAmount           the label to set the amount of orders to.
      * @return a list of all orders.
      * @throws SQLException if the query failed.
      */
@@ -88,12 +93,21 @@ public class OrderDao {
                     Thread.sleep(100);
                 }
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | ArrayIndexOutOfBoundsException e) {
             logger.error(e.getMessage());
         }
         return allOrders;
     }
 
+    /**
+     * Retrieves all order lines from a specific order.
+     *
+     * @param con     the database connection object.
+     * @param query   the query to execute.
+     * @param orderId the id of the order you want to retrieve the order lines from.
+     * @return a list of order lines.
+     * @throws SQLException if the query failed.
+     */
     private List<OrderLine> getOrderLines(Connection con, String query, int orderId) throws SQLException {
         List<OrderLine> orderLines = new ArrayList<>();
         try (PreparedStatement ps = con.prepareStatement(query)) {
@@ -103,11 +117,20 @@ public class OrderDao {
                     OrderLine orderLine = createOrderLineFromResultSet(rs);
                     orderLines.add(orderLine);
                 }
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
             }
         }
         return orderLines;
     }
 
+    /**
+     * Creates an order from a result set.
+     * @param rs the result set to create the order from.
+     * @param orderLines the order lines to add to the order.
+     * @return the order as an object.
+     * @throws SQLException if the query failed.
+     */
     private Order createOrderFromResultSet(ResultSet rs, List<OrderLine> orderLines) throws SQLException {
         return new Order(
                 rs.getInt("OrderID"),
@@ -130,8 +153,15 @@ public class OrderDao {
         );
     }
 
+    /**
+     * Creates an order line from a result set.
+     *
+     * @param rs the result set to create the order line from.
+     * @return the order line as an object.
+     * @throws SQLException if the query failed.
+     */
     private OrderLine createOrderLineFromResultSet(ResultSet rs) throws SQLException {
-        OrderLine orderLine = new OrderLine(
+        return new OrderLine(
                 rs.getInt("OrderLineID"),
                 rs.getInt("OrderID"),
                 rs.getInt("StockItemID"),
@@ -145,13 +175,25 @@ public class OrderDao {
                 rs.getInt("LastEditedBy"),
                 rs.getDate("LastEditedWhen")
         );
-        return orderLine;
     }
 
+    /**
+     * Adds orders to the list model.
+     *
+     * @param orders                the orders to add.
+     * @param orderDefaultListModel the list model to add the orders to.
+     */
     private void addOrdersToDefaultListModel(List<Order> orders, DefaultListModel<Order> orderDefaultListModel) {
-        orders.forEach(orderDefaultListModel::addElement);
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                for (Order order : orders) {
+                    orderDefaultListModel.addElement(order);
+                }
+            });
+        } catch (InterruptedException | InvocationTargetException e) {
+            logger.error(e.getMessage());
+        }
     }
-
 
     /**
      * Adds an order to the database.
@@ -162,9 +204,8 @@ public class OrderDao {
      */
     public void addOrder(Connection con, Order order) throws SQLException {
         String query = "INSERT INTO orders(CustomerID, OrderDate, ExpectedDeliveryDate, IsUndersupplyBackordered, " +
-                "LastEditedBy, LastEditedWhen, SalespersonPersonID, ContactPersonID) VALUES (?,?,?,?,?,?,?,?)";
+                "LastEditedBy, LastEditedWhen, SalespersonPersonID, ContactPersonID, OrderID) VALUES (?,?,?,?,?,?,?,?,?)";
         try (PreparedStatement ps = con.prepareStatement(query)) {
-            System.out.println(order);
             ps.setInt(1, order.getCustomerId());
             ps.setDate(2, order.getOrderDate());
             ps.setDate(3, order.getExpectedDeliveryDate());
@@ -173,9 +214,33 @@ public class OrderDao {
             ps.setDate(6, order.getLastEditedWhen());
             ps.setInt(7, order.getSalespersonPersonId());
             ps.setInt(8, order.getContactPersonId());
+            ps.setInt(9, order.getOrderId());
             ps.executeUpdate();
         }
     }
 
+    /**
+     * Retrieves the newest order from the database.
+     *
+     * @param con         the database connection object.
+     * @param rowLockType the row lock type.
+     * @return the newest order.
+     * @throws SQLException if the query failed.
+     */
+    public Order getNewestOrder(Connection con, RowLockType rowLockType) throws SQLException {
+        String getLatestOrderQuery = rowLockType.getQueryWithLock("SELECT * FROM orders ORDER BY OrderID DESC LIMIT 1");
+        String getAllOrderLines = rowLockType.getQueryWithLock("SELECT * FROM orderlines WHERE OrderID = ?");
+        try (PreparedStatement ps = con.prepareStatement(getLatestOrderQuery)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int orderId = rs.getInt("OrderID");
+                List<OrderLine> orderLines = getOrderLines(con, getAllOrderLines, orderId);
+                return createOrderFromResultSet(rs, orderLines);
+            }
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
+        return null;
+    }
 
 }

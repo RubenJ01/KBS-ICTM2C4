@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Order {
 
-    private final int orderId;
+    private int orderId;
     private int customerId;
     private int salespersonPersonId;
     private int pickedByPersonId;
@@ -176,6 +176,10 @@ public class Order {
 
     public boolean isPicked() {
     	return this.pickingCompletedWhen != null;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     @Override
