@@ -49,6 +49,8 @@ public class OrderView extends JPanel implements ViewBuilder {
         JList<Order> orderList = new JList<>();
         orderList.setModel(orderListModel);
         orderList.setSelectionBackground(Color.GRAY);
+        orderList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        orderList.addListSelectionListener(e -> orderController.listSelectionListener(orderList));
         JScrollPane scrollPane = new JScrollPane(orderList);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         this.add(scrollPane, BorderLayout.CENTER);
@@ -66,7 +68,7 @@ public class OrderView extends JPanel implements ViewBuilder {
         orderBottomBarButtons.add(addOrder);
 
         JButton editOrder = new JButton("Bewerken");
-        editOrder.addActionListener(e -> orderController.editButton(e, orderList));
+        editOrder.addActionListener(e -> orderController.editButton(orderList));
         orderBottomBarButtons.add(editOrder);
 
         JLabel filterOrder = new JLabel("Filters:");

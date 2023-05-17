@@ -182,6 +182,10 @@ public class Order {
         this.orderId = orderId;
     }
 
+    public List<OrderLine> getOrderLines() {
+        return orderLines;
+    }
+
     @Override
     public String toString() {
         return String.format("Order ID: %d - Order Date: %s", orderId, orderDate);

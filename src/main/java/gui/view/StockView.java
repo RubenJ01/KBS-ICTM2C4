@@ -184,10 +184,7 @@ public class StockView extends JPanel implements ViewBuilder {
      */
     private boolean checkTableEmpty(JTable jtable){
         rowCount = jtable.getRowCount();
-        if(rowCount <= 0){
-            return true;
-        }
-        return false;
+        return rowCount <= 0;
     }
 
     /**

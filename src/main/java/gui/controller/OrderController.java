@@ -30,14 +30,14 @@ public class OrderController {
 
     /**
      * This method is used to open the JDialog to edit an order.
-     * @param e ActionEvent to check if the button is clicked.
      */
-    public void editButton(ActionEvent e, JList<Order> orderList) {
+    public void editButton(JList<Order> orderList) {
         if (!this.editOrderDialog.isActive() || !this.editOrderDialog.isVisible()) {
             if(orderList.getSelectedIndex() == -1) {
                 JOptionPane.showMessageDialog(null, "Selecteer een order om te bewerken.");
                 return;
             }
+            EditOrderDialog.order = orderList.getSelectedValue();
             this.editOrderDialog.setVisible(true);
         }
     }
@@ -123,6 +123,19 @@ public class OrderController {
             orderList.setListData(allOrders.toArray(new Order[0]));
             currentVisibleOrders.setText(String.format("Aantal zichtbare orders: %d", allOrders.size()));
         }
+    }
+
+    /**
+     * This method is called when an order is selected in the JList.
+     * @param orderList JList of orders.
+     */
+    public void listSelectionListener(JList<Order> orderList) {
+        if (orderList.getSelectedIndex() == -1) {
+            return;
+        }
+        EditOrderDialog.order = orderList.getSelectedValue();
+        // not very pretty but this refreshed the dialog
+        this.editOrderDialog.setVisible(false);
     }
 }
 

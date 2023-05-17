@@ -246,4 +246,59 @@ public class OrderDao {
         return null;
     }
 
+    /**
+     * Updates an order in the database.
+     * @param con the database connection object.
+     * @param order the order you want to update.
+     * @throws SQLException if the query failed.
+     */
+    public void updateOrder(Connection con, Order order) throws SQLException {
+        String query = "UPDATE orders SET CustomerID = ?, OrderDate = ?, ExpectedDeliveryDate = ?, IsUndersupplyBackordered = ?, " +
+                "LastEditedBy = ?, LastEditedWhen = ?, SalespersonPersonID = ?, ContactPersonID = ?, OrderID = ? WHERE OrderID = ?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, order.getCustomerId());
+            ps.setDate(2, order.getOrderDate());
+            ps.setDate(3, order.getExpectedDeliveryDate());
+            ps.setInt(4, order.getIsUndersupplyBackordered());
+            ps.setInt(5, order.getLastEditedBy());
+            ps.setDate(6, order.getLastEditedWhen());
+            ps.setInt(7, order.getSalespersonPersonId());
+            ps.setInt(8, order.getContactPersonId());
+            ps.setInt(9, order.getOrderId());
+            ps.setInt(10, order.getOrderId());
+
+            for (OrderLine orderLine : order.getOrderLines()) {
+                updateOrderLine(con, orderLine);
+            }
+            ps.executeUpdate();
+        }
+
+    }
+
+    /**
+     * Updates an order line in the database.
+     * @param con the database connection object.
+     * @param orderLine the order line you want to update.
+     */
+    private void updateOrderLine(Connection con, OrderLine orderLine) {
+        String query = "UPDATE orderlines SET OrderID = ?, StockItemID = ?, Description = ?, PackageTypeID = ?, Quantity = ?, UnitPrice = ?, TaxRate = ?, PickedQuantity = ?, PickingCompletedWhen = ?, LastEditedBy = ?, LastEditedWhen = ? WHERE OrderLineID = ?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, orderLine.getOrderId());
+            ps.setInt(2, orderLine.getStockItemId());
+            ps.setString(3, orderLine.getDescription());
+            ps.setInt(4, orderLine.getPackageTypeId());
+            ps.setInt(5, orderLine.getQuantity());
+            ps.setFloat(6, orderLine.getUnitPrice());
+            ps.setFloat(7, orderLine.getTaxRate());
+            ps.setInt(8, orderLine.getPickedQuantity());
+            ps.setDate(9, orderLine.getPickingCompletedWhen());
+            ps.setInt(10, orderLine.getLastEditedBy());
+            ps.setDate(11, orderLine.getLastEditedWhen());
+            ps.setInt(12, orderLine.getOrderLineId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
 }
