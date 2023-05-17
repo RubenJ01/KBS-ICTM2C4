@@ -1,7 +1,7 @@
 package database.dao;
 
-import database.model.StockItemHolding;
 import database.model.StockItem;
+import database.model.StockItemHolding;
 import database.util.RowLockType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +28,10 @@ public class StockItemDao {
     }
 
     /**
-     * gets stock from item by searching on StockItemID
+     * Funtion to receive stock information by searching on a specific stockItemID
      * @param con
      * @param stockItemID
      * @param rowLockType
-     * @return new Stockitemholdings object
      * @throws SQLException
      */
     public StockItem getStockByStockItemID(Connection con, int stockItemID, RowLockType rowLockType) throws SQLException {
@@ -54,8 +53,9 @@ public class StockItemDao {
         }
     }
 
+
     /**
-     *
+     * function to receive all stock information from all products in the database
      * @param con
      * @return
      * @throws SQLException
@@ -76,7 +76,13 @@ public class StockItemDao {
         return stockitems;
     }
 
-    private StockItem getStockitems(ResultSet rs) throws SQLException {
+    /**
+     * Function to put a result set in a list
+     * @param rs
+     * @return new StockItem
+     * @throws SQLException
+     */
+    private static StockItem getStockitems(ResultSet rs) throws SQLException {
         StockItemHolding stockitemholdings = new StockItemHolding(
                 rs.getInt("StockItemID"),
                 rs.getInt("QuantityOnHand")

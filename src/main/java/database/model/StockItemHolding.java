@@ -3,7 +3,6 @@ package database.model;
 import java.sql.Date;
 
 public class StockItemHolding {
-
     private final int stockItemID;
     private int quantityOnHand;
     private String binLocation;
