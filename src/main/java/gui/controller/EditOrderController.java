@@ -20,6 +20,12 @@ public class EditOrderController {
     }
 
 
+    /**
+     * Updates the picked quantity of an orderline.
+     * @param orderLine the orderline to update .
+     * @param pickedQuantity the new picked quantity.
+     * @param order the order to update.
+     */
     public void updatePickedQuantity(OrderLine orderLine, String pickedQuantity, Order order) {
         try {
             int amount = Integer.parseInt(pickedQuantity);
@@ -34,6 +40,12 @@ public class EditOrderController {
         }
     }
 
+    /**
+     * Updates the quantity of an orderline.
+     * @param orderLine the orderline to update.
+     * @param quantity the new quantity.
+     * @param order the order to update.
+     */
     public void updateQuantity(OrderLine orderLine, String quantity, Order order) {
         try {
             int amount = Integer.parseInt(quantity);
