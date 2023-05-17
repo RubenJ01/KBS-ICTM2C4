@@ -31,9 +31,9 @@ public class AddOrderDialog extends JDialog implements ViewBuilder {
     private final PeopleDao peopleDao = PeopleDao.getInstance();
     private final AddOrderController addOrderController;
 
-    public AddOrderDialog(JLabel totalOrders, DefaultListModel<Order> orderListModel) {
+    public AddOrderDialog(JLabel totalOrders, DefaultListModel<Order> orderListModel, JLabel currentVisibleOrders) {
         buildAndShowView();
-        this.addOrderController = new AddOrderController(totalOrders, this, orderListModel);
+        this.addOrderController = new AddOrderController(totalOrders, this, orderListModel, currentVisibleOrders);
     }
 
     @Override

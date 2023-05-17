@@ -67,7 +67,6 @@ public class OrderDao {
     /**
      * Retrieves all orders from the database and adds them to the list model.
      * This method should never be used outside of OrderView.
-     * It blocks the EDT for a long time.
      *
      * @param con                   the database connection object.
      * @param orderDefaultListModel the list model to add the orders to.
@@ -75,7 +74,8 @@ public class OrderDao {
      * @return a list of all orders.
      * @throws SQLException if the query failed.
      */
-    public List<Order> getAllOrders(Connection con, DefaultListModel<Order> orderDefaultListModel, JLabel orderAmount) throws SQLException {
+    public List<Order> getAllOrders(Connection con, DefaultListModel<Order> orderDefaultListModel, JLabel orderAmount,
+                                    JLabel currentVisibleOrders) throws SQLException {
         String getAllOrders = "SELECT * FROM orders ORDER BY OrderID";
         String getAllOrderLines = "SELECT * FROM orderlines WHERE OrderID = ?";
         List<Order> allOrders = new ArrayList<>();
@@ -90,10 +90,13 @@ public class OrderDao {
                     addOrdersToDefaultListModel(allOrders, orderDefaultListModel);
                     allOrders.clear();
                     orderAmount.setText(String.format("Totaal aantal orders: %d", orderDefaultListModel.size()));
-                    Thread.sleep(100);
+                    currentVisibleOrders.setText(String.format("Aantal zichtbare orders: %d", orderDefaultListModel.size()));
                 }
             }
-        } catch (InterruptedException | ArrayIndexOutOfBoundsException e) {
+            addOrdersToDefaultListModel(allOrders, orderDefaultListModel);
+            orderAmount.setText(String.format("Totaal aantal orders: %d", orderDefaultListModel.size()));
+            currentVisibleOrders.setText(String.format("Aantal zichtbare orders: %d", orderDefaultListModel.size()));
+        } catch (ArrayIndexOutOfBoundsException e) {
             logger.error(e.getMessage());
         }
         return allOrders;

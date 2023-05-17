@@ -23,11 +23,14 @@ public class AddOrderController {
     private static final Logger logger = LoggerFactory.getLogger(AddOrderController.class);
     private final OrderDao orderDao = OrderDao.getInstance();
     private final JLabel totalOrders;
+    private final JLabel currentVisibleOrders;
     private final JDialog addOrderDialog;
     private final DefaultListModel<Order> orderListModel;
 
-    public AddOrderController(JLabel totalOrders, JDialog addOrderDialog, DefaultListModel<Order> orderListModel) {
+    public AddOrderController(JLabel totalOrders, JDialog addOrderDialog, DefaultListModel<Order> orderListModel,
+                              JLabel currentVisibleOrders) {
         this.totalOrders = totalOrders;
+        this.currentVisibleOrders = currentVisibleOrders;
         this.addOrderDialog = addOrderDialog;
         this.orderListModel = orderListModel;
     }
@@ -55,7 +58,6 @@ public class AddOrderController {
         try(Connection con = DatabaseConnection.getConnection()) {
             con.setAutoCommit(false);
             int newestOrderId = orderDao.getNewestOrder(con, RowLockType.FOR_UPDATE).getOrderId();
-            System.out.println(newestOrderId);
             Order order = new Order();
             Customer customer = (Customer) klantIdField.getSelectedItem();
             order.setCustomerId(customer.getCustomerID());
@@ -79,6 +81,7 @@ public class AddOrderController {
                 int orderCount = Integer.parseInt(digits);
                 this.totalOrders.setText(String.format("Totaal aantal orders: %d", ++orderCount));
             }
+            this.currentVisibleOrders.setText(String.format("Aantal zichtbare orders: %d", this.orderListModel.size() + 1));
             this.orderListModel.addElement(order);
             this.addOrderDialog.dispose();
             con.commit();

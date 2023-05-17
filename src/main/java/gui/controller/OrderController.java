@@ -2,6 +2,7 @@ package gui.controller;
 
 import database.model.Order;
 import gui.view.dialog.AddOrderDialog;
+import gui.view.dialog.EditOrderDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,19 +18,28 @@ public class OrderController {
     private final CardLayout layout;
     private final JPanel root;
     private final JDialog addOrderDialog;
+    private final JDialog editOrderDialog;
 
-    public OrderController(CardLayout layout, JPanel root, JLabel totalOrders, DefaultListModel<Order> orderListModel) {
+    public OrderController(CardLayout layout, JPanel root, JLabel totalOrders, DefaultListModel<Order> orderListModel ,
+                           JLabel currentVisibleOrders) {
         this.layout = layout;
         this.root = root;
-        this.addOrderDialog = new AddOrderDialog(totalOrders, orderListModel);
+        this.addOrderDialog = new AddOrderDialog(totalOrders, orderListModel, currentVisibleOrders);
+        this.editOrderDialog = new EditOrderDialog();
     }
 
     /**
-     *
-     * @param e
+     * This method is used to open the JDialog to edit an order.
+     * @param e ActionEvent to check if the button is clicked.
      */
-    public void editButton(ActionEvent e) {
-
+    public void editButton(ActionEvent e, JList<Order> orderList) {
+        if (!this.editOrderDialog.isActive() || !this.editOrderDialog.isVisible()) {
+            if(orderList.getSelectedIndex() == -1) {
+                JOptionPane.showMessageDialog(null, "Selecteer een order om te bewerken.");
+                return;
+            }
+            this.editOrderDialog.setVisible(true);
+        }
     }
 
     /**
@@ -49,9 +59,11 @@ public class OrderController {
      * @param orderListModel    DefaultListModel of orders.
      * @param search            String to search for.
      * @param filterPickedOrder JCheckBox to filter picked orders.
+     * @param currentVisibleOrders JLabel to show the amount of orders that are visible.
      * @see Order for more information about the order.
      */
-    public void searchTextField(JList<Order> orderList, DefaultListModel<Order> orderListModel, String search, JCheckBox filterPickedOrder) {
+    public void searchTextField(JList<Order> orderList, DefaultListModel<Order> orderListModel, String search,
+                                JCheckBox filterPickedOrder, JLabel currentVisibleOrders) {
         List<Order> result = new ArrayList<>();
         if (search.equals("Zoeken...") || search.equals("")) {
             for (int i = 0; i < orderListModel.getSize(); i++) {
@@ -60,6 +72,7 @@ public class OrderController {
                     continue;
                 }
                 result.add(order);
+                currentVisibleOrders.setText(String.format("Aantal zichtbare orders: %d", result.size()));
             }
         } else {
             try {
@@ -72,9 +85,10 @@ public class OrderController {
                     if (order.getOrderId() == orderId) {
                         result.add(order);
                     }
+                    currentVisibleOrders.setText(String.format("Aantal zichtbare orders: %d", result.size()));
                 }
             } catch (NumberFormatException ex) {
-                logger.error(ex.getMessage());
+                currentVisibleOrders.setText(String.format("Aantal zichtbare orders: %d", result.size()));
             }
         }
         orderList.setListData(result.toArray(new Order[0]));
@@ -89,7 +103,8 @@ public class OrderController {
      * @param orderListModel DefaultListModel of orders.
      * @see Order for more information about the order.
      */
-    public void filterPickedOrder(JList<Order> orderList, boolean isSelected, DefaultListModel<Order> orderListModel) {
+    public void filterPickedOrder(JList<Order> orderList, boolean isSelected, DefaultListModel<Order> orderListModel,
+                                  JLabel currentVisibleOrders) {
         if (isSelected) {
             List<Order> result = new ArrayList<>();
             for (int i = 0; i < orderListModel.getSize(); i++) {
@@ -99,12 +114,14 @@ public class OrderController {
                 }
             }
             orderList.setListData(result.toArray(new Order[0]));
+            currentVisibleOrders.setText(String.format("Aantal zichtbare orders: %d", result.size()));
         } else {
             List<Order> allOrders = new ArrayList<>();
             for (int i = 0; i < orderListModel.getSize(); i++) {
                 allOrders.add(orderListModel.getElementAt(i));
             }
             orderList.setListData(allOrders.toArray(new Order[0]));
+            currentVisibleOrders.setText(String.format("Aantal zichtbare orders: %d", allOrders.size()));
         }
     }
 }
