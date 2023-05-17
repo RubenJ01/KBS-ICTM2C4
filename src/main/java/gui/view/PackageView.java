@@ -1,11 +1,12 @@
 package gui.view;
 
-import constants.Constants;
-import gui.ViewBuilder;
-import gui.controller.PackageController;
+import constants.*;
+import gui.*;
+import gui.controller.*;
 
 import javax.swing.*;
 import java.awt.*;
+
 
 public class PackageView extends JPanel implements ViewBuilder {
 

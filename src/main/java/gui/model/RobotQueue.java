@@ -60,7 +60,7 @@ public class RobotQueue {
 
                     // robot gaat eerst naar beginpunt
 
-                    SerialCommunication.getInstance().sendData(6, 1, 1, true);
+                    SerialCommunication.writeToSerial(6,1);
                     //Dialoog wordt aan gemaakt voor het plaatsen van pakket op palletvork
                     PlacePackageDialog placePackageDialog = new PlacePackageDialog(item);
 
@@ -70,25 +70,23 @@ public class RobotQueue {
 
                 }
 
-            }else {
-            System.out.println("wachtrij is leeg");
-        }
+            } else {
+                System.out.println("wachtrij is leeg");
+            }
 
-        }catch (ConcurrentModificationException e){
+        } catch (ConcurrentModificationException e) {
             System.err.println("opdracht gecancelled");
         }
     }
 
 
-
-
-    public static void removeQueue(){
+    public static void removeQueue() {
         PackageView.model.removeAllElements();
 
         queue.clear();
     }
 
-    public static void removeFirstItem(PackageModel packageModel){
+    public static void removeFirstItem(PackageModel packageModel) {
         queue.remove(packageModel);
         PackageView.model.removeAllElements();
         for (PackageModel item : queue) {
@@ -96,18 +94,19 @@ public class RobotQueue {
         }
     }
 
-    public static void inladen(PackageModel packageModel){
-        int x=packageModel.getLocationX();
-        int y=packageModel.getLocationY();
-        SerialCommunication.getInstance().sendData(x,y,1,true);
+    public static void inladen(PackageModel packageModel) {
+        int x = packageModel.getLocationX();
+        int y = packageModel.getLocationY();
+        SerialCommunication.writeToSerial(x,y);
+        SerialCommunication.setMeldingRobot("A");
 
-
-            // Start de loop in een nieuwe thread
+        // Start de loop in een nieuwe thread
         Executors.newSingleThreadExecutor().execute(() -> {
             // Wacht op "2" van de seriële poort
-            while(true) {
+            while (true) {
+                try {
                 String b = SerialCommunication.getMeldingRobot();
-                if (b.equals("BEREIKT")) {
+                if (b.equals("B")) {
                     SerialCommunication.setMeldingRobot("");
                     System.out.println("Lading is in rack");
                     RackModel.addToRack(packageModel);
@@ -117,29 +116,23 @@ public class RobotQueue {
                     executeQueue();
                     break;
 
-                } else {
-                    SerialCommunication.getInstance().sendData(0, 0, 0, false);
-                    System.out.println("niet ontvangen");
+                }else {
+                    System.out.println(SerialCommunication.getMeldingRobot());
+                }
+                }catch (NullPointerException ex){
+                    System.err.println("b=null");
                 }
             }
-
 
 
         });
 
 
-
     }
 
-    public static boolean CheckIfLoadInRack(){
+    public static boolean CheckIfLoadInRack() {
         return true;
     }
-
-
-
-
-
-
 
 
 }

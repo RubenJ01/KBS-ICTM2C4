@@ -1,133 +1,72 @@
 package serial;
 
-import com.fazecast.jSerialComm.SerialPort;
+import jssc.SerialPort;
+import jssc.SerialPortEvent;
+import jssc.SerialPortEventListener;
+import jssc.SerialPortException;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.concurrent.Executors;
+public class SerialCommunication implements SerialPortEventListener {
+    private static String meldingRobot;
+    private static SerialPort serialPort;
+    private String newdata = "";
+    private StringBuilder receivedDataBuilder = new StringBuilder();
 
-public class SerialCommunication {
-
-    private static SerialCommunication instance = null;
-    private final SerialPort port;
-
-    public int locatieRobot;
-    public static String meldingRobot="";
-
-
-    //initializes the SerialPort with the right COM (you need to change the COM to the correct one in the main)
-    private SerialCommunication(String portName) {
-        port = SerialPort.getCommPort(portName);
-        //sets the communication between java and arduino
-        port.setComPortParameters(9600, 8, 1, 0);
-
-    }
-
-    public static SerialCommunication getInstance() {
-        if (instance == null) {
-            instance = new SerialCommunication("COM4");
+    public SerialCommunication() {
+        // Initialisatie van de seriële communicatie
+        serialPort = new SerialPort("COM6"); // Pas de poortnaam aan indien nodig
+        try {
+            serialPort.openPort();
+            serialPort.setParams(SerialPort.BAUDRATE_9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+            serialPort.addEventListener(this, SerialPort.MASK_RXCHAR);
+        } catch (SerialPortException e) {
+            e.printStackTrace();
         }
-        return instance;
     }
 
-
-
-    //sends the locations to the robot
-    public void sendData(int x, int y, int uitladen,boolean versturen) {
-        //make controller pas als actie is ondernomen voer actie uit
-            //maakt verbinding
+    @Override
+    public void serialEvent(SerialPortEvent event) {
+        if (event.isRXCHAR() && event.getEventValue() > 0) {
             try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                byte[] buffer = serialPort.readBytes(event.getEventValue());
+                String receivedData = new String(buffer);
+                receivedDataBuilder.append(receivedData);
+
+                // Controleer of het volledige getal is ontvangen
+                String completeData;
+                if (receivedDataBuilder.toString().contains("\n")) {
+                    completeData = receivedDataBuilder.toString().trim();
+                    System.out.println("Ontvangen gegevens: " + completeData);
+                    setMeldingRobot(completeData);
+
+                    // Reset de StringBuilder
+                    receivedDataBuilder.setLength(0);
+                } else {
+                    completeData = "null";
+                }
+
+            } catch (SerialPortException e) {
+                e.printStackTrace();
             }
-            port.openPort();
-
-                    //deze variabele gaat over of we gaan sturen naar de Serial of Gaan ontvangen
-                    if(versturen==false) {
-
-                        try {
-                        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 1000, 1000);
-                        InputStream in = port.getInputStream();
-                        StringBuilder buffer = new StringBuilder();
-                        while (true) {
-                            if (in.available() > 0) {
-                                char c = (char) in.read();
-                                if (c == '\n') {
-                                    String data=(buffer.toString());
-                                    buffer.setLength(0);
-
-
-                                  try {
-                                      System.out.println("int:");
-                                      locatieRobot=Integer.parseInt(data);
-                                      System.out.println(locatieRobot);
-                                      break;
-
-
-                                  }catch (NumberFormatException e){
-                                      System.out.println("melding:");
-                                      meldingRobot=data;
-                                      System.out.println(meldingRobot);
-                                      break;
-
-                                  }
-
-
-                                } else {
-                                    buffer.append(c);
-
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        port.closePort();
-                    }
-                    }else {
-                        Executors.newSingleThreadExecutor().execute(() -> {
-                        try {
-                        port.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 500, 500);
-                        //needs to be changed into the location of products
-                        OutputStream outputStream = port.getOutputStream();
-                        int datax = (byte) x;
-                        int datay = (byte) y;
-                        //if uitladen==1 robot--> inladen if uitladen==2 robot-->uitladen
-                        int dataUitladen = (byte) uitladen;
-
-                        Thread.sleep(3000);
-
-                        //Writing data to the serial:
-                        outputStream.write(datax);
-                        outputStream.write(datay);
-                        outputStream.write(dataUitladen);
-
-                        //stuurt alle data in een keer (als een toilet die je doorspoelt)
-                        outputStream.flush();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            port.closePort();
-                        }
-                        });
-                    }
-
-
-
-
+        }
     }
 
 
-    public int getLocatieRobot() {
-        return locatieRobot;
-    }
+    public static void writeToSerial(int x, int y) {
+        try {
+            serialPort.writeByte((byte) y);
+            serialPort.writeByte((byte) x);
+            System.out.println("Data naar seriële poort geschreven: " + x+" "+y);
 
-    public static String getMeldingRobot() {
-        return meldingRobot;
+        } catch (SerialPortException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void setMeldingRobot(String meldingRobot) {
         SerialCommunication.meldingRobot = meldingRobot;
+    }
+
+    public static String getMeldingRobot() {
+        return meldingRobot;
     }
 }
