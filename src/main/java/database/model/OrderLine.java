@@ -17,6 +17,20 @@ public class OrderLine {
     private int lastEditedBy;
     private Date lastEditedWhen;
 
+    public OrderLine(int orderLineId, int orderId, int stockItemId, String description){
+        this.orderLineId = orderLineId;
+        this.orderId     = orderId;
+        this.stockItemId = stockItemId;
+        this.description = description;
+    }
+    public OrderLine(int orderLineId, int orderId, int stockItemId, String description, int quantity){
+        this.orderLineId = orderLineId;
+        this.orderId     = orderId;
+        this.stockItemId = stockItemId;
+        this.description = description;
+        this.quantity = quantity;
+    }
+
     public OrderLine(int orderLineId, int orderId, int stockItemId, String description, int packageTypeId, int quantity,
                      float unitPrice, float taxRate, int pickedQuantity, Date pickingCompletedWhen, int lastEditedBy,
                      Date lastEditedWhen) {

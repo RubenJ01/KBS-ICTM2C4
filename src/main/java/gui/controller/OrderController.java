@@ -1,22 +1,31 @@
 package gui.controller;
 
+import database.dao.OrderDao;
 import database.model.Order;
 import database.model.OrderLine;
+import database.util.DatabaseConnection;
+import database.util.RowLockType;
+import gui.view.OrderView;
 import gui.view.dialog.AddOrderDialog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 public class OrderController {
 
     private final CardLayout layout;
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
     private final JPanel root;
     private final JDialog addOrderDialog;
+    private OrderDao orderDao;
 
 
     public void listSelected(ListSelectionEvent e, JList<Order> orderList, JPanel singleOrder) {
@@ -24,14 +33,24 @@ public class OrderController {
         if (selectedIndex >= 0) {
             Order selectedOrder = orderList.getSelectedValue();
             singleOrder.removeAll();
-            singleOrder.add(new JLabel("Order ID: "));
-            singleOrder.add(new JLabel(String.valueOf(selectedOrder.getOrderId())));
-            singleOrder.add(new JLabel("Datum: "));
-            singleOrder.add(new JLabel(selectedOrder.getOrderDate().toString()));
-            singleOrder.add(new JLabel("Productnaam: "));
-            singleOrder.add(new JLabel(String.valueOf(selectedOrder.getOrderLines().get(selectedOrder.getOrderId()).getDescription())));
-            singleOrder.add(new JLabel("Hoeveelheid: "));
-            singleOrder.add(new JLabel(String.valueOf(selectedOrder.getOrderLines().get(selectedOrder.getOrderId()).getQuantity())));
+            singleOrder.setLayout(new BoxLayout(singleOrder, BoxLayout.Y_AXIS));
+            singleOrder.add(new JLabel("Producten in deze order: "));
+            for (OrderLine orderLine : selectedOrder.getOrderLines()) {
+                if (orderLine.getOrderId() == selectedOrder.getOrderId()) {
+                    JPanel itemPanel = new JPanel();
+                    itemPanel.setLayout(new GridLayout(3,1));
+                    itemPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                    itemPanel.add(new JLabel("Product ID:"));
+                    itemPanel.add(new JLabel(String.valueOf(orderLine.getStockItemId())));
+                    itemPanel.add(new JLabel("Productomschrijving: "));
+                    itemPanel.add(new JLabel(String.valueOf(orderLine.getDescription())));
+                    itemPanel.add(new JLabel("Hoeveelheid: "));
+                    itemPanel.add(new JLabel(String.valueOf(orderLine.getQuantity())));
+
+                    singleOrder.add(itemPanel);
+                }
+            }
+
             singleOrder.revalidate();
             singleOrder.repaint();
         }

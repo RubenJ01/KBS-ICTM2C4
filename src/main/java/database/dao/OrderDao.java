@@ -90,6 +90,54 @@ public class OrderDao {
             }
         }
     }
+    public Order getProductsByOrderId(Connection con, int orderId, RowLockType rowLockType) throws SQLException {
+        String query = rowLockType.getQueryWithLock("SELECT StockItemID, Description FROM orderlines WHERE OrderID = ?");
+        String getProductOrderLines = "SELECT StockItemID, Description FROM orderlines WHERE OrderID = ?";
+        List<OrderLine> orderLines = new ArrayList<>();
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, orderId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    try(PreparedStatement ps2 = con.prepareStatement(getProductOrderLines)) {
+                        ps2.setInt(1, rs.getInt("OrderID"));
+                        try(ResultSet rs2 = ps2.executeQuery()) {
+                            while(rs2.next()) {
+                                orderLines.add(new OrderLine(
+                                        rs2.getInt("OrderLineID"),
+                                        rs2.getInt("OrderID"),
+                                        rs2.getInt("StockItemID"),
+                                        rs2.getString("Description")
+                                    )
+                                );
+                            }
+                        }
+                    }
+                    return new Order(
+                            rs.getInt("OrderID"),
+                            rs.getInt("CustomerID"),
+                            rs.getInt("SalespersonPersonID"),
+                            rs.getInt("PickedByPersonID"),
+                            rs.getInt("ContactPersonID"),
+                            rs.getInt("BackorderOrderID"),
+                            rs.getDate("OrderDate"),
+                            rs.getDate("ExpectedDeliveryDate"),
+                            rs.getString("CustomerPurchaseOrderNumber"),
+                            rs.getInt("IsUndersupplyBackordered"),
+                            rs.getString("Comments"),
+                            rs.getString("DeliveryInstructions"),
+                            rs.getString("InternalComments"),
+                            rs.getDate("PickingCompletedWhen"),
+                            rs.getInt("LastEditedBy"),
+                            rs.getDate("LastEditedWhen"),
+                            orderLines
+                    );
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
+
 
     /**
      * Retrieves all orders from the database.

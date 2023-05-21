@@ -5,6 +5,7 @@ import database.dao.OrderDao;
 import database.model.Order;
 import database.model.OrderLine;
 import database.util.DatabaseConnection;
+import database.util.RowLockType;
 import gui.ViewBuilder;
 import gui.controller.OrderController;
 import org.slf4j.Logger;
