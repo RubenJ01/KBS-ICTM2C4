@@ -2,26 +2,27 @@ package gui.view;
 
 import constants.Constants;
 import gui.ViewBuilder;
-import gui.controller.LoadController;
+import gui.controller.PackageController;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class LoadView extends JPanel implements ViewBuilder {
+public class PackageView extends JPanel implements ViewBuilder {
 
 
     public static JTextField itemnummerInput;
     public static JTextField YInput;
     public static JTextField XInput;
-    public static JLabel Error = new JLabel("");
+    public static JTextField SizeInput;
+
     public static DefaultListModel<String> model = new DefaultListModel<>();
     private final NavbarView navbarView;
-    private final LoadController loadController;
+    private final PackageController loadController;
 
 
-    public LoadView(CardLayout layout, JPanel root) {
+    public PackageView(CardLayout layout, JPanel root) {
         this.navbarView = new NavbarView(layout, root);
-        this.loadController = new LoadController(layout, root);
+        this.loadController = new PackageController(layout, root);
         buildAndShowView();
     }
 
@@ -36,9 +37,8 @@ public class LoadView extends JPanel implements ViewBuilder {
         loadInput.setSize(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT / 10);
 
 
-        loadInput.add(Error);
 
-        JLabel itemnummerText = new JLabel("Itemnummer: ");
+        JLabel itemnummerText = new JLabel("Product Id: ");
         itemnummerText.setFont(new Font("Calibri", Font.BOLD, 20));
         loadInput.add(itemnummerText);
 
@@ -58,6 +58,12 @@ public class LoadView extends JPanel implements ViewBuilder {
         loadInput.add(YText);
         YInput = new JTextField(20);
         loadInput.add(YInput);
+
+        JLabel SizeText = new JLabel("Grootte: ");
+        SizeText.setFont(new Font("Calibri", Font.BOLD, 20));
+        loadInput.add(SizeText);
+        SizeInput = new JTextField(20);
+        loadInput.add(SizeInput);
 
 
         JPanel loadBottomBar = new JPanel();

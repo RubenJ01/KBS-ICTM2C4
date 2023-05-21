@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Order {
 
-    private final int orderId;
+    private int orderId;
     private int customerId;
     private int salespersonPersonId;
     private int pickedByPersonId;
@@ -44,6 +44,10 @@ public class Order {
         this.lastEditedBy = lastEditedBy;
         this.lastEditedWhen = lastEditedWhen;
         this.orderLines = orderLines;
+    }
+
+    public Order() {
+        this.orderId = -1;
     }
 
     public int getOrderId() {
@@ -168,6 +172,18 @@ public class Order {
 
     public void setLastEditedWhen(Date lastEditedWhen) {
         this.lastEditedWhen = lastEditedWhen;
+    }
+
+    public boolean isPicked() {
+    	return this.pickingCompletedWhen != null;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public List<OrderLine> getOrderLines() {
+        return orderLines;
     }
 
     @Override

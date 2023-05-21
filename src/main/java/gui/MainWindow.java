@@ -5,7 +5,7 @@ import gui.view.NavbarView;
 
 import javax.swing.*;
 import java.awt.*;
-
+import constants.Constants;
 /**
  * This is the main window.
  * It's the first window the user sees when the application is started.
