@@ -55,6 +55,20 @@ public class OrderView extends JPanel implements ViewBuilder {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         this.add(scrollPane, BorderLayout.CENTER);
 
+        JPanel singleOrder = new JPanel();
+        singleOrder.setBackground(Color.WHITE);
+
+        orderList.addListSelectionListener(e -> orderController.listSelected(e, orderList, singleOrder));
+        orderList.setSelectionBackground(Color.GRAY);
+
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        JPanel centralPanel = new JPanel();
+        centralPanel.setLayout(new GridLayout(1, 2));
+        centralPanel.add(scrollPane);
+        this.add(centralPanel, BorderLayout.CENTER);
+        centralPanel.add(singleOrder);
+
+
         JPanel orderBottomBarButtons = new JPanel();
         orderBottomBarButtons.setLayout(new FlowLayout(FlowLayout.LEFT));
 
