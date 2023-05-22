@@ -126,6 +126,15 @@ public class OrderLine {
         this.lastEditedWhen = lastEditedWhen;
     }
 
+    /**
+     * Makes a copy of the OrderLine object.
+     * @return A copy of the OrderLine object.
+     */
+    public OrderLine copy() {
+        return new OrderLine(orderLineId, orderId, stockItemId, description, packageTypeId, quantity, unitPrice,
+                taxRate, pickedQuantity, pickingCompletedWhen, lastEditedBy, lastEditedWhen);
+    }
+
     @Override
     public String toString() {
         return "OrderLine{" +

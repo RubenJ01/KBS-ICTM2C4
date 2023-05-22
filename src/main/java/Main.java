@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.sql.SQLException;
+import java.util.function.Predicate;
 //import serial.SerialCommunication;
 
 public class Main {
@@ -31,5 +33,6 @@ public class Main {
         //this is for sending the locations of the products to the robot.
 
         //sending product location ends here.
+
     }
 }
