@@ -1,6 +1,7 @@
 package database.model;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
@@ -186,8 +187,25 @@ public class Order {
         return orderLines;
     }
 
+    /**
+     * Copies the order and returns a new instance of the order.
+     * @return a new instance of the order.
+     */
+    public Order copy() {
+        List<OrderLine> newOrderLines = new ArrayList<>();
+        for (OrderLine orderLine : orderLines) {
+            newOrderLines.add(orderLine.copy());
+        }
+        return new Order(orderId, customerId, salespersonPersonId, pickedByPersonId, contactPersonId, backorderOrderId,
+                orderDate, expectedDeliveryDate, customerPurchaseOrderNumber, isUndersupplyBackordered, comments,
+                deliveryInstructions, internalComments, pickingCompletedWhen, lastEditedBy, lastEditedWhen, newOrderLines);
+    }
+
     @Override
     public String toString() {
         return String.format("Order ID: %d - Order Date: %s", orderId, orderDate);
     }
+
+
+
 }

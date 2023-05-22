@@ -21,6 +21,7 @@ public class EditOrderDialog extends JDialog implements ViewBuilder {
     private final EditOrderController editOrderController;
     private JLabel header;
     private JPanel scrollablePanel;
+    private Order copy;
 
     public EditOrderDialog() {
         this.editOrderController = new EditOrderController();
@@ -53,6 +54,7 @@ public class EditOrderDialog extends JDialog implements ViewBuilder {
     @Override
     public void setVisible(boolean b) {
         super.setVisible(b);
+        this.copy = order.copy();
         updateView();
     }
 
@@ -103,7 +105,7 @@ public class EditOrderDialog extends JDialog implements ViewBuilder {
                 }
 
                 private void updateQuantity() {
-                    editOrderController.updateQuantity(orderLine, quantityField.getText(), order);
+                    editOrderController.updateQuantity(quantityField.getText(), copy, orderLine);
                 }
             });
             orderLinePanel.add(quantityField);
@@ -126,7 +128,7 @@ public class EditOrderDialog extends JDialog implements ViewBuilder {
                 }
 
                 private void updatePickedQuantity() {
-                    editOrderController.updatePickedQuantity(orderLine, pickedQuantityField.getText(), order);
+                    editOrderController.updateQuantity(quantityField.getText(), copy, orderLine);
                 }
             });
             orderLinePanel.add(pickedQuantityField);
@@ -140,5 +142,16 @@ public class EditOrderDialog extends JDialog implements ViewBuilder {
 
             scrollablePanel.add(orderLinePanel);
         });
+
+        JPanel editOrderBottomBar = new JPanel();
+        editOrderBottomBar.setLayout(new GridLayout(1, 2));
+
+        JButton saveButton = new JButton("Opslaan");
+        JButton cancelButton = new JButton("Annuleren");
+
+        editOrderBottomBar.add(saveButton);
+        editOrderBottomBar.add(cancelButton);
+
+        this.add(editOrderBottomBar, BorderLayout.SOUTH);
     }
 }

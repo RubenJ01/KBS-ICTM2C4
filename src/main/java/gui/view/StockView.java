@@ -233,16 +233,11 @@ public class StockView extends JPanel implements ViewBuilder {
         //https://stackoverflow.com/questions/6592192/why-does-my-jtable-sort-an-integer-column-incorrectly
         @Override
         public Class getColumnClass(int column) {
-            switch (column) {
-                case 0:
-                    return Integer.class;
-                case 1:
-                    return String.class;
-                case 2:
-                    return Integer.class;
-                default:
-                    return String.class;
-            }
+            return switch (column) {
+                case 0, 2 -> Integer.class;
+                case 1 -> String.class;
+                default -> String.class;
+            };
         }
 
         public int getColumnCount() {
