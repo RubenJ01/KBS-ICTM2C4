@@ -122,24 +122,9 @@ public class RobotQueue {
                     System.out.println("niet ontvangen");
                 }
             }
-
-
-
         });
-
-
-
     }
-
     public static boolean CheckIfLoadInRack(){
         return true;
     }
-
-
-
-
-
-
-
-
 }
