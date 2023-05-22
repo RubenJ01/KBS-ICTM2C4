@@ -7,17 +7,16 @@ import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
 
-
-// voor het ontvangen en versturen van gegevens naar de hoofd arduino die gaat over Z en Y as
-public class SerialCommunication implements SerialPortEventListener {
+//ontvangen van gegevens van arduino die gaat over X-as
+public class SerialCommunication2 implements SerialPortEventListener {
     private static String meldingRobot;
     private static SerialPort serialPort;
     private String newdata = "";
     private StringBuilder receivedDataBuilder = new StringBuilder();
 
-    public SerialCommunication() {
+    public SerialCommunication2() {
         // Initialisatie van de seriële communicatie
-        serialPort = new SerialPort("COM4"); // Pas de poortnaam aan indien nodig
+        serialPort = new SerialPort("COM5"); // Pas de poortnaam aan indien nodig
         try {
             serialPort.openPort();
             serialPort.setParams(SerialPort.BAUDRATE_9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
@@ -81,19 +80,19 @@ public class SerialCommunication implements SerialPortEventListener {
     }
 
 
-    public static void writeToSerial(int x, int y) {
-        try {
-            serialPort.writeByte((byte) y);
-            serialPort.writeByte((byte) x);
-            System.out.println("Data naar seriële poort geschreven: " + x+" "+y);
-
-        } catch (SerialPortException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void writeToSerial(int x, int y) {
+//        try {
+//            serialPort.writeByte((byte) y);
+//            serialPort.writeByte((byte) x);
+//            System.out.println("Data naar seriële poort geschreven: " + x+" "+y);
+//
+//        } catch (SerialPortException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public static void setMeldingRobot(String meldingRobot) {
-        SerialCommunication.meldingRobot = meldingRobot;
+        SerialCommunication2.meldingRobot = meldingRobot;
     }
 
     public static String getMeldingRobot() {

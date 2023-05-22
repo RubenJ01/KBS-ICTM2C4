@@ -1,16 +1,13 @@
 package gui.model;
 
-import gui.MainFrame;
+import gui.MainWindow;
 import gui.view.PackageView;
 import gui.view.dialog.PlacePackageDialog;
 import serial.SerialCommunication;
-import serial.SerialReceive;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class RobotQueue {
     public static ArrayList<PackageModel> queue=new ArrayList<>();
@@ -82,6 +79,7 @@ public class RobotQueue {
 
     public static void removeQueue() {
         PackageView.model.removeAllElements();
+        MainWindow.model.removeAllElements();
 
         queue.clear();
     }
@@ -91,6 +89,7 @@ public class RobotQueue {
         PackageView.model.removeAllElements();
         for (PackageModel item : queue) {
             PackageView.model.addElement(item.toString());
+            MainWindow.model.addElement(item.toString());
         }
     }
 
@@ -133,6 +132,7 @@ public class RobotQueue {
     public static boolean CheckIfLoadInRack() {
         return true;
     }
+
 
 
 }

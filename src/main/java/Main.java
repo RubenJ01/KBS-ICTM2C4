@@ -2,6 +2,8 @@
 //import gui.model.LoadModel;
 
 import gui.*;
+import gui.model.PackageModel;
+import gui.model.RackModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 import serial.SerialCommunication;
+import serial.SerialCommunication2;
 
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -22,7 +25,13 @@ public class Main {
         }
         logger.info("INFO - dit is een test");
         new MainFrame();
+
+        //aanmaken van class die luisteren naar de serial input
         SerialCommunication serialListener = new SerialCommunication();
+        SerialCommunication2 serialListener2 = new SerialCommunication2();
+
+
+
 
         //StockView stockView = new StockView();
 

@@ -32,11 +32,11 @@ public class AddOrderDialog extends JDialog implements ViewBuilder {
 
     private final CustomerDao customerDao = CustomerDao.getInstance();
     private final PeopleDao peopleDao = PeopleDao.getInstance();
-    private final AddOrderController addOrderController = new AddOrderController();
+    //private final AddOrderController addOrderController = new AddOrderController(totalOrders, this, orderListModel);
 
     public AddOrderDialog() {
         buildAndShowView();
-        this.addOrderController = new AddOrderController(totalOrders, this, orderListModel);
+        //this.addOrderController = new AddOrderController(totalOrders, this, orderListModel);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class AddOrderDialog extends JDialog implements ViewBuilder {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addOrderController.addOrder(e, klantIdField, salesPersonIdField, contactPersonIdField, orderDateField, expectedDeliveryDateField, isUndersupplyBackorderedField);
+                //addOrderController.addOrder(e, klantIdField, salesPersonIdField, contactPersonIdField, orderDateField, expectedDeliveryDateField, isUndersupplyBackorderedField);
             }
         });
         this.add(addButton, BorderLayout.SOUTH);
