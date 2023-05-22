@@ -60,7 +60,7 @@ public class OrderController {
                            JLabel currentVisibleOrders) {
         this.layout = layout;
         this.root = root;
-        this.addOrderDialog = new AddOrderDialog(totalOrders, orderListModel, currentVisibleOrders);
+        this.addOrderDialog = new AddOrderDialog();
         this.editOrderDialog = new EditOrderDialog();
     }
 

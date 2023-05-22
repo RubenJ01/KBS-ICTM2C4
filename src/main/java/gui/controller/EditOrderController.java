@@ -7,8 +7,9 @@ import database.util.DatabaseConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.List;
 
 public class EditOrderController {
 
@@ -20,43 +21,31 @@ public class EditOrderController {
     }
 
 
-    /**
-     * Updates the picked quantity of an orderline.
-     * @param orderLine the orderline to update .
-     * @param pickedQuantity the new picked quantity.
-     * @param order the order to update.
-     */
-    public void updatePickedQuantity(OrderLine orderLine, String pickedQuantity, Order order) {
-        try {
-            int amount = Integer.parseInt(pickedQuantity);
-            orderLine.setPickedQuantity(amount);
-            try(Connection con = DatabaseConnection.getConnection()) {
-                orderDao.updateOrder(con, order);
-            } catch (SQLException e) {
-                logger.error(e.getMessage());
-            }
-        } catch (NumberFormatException e) {
-            logger.error("Invalid amount entered");
+    public void saveUpdatedOrder(Order order, JTextField quantityField, JTextField pickedQuantityField) {
+        try (Connection con = DatabaseConnection.getConnection()) {
+            orderDao.updateOrder(con, order);
+        } catch (Exception e) {
+            logger.error("Error while saving order", e);
         }
     }
 
-    /**
-     * Updates the quantity of an orderline.
-     * @param orderLine the orderline to update.
-     * @param quantity the new quantity.
-     * @param order the order to update.
-     */
-    public void updateQuantity(OrderLine orderLine, String quantity, Order order) {
-        try {
-            int amount = Integer.parseInt(quantity);
-            orderLine.setQuantity(amount);
-            try(Connection con = DatabaseConnection.getConnection()) {
-                orderDao.updateOrder(con, order);
-            } catch (SQLException e) {
-                logger.error(e.getMessage());
+    public void updateQuantity(String text, Order copy, OrderLine orderLine) {
+        List<OrderLine> orderLines = copy.getOrderLines();
+        orderLines.forEach(orderLineCopy -> {
+            if (orderLineCopy.getStockItemId() == orderLine.getStockItemId()) {
+                orderLineCopy.setQuantity(Integer.parseInt(text));
             }
-        } catch (NumberFormatException e) {
-            logger.error("Invalid amount entered");
-        }
+        });
+
     }
+
+    public void updatePickedQuantity(String text, Order copy, OrderLine orderLine) {
+        List<OrderLine> orderLines = copy.getOrderLines();
+        orderLines.forEach(orderLineCopy -> {
+            if (orderLineCopy.getStockItemId() == orderLine.getStockItemId()) {
+                orderLineCopy.setPickedQuantity(Integer.parseInt(text));
+            }
+        });
+    }
+
 }
