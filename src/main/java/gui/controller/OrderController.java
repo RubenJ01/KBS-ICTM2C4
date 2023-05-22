@@ -30,7 +30,6 @@ public class OrderController {
     private final JDialog addOrderDialog;
     private OrderDao orderDao;
 
-
     public void listSelected(ListSelectionEvent e, JList<Order> orderList, JPanel singleOrder) {
         int selectedIndex = orderList.getSelectedIndex();
         if (selectedIndex >= 0) {
@@ -53,12 +52,10 @@ public class OrderController {
                     singleOrder.add(itemPanel);
                 }
             }
-
             singleOrder.revalidate();
             singleOrder.repaint();
         }
     }
-
     public OrderController(CardLayout layout, JPanel root, JLabel totalOrders, DefaultListModel<Order> orderListModel ,
                            JLabel currentVisibleOrders) {
         this.layout = layout;
@@ -90,10 +87,6 @@ public class OrderController {
             this.addOrderDialog.setVisible(true);
         }
     }
-    public void viewOrderButton(ActionEvent e){
-
-    }
-
     /**
      * This method is used to search for an order by order id.
      *

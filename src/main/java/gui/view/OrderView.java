@@ -68,7 +68,6 @@ public class OrderView extends JPanel implements ViewBuilder {
         this.add(centralPanel, BorderLayout.CENTER);
         centralPanel.add(singleOrder);
 
-
         JPanel orderBottomBarButtons = new JPanel();
         orderBottomBarButtons.setLayout(new FlowLayout(FlowLayout.LEFT));
 
