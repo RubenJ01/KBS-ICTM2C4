@@ -28,13 +28,13 @@ public class PackageController extends RackModel {
     public void addLoadButton(ActionEvent e){
         try {
             //verzamelen X en Y waarde uit de velden
-            int grootte=Integer.parseInt(PackageView.SizeInput.getText());
+            int weight=Integer.parseInt(PackageView.SizeInput.getText());
             int y= Integer.parseInt(PackageView.YInput.getText());
             int x= Integer.parseInt(PackageView.XInput.getText());
             int item= Integer.parseInt(PackageView.itemnummerInput.getText());
 
             if(CheckLocationPossession(x,y)){
-                PackageModel packageModel=new PackageModel(y,x,item,grootte,false);
+                PackageModel packageModel=new PackageModel(y,x,item,weight,false);
                 RobotQueue.addQueue(packageModel,true);
 
             }else{

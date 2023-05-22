@@ -1,8 +1,10 @@
 package gui.model;
 
+import gui.view.RackView;
+
 import java.util.ArrayList;
 
-public  class  RackModel {
+public  class  RackModel  extends RackView {
     public static ArrayList<PackageModel> rack=new ArrayList<>();
 
     public static void printRack(){
