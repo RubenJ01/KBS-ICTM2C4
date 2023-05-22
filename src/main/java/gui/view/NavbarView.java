@@ -6,6 +6,8 @@ import gui.controller.NavbarController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class NavbarView extends JPanel implements ViewBuilder {
 
@@ -40,6 +42,9 @@ public class NavbarView extends JPanel implements ViewBuilder {
         JButton loadButton = new JButton("Inladen");
         loadButton.addActionListener(navbarController::loadButton);
         this.add(loadButton);
+
+        JButton packingSlipButton = new JButton("Pakbon");
+        packingSlipButton.addActionListener((navbarController::packingSlipButton));
 
         this.setVisible(true);
     }
