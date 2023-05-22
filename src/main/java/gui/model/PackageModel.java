@@ -1,32 +1,62 @@
 package gui.model;
 
+import gui.controller.RobotController;
+
+import javax.swing.*;
 import java.awt.*;
 
-public class PackageModel {
+public class PackageModel extends JPanel {
     private  int locationX;
     private  int locationY;
+    private  int locationPanelX;
+    private  int locationPanelY;
     private  int itemnummer;
 
-    private int grootte;
+    private int weight;
 
     private boolean inMagazijn;
 
     private Color color;
 
-    public PackageModel(int locationY, int locationX, int itemnummer, int grootte,boolean inMagazijn) {
+    public PackageModel(int locationY, int locationX, int itemnummer, int weight,boolean inMagazijn) {
         this.locationY = locationY;
         this.locationX = locationX;
         this.itemnummer = itemnummer;
-        this.grootte=grootte;
+        this.weight=weight;
+        locationConvertToPanel(locationY,locationX);
         this.inMagazijn=inMagazijn;
+        if(weight==1){
+            this.color=Color.red;
+        } else if (weight==2) {
+            this.color=Color.green;
+        } else if (weight==3) {
+            this.color=Color.blue;
+        }else{
+            this.color=Color.blue;
+        }
 
     }
-    public PackageModel(int itemnummer, int grootte) {
+    public PackageModel(int itemnummer, int weight) {
         this.locationY = 1;
         this.locationX = 8;
         this.itemnummer = itemnummer;
-        this.grootte=grootte;
+        this.weight=weight;
+        locationConvertToPanel(1,8);
+        if(weight==1){
+            this.color=Color.red;
+        } else if (weight==2) {
+            this.color=Color.green;
+        } else if (weight==3) {
+            this.color=Color.blue;
+        }else{
+            this.color=Color.blue;
+        }
 
+    }
+
+    public void locationConvertToPanel(int locationY,int locationX){
+        locationPanelX=150*(locationX-1)+38;
+        locationPanelY=600-(100*(locationY)+5);
     }
 
     public boolean isInMagazijn() {
@@ -48,8 +78,8 @@ public class PackageModel {
         return itemnummer;
     }
 
-    public int getGrootte() {
-        return grootte;
+    public int getWeight() {
+        return weight;
     }
 
     public Color getColor() {
@@ -57,7 +87,19 @@ public class PackageModel {
     }
 
     public String toString() {
-       return "itemnummer: " + itemnummer + " X: " + locationX + " Y: " + locationY+" Grootte: "+grootte;
+       return "itemnummer: " + itemnummer + " X: " + locationX + " Y: " + locationY+" Grootte: "+weight;
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(color);
+        int packageWidth=75;
+        int packageHeight=50;
+        g.fillRect(locationPanelX,locationPanelY,packageWidth,packageHeight);
+        g.setColor(Color.black);
+        Font font = new Font("Calibri", Font.BOLD, 16);
+        g.setFont(font);
+        g.drawString("ID: "+String.valueOf(itemnummer),locationPanelX,locationPanelY+25);
     }
 }
 
