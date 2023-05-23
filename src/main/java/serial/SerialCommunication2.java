@@ -50,7 +50,7 @@ public class SerialCommunication2 implements SerialPortEventListener {
                             String yString = completeData.substring(2);
                             int yValue = Integer.parseInt(yString);
                             RobotController.setYpositie(yValue);
-                            System.out.println("Y-waarde: " + yValue);
+                            //System.out.println("Y-waarde: " + yValue);
 
                         }catch (NumberFormatException e){
                             System.err.println("Lees Error");
@@ -61,7 +61,7 @@ public class SerialCommunication2 implements SerialPortEventListener {
                             String xString = completeData.substring(2);
                             int xValue = Integer.parseInt(xString);
                             RobotController.setXpositie(xValue);
-                            System.out.println("X-waarde: " + xValue);
+                            //System.out.println("X-waarde: " + xValue);
 
                         }catch (NumberFormatException e){
                             System.err.println("Lees Error");

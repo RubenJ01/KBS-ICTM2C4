@@ -84,10 +84,13 @@ public class SerialCommunication implements SerialPortEventListener {
     }
 
 
-    public static void writeToSerial(int x, int y) {
+
+// x en y waarde meesturen,     als uitladen == 1 robot--> inladen     uitladen==2 robot --> uitladen
+    public static void writeToSerial(int x, int y,int uitladen) {
         try {
             serialPort.writeByte((byte) y);
             serialPort.writeByte((byte) x);
+            serialPort.writeByte((byte) uitladen);
             System.out.println("Data naar seriële poort geschreven: " + x+" "+y);
 
         } catch (SerialPortException e) {
