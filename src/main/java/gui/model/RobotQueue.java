@@ -57,7 +57,7 @@ public class RobotQueue {
                 if (!CheckIfLoadInRack(item.getLocationY(),item.getLocationX())) {
                     //item moet ingeladen worden
                     // robot gaat eerst naar beginpunt
-                    SerialCommunication.writeToSerial(6,1);
+                    SerialCommunication.writeToSerial(6,1,3);
                     //Dialoog wordt aan gemaakt voor het plaatsen van pakket op palletvork
                     PlacePackageDialog placePackageDialog = new PlacePackageDialog(item);
                 } else {
@@ -94,7 +94,7 @@ public class RobotQueue {
     public static void inladen(PackageModel packageModel) {
         int x = packageModel.getLocationX();
         int y = packageModel.getLocationY();
-        SerialCommunication.writeToSerial(x,y);
+        SerialCommunication.writeToSerial(x,y,1);
         SerialCommunication.setMeldingRobot("A");
         RobotController.setLoad(packageModel);
         // Start de loop in een nieuwe thread
@@ -104,9 +104,10 @@ public class RobotQueue {
             while (true) {
                 try {
                 String b = SerialCommunication.getMeldingRobot();
+                    System.out.println(SerialCommunication.getMeldingRobot());
                 if (b.equals("B")) {
                     RobotController.removeLoad();
-                    SerialCommunication.setMeldingRobot("");
+                    SerialCommunication.setMeldingRobot("A");
                     System.out.println("Lading is in rack");
                     RackModel.addToRack(packageModel);
                     RobotQueue.removeFirstItem(packageModel);
@@ -115,8 +116,6 @@ public class RobotQueue {
                     executeQueue();
                     break;
 
-                }else {
-                    System.out.println(SerialCommunication.getMeldingRobot());
                 }
                 }catch (NullPointerException ex){
                     System.err.println("b=null");
