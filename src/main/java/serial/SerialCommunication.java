@@ -1,11 +1,13 @@
 package serial;
 
+import gui.MainFrame;
 import gui.controller.RobotController;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
+import javax.swing.*;
 
 
 // voor het ontvangen en versturen van gegevens naar de hoofd arduino die gaat over Z en Y as
@@ -17,12 +19,13 @@ public class SerialCommunication implements SerialPortEventListener {
 
     public SerialCommunication() {
         // Initialisatie van de seriële communicatie
-        serialPort = new SerialPort("COM4"); // Pas de poortnaam aan indien nodig
+        serialPort = new SerialPort("COM6"); // Pas de poortnaam aan indien nodig
         try {
             serialPort.openPort();
             serialPort.setParams(SerialPort.BAUDRATE_9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
             serialPort.addEventListener(this, SerialPort.MASK_RXCHAR);
         } catch (SerialPortException e) {
+            JOptionPane.showMessageDialog(MainFrame.mainWindow, "Geen verbinding met Arduino Main", "Waarschuwing", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }

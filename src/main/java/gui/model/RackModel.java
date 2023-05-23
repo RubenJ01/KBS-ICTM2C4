@@ -20,8 +20,11 @@ public  class  RackModel  extends RackView {
         for (PackageModel item : rack) {
             if(x==item.getLocationX()&&y==item.getLocationY()){
                 return false;
-            }else{
-                return true;
+            }
+        }
+        for (PackageModel item : RobotQueue.queue) {
+            if(x==item.getLocationX()&&y==item.getLocationY()){
+                return false;
             }
         }
         return true;

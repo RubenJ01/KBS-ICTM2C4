@@ -101,6 +101,19 @@ public class PackageModel extends JPanel {
         g.setFont(font);
         g.drawString("ID: "+String.valueOf(itemnummer),locationPanelX,locationPanelY+25);
     }
+
+    public void paintComponent(Graphics g,float y,float x) {
+        super.paintComponent(g);
+        g.setColor(color);
+        int packageWidth=75;
+        int packageHeight=50;
+        g.fillRect((int) x-(packageWidth/2), (int) y-(packageHeight/2),packageWidth,packageHeight);
+        g.setColor(Color.black);
+        Font font = new Font("Calibri", Font.BOLD, 16);
+        g.setFont(font);
+        g.drawString("ID: "+String.valueOf(itemnummer),(int) x-(packageWidth/2),(int) y);
+    }
+
 }
 
 

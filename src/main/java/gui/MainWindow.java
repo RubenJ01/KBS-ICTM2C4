@@ -51,11 +51,6 @@ public class MainWindow extends JPanel implements ViewBuilder {
         rackPanel.add(new RackView());
 
 
-        JList<String> loadList = new JList<>(model);
-        JScrollPane scrollPane = new JScrollPane(loadList);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(scrollPane.getPreferredSize().width, 600));
-        panel.add(scrollPane);
 
 
 

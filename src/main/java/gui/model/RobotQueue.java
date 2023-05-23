@@ -1,6 +1,8 @@
 package gui.model;
 
 import gui.MainWindow;
+import gui.controller.RackController;
+import gui.controller.RobotController;
 import gui.view.PackageView;
 import gui.view.dialog.PlacePackageDialog;
 import serial.SerialCommunication;
@@ -52,16 +54,12 @@ public class RobotQueue {
         if(queue.size()>=1) {
                 PackageModel item=queue.get(0);
                 //kijkt of item al in het magazijn staat of niet
-                if (!item.isInMagazijn()) {
+                if (!CheckIfLoadInRack(item.getLocationY(),item.getLocationX())) {
                     //item moet ingeladen worden
-
                     // robot gaat eerst naar beginpunt
-
                     SerialCommunication.writeToSerial(6,1);
                     //Dialoog wordt aan gemaakt voor het plaatsen van pakket op palletvork
                     PlacePackageDialog placePackageDialog = new PlacePackageDialog(item);
-
-
                 } else {
                     //item moet worden uitgeladen
 
@@ -98,14 +96,16 @@ public class RobotQueue {
         int y = packageModel.getLocationY();
         SerialCommunication.writeToSerial(x,y);
         SerialCommunication.setMeldingRobot("A");
-
+        RobotController.setLoad(packageModel);
         // Start de loop in een nieuwe thread
         Executors.newSingleThreadExecutor().execute(() -> {
-            // Wacht op "2" van de seriële poort
+
+            // Wacht op "B" van de seriële poort
             while (true) {
                 try {
                 String b = SerialCommunication.getMeldingRobot();
                 if (b.equals("B")) {
+                    RobotController.removeLoad();
                     SerialCommunication.setMeldingRobot("");
                     System.out.println("Lading is in rack");
                     RackModel.addToRack(packageModel);
@@ -129,8 +129,13 @@ public class RobotQueue {
 
     }
 
-    public static boolean CheckIfLoadInRack() {
-        return true;
+    public static boolean CheckIfLoadInRack(int x,int y) {
+        for (PackageModel item : RackModel.rack) {
+            if(x==item.getLocationX()&&y==item.getLocationY()){
+                return true;
+            }
+        }
+        return false;
     }
 
 
