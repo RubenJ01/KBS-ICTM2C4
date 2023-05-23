@@ -8,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.List;
 
@@ -74,7 +72,7 @@ public class EditOrderDialog extends JDialog implements ViewBuilder {
         // add the header above the scrollpane
         this.scrollablePanel.add(orderLinePanelHeader);
 
-        List<OrderLine> orderLines = order.getOrderLines();
+        List<OrderLine> orderLines = copy.getOrderLines();
         orderLines.forEach(orderLine -> {
             JPanel orderLinePanel = new JPanel();
             orderLinePanel.setMaximumSize(new Dimension(400, 30));
@@ -88,49 +86,9 @@ public class EditOrderDialog extends JDialog implements ViewBuilder {
             orderLinePanel.add(productLabel);
 
             JTextField quantityField = new JTextField(String.valueOf(orderLine.getQuantity()));
-            quantityField.getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    updateQuantity();
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    updateQuantity();
-                }
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    updateQuantity();
-                }
-
-                private void updateQuantity() {
-                    editOrderController.updateQuantity(quantityField.getText(), copy, orderLine);
-                }
-            });
             orderLinePanel.add(quantityField);
 
             JTextField pickedQuantityField = new JTextField(String.valueOf(orderLine.getPickedQuantity()));
-            pickedQuantityField.getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    updatePickedQuantity();
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    updatePickedQuantity();
-                }
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    updatePickedQuantity();
-                }
-
-                private void updatePickedQuantity() {
-                    editOrderController.updateQuantity(quantityField.getText(), copy, orderLine);
-                }
-            });
             orderLinePanel.add(pickedQuantityField);
 
             JButton deleteButton = new JButton("Verwijder");
@@ -148,6 +106,7 @@ public class EditOrderDialog extends JDialog implements ViewBuilder {
 
         JButton saveButton = new JButton("Opslaan");
         JButton cancelButton = new JButton("Annuleren");
+        cancelButton.addActionListener(e -> editOrderController.cancelButton(this));
 
         editOrderBottomBar.add(saveButton);
         editOrderBottomBar.add(cancelButton);

@@ -113,4 +113,8 @@ public class StockItemHolding {
                 ", lastEditedWhen=" + lastEditedWhen +
                 '}';
     }
+
+    public void addQuantityOnHand(int addedQuantity) {
+        this.quantityOnHand += addedQuantity;
+    }
 }

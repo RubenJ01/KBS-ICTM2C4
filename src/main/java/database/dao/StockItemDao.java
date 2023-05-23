@@ -18,10 +18,11 @@ public class StockItemDao {
     private static final Logger logger = LoggerFactory.getLogger(StockItemDao.class);
     private static StockItemDao instance = null;
 
-    private StockItemDao() {}
+    private StockItemDao() {
+    }
 
     public static StockItemDao getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new StockItemDao();
         }
         return instance;
@@ -29,6 +30,7 @@ public class StockItemDao {
 
     /**
      * Funtion to receive stock information by searching on a specific stockItemID
+     *
      * @param con
      * @param stockItemID
      * @param rowLockType
@@ -37,14 +39,14 @@ public class StockItemDao {
     public StockItem getStockByStockItemID(Connection con, int stockItemID, RowLockType rowLockType) throws SQLException {
         String query = rowLockType.getQueryWithLock(
                 "SELECT SI.stockItemID, QuantityOnHand, stockItemName " +
-                "FROM stockitems AS SI " +
-                "LEFT JOIN stockitemholdings AS SIH ON SIH.stockItemID = SI.stockItemID " +
-                "WHERE StockItemID = ? "
+                        "FROM stockitems AS SI " +
+                        "LEFT JOIN stockitemholdings AS SIH ON SIH.stockItemID = SI.stockItemID " +
+                        "WHERE StockItemID = ? "
         );
-        try(PreparedStatement ps = con.prepareStatement(query)) {
+        try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, stockItemID);
-            try(ResultSet rs = ps.executeQuery()) {
-                if(rs.next()) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
                     return getStockitems(rs);
                 } else {
                     return null;
@@ -56,6 +58,7 @@ public class StockItemDao {
 
     /**
      * function to receive all stock information from all products in the database
+     *
      * @param con
      * @return
      * @throws SQLException
@@ -66,9 +69,9 @@ public class StockItemDao {
                 "LEFT JOIN stockitemholdings AS SIH ON SIH.stockItemID = SI.stockItemID " +
                 "ORDER BY stockItemID";
         List<StockItem> stockitems = new ArrayList<>();
-        try(PreparedStatement ps = con.prepareStatement(query)) {
-            try(ResultSet rs = ps.executeQuery()) {
-                while(rs.next()) {
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
                     stockitems.add(getStockitems(rs));
                 }
             }
@@ -76,13 +79,25 @@ public class StockItemDao {
         return stockitems;
     }
 
+    public void updateQuantityOnHand(Connection con, StockItemHolding stockitemholdings) {
+        String query = "UPDATE stockitemholdings SET QuantityOnHand = ? WHERE stockItemID = ?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, stockitemholdings.getQuantityOnHand());
+            ps.setInt(2, stockitemholdings.getStockItemID());
+            ps.executeUpdate();
+        } catch (SQLException exc) {
+            logger.error(exc.getMessage());
+        }
+    }
+
     /**
      * Function to put a result set in a list
+     *
      * @param rs
      * @return new StockItem
      * @throws SQLException
      */
-    private static StockItem getStockitems(ResultSet rs) throws SQLException {
+    private StockItem getStockitems(ResultSet rs) throws SQLException {
         StockItemHolding stockitemholdings = new StockItemHolding(
                 rs.getInt("StockItemID"),
                 rs.getInt("QuantityOnHand")
@@ -92,4 +107,5 @@ public class StockItemDao {
                 rs.getString("StockItemName"),
                 stockitemholdings);
     }
+
 }

@@ -4,6 +4,7 @@ import database.dao.CustomerDao;
 import database.dao.PeopleDao;
 import database.dao.StockItemDao;
 import database.model.Customer;
+import database.model.Order;
 import database.model.Person;
 import database.model.StockItem;
 import database.util.DatabaseConnection;
@@ -32,11 +33,11 @@ public class AddOrderDialog extends JDialog implements ViewBuilder {
 
     private final CustomerDao customerDao = CustomerDao.getInstance();
     private final PeopleDao peopleDao = PeopleDao.getInstance();
-    //private final AddOrderController addOrderController = new AddOrderController(totalOrders, this, orderListModel);
+    private final AddOrderController addOrderController;
 
-    public AddOrderDialog() {
+    public AddOrderDialog(JLabel totalOrders, DefaultListModel<Order> orderListModel, JLabel currentVisibleOrders) {
         buildAndShowView();
-        //this.addOrderController = new AddOrderController(totalOrders, this, orderListModel);
+        this.addOrderController = new AddOrderController(totalOrders, this, orderListModel, currentVisibleOrders);
     }
 
     @Override
@@ -51,7 +52,7 @@ public class AddOrderDialog extends JDialog implements ViewBuilder {
         this.add(header, BorderLayout.NORTH);
 
         JPanel centerContent = new JPanel();
-        centerContent.setLayout(new GridLayout(7, 2));
+        centerContent.setLayout(new GridLayout(6, 2));
         centerContent.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
         this.add(centerContent, BorderLayout.CENTER);
 
@@ -121,7 +122,7 @@ public class AddOrderDialog extends JDialog implements ViewBuilder {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //addOrderController.addOrder(e, klantIdField, salesPersonIdField, contactPersonIdField, orderDateField, expectedDeliveryDateField, isUndersupplyBackorderedField);
+                addOrderController.addOrder(e, klantIdField, salesPersonIdField, contactPersonIdField, orderDateField, expectedDeliveryDateField, isUndersupplyBackorderedField);
             }
         });
         this.add(addButton, BorderLayout.SOUTH);
