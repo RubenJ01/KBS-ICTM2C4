@@ -129,7 +129,8 @@ public class OrderDao {
 
     /**
      * Creates an order from a result set.
-     * @param rs the result set to create the order from.
+     *
+     * @param rs         the result set to create the order from.
      * @param orderLines the order lines to add to the order.
      * @return the order as an object.
      * @throws SQLException if the query failed.
@@ -248,7 +249,8 @@ public class OrderDao {
 
     /**
      * Updates an order in the database.
-     * @param con the database connection object.
+     *
+     * @param con   the database connection object.
      * @param order the order you want to update.
      * @throws SQLException if the query failed.
      */
@@ -277,7 +279,8 @@ public class OrderDao {
 
     /**
      * Updates an order line in the database.
-     * @param con the database connection object.
+     *
+     * @param con       the database connection object.
      * @param orderLine the order line you want to update.
      */
     private void updateOrderLine(Connection con, OrderLine orderLine) {

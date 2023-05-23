@@ -3,21 +3,13 @@ package gui.controller;
 import database.dao.OrderDao;
 import database.model.Order;
 import database.model.OrderLine;
-import database.util.DatabaseConnection;
-import database.util.RowLockType;
-import gui.view.OrderView;
 import gui.view.dialog.AddOrderDialog;
 import gui.view.dialog.EditOrderDialog;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +21,14 @@ public class OrderController {
 
     private final JDialog addOrderDialog;
     private OrderDao orderDao;
+
+    public OrderController(CardLayout layout, JPanel root, JLabel totalOrders, DefaultListModel<Order> orderListModel ,
+                           JLabel currentVisibleOrders) {
+        this.layout = layout;
+        this.root = root;
+        this.addOrderDialog = new AddOrderDialog(totalOrders, orderListModel, currentVisibleOrders);
+        this.editOrderDialog = new EditOrderDialog();
+    }
 
     public void listSelected(ListSelectionEvent e, JList<Order> orderList, JPanel singleOrder) {
         int selectedIndex = orderList.getSelectedIndex();
@@ -56,13 +56,7 @@ public class OrderController {
             singleOrder.repaint();
         }
     }
-    public OrderController(CardLayout layout, JPanel root, JLabel totalOrders, DefaultListModel<Order> orderListModel ,
-                           JLabel currentVisibleOrders) {
-        this.layout = layout;
-        this.root = root;
-        this.addOrderDialog = new AddOrderDialog();
-        this.editOrderDialog = new EditOrderDialog();
-    }
+
 
     /**
      * This method is used to open the JDialog to edit an order.

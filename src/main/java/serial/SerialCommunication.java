@@ -12,6 +12,7 @@ import javax.swing.*;
 
 // voor het ontvangen en versturen van gegevens naar de hoofd arduino die gaat over Z en Y as
 public class SerialCommunication implements SerialPortEventListener {
+
     private static String meldingRobot;
     private static SerialPort serialPort;
     private String newdata = "";
