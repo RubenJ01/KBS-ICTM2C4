@@ -20,7 +20,7 @@ public class SerialCommunication implements SerialPortEventListener {
 
     public SerialCommunication() {
         // Initialisatie van de seriële communicatie
-        serialPort = new SerialPort("COM6"); // Pas de poortnaam aan indien nodig
+        serialPort = new SerialPort("COM4"); // Pas de poortnaam aan indien nodig
         try {
             serialPort.openPort();
             serialPort.setParams(SerialPort.BAUDRATE_9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
@@ -43,17 +43,17 @@ public class SerialCommunication implements SerialPortEventListener {
                 String completeData;
                 if (receivedDataBuilder.toString().contains("\n")) {
                     completeData = receivedDataBuilder.toString().trim();
-                    System.out.println("Ontvangen gegevens: " + completeData);
+                   //System.out.println("Ontvangen gegevens: " + completeData);
                     if (completeData.startsWith("Y:")) {
                         // Ontvangen Y-waarde
                         try {
                             String yString = completeData.substring(2);
                             int yValue = Integer.parseInt(yString);
                             RobotController.setYpositie(yValue);
-                            System.out.println("Y-waarde: " + yValue);
+                            //System.out.println("Y-waarde: " + yValue);
 
                         }catch (NumberFormatException e){
-                            System.err.println("Lees Error");
+                            //System.err.println("Lees Error");
                         }
                     } else if (completeData.startsWith("X:")) {
                         // Ontvangen X-waarde
@@ -61,7 +61,7 @@ public class SerialCommunication implements SerialPortEventListener {
                             String xString = completeData.substring(2);
                             int xValue = Integer.parseInt(xString);
                             RobotController.setXpositie(xValue);
-                            System.out.println("X-waarde: " + xValue);
+                            //System.out.println("X-waarde: " + xValue);
 
                         }catch (NumberFormatException e){
                             System.err.println("Lees Error");
@@ -85,11 +85,14 @@ public class SerialCommunication implements SerialPortEventListener {
     }
 
 
-    public static void writeToSerial(int x, int y) {
+
+// x en y waarde meesturen,     als uitladen == 1 robot--> inladen     uitladen==2 robot --> uitladen
+    public static void writeToSerial(int x, int y,int uitladen) {
         try {
             serialPort.writeByte((byte) y);
             serialPort.writeByte((byte) x);
-            System.out.println("Data naar seriële poort geschreven: " + x+" "+y);
+            serialPort.writeByte((byte) uitladen);
+            System.out.println("Data naar seriële poort geschreven: " + x+" "+y+" "+uitladen);
 
         } catch (SerialPortException e) {
             e.printStackTrace();

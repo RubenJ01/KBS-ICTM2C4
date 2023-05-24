@@ -1,5 +1,7 @@
 package gui.model;
 
+import database.dao.RackDao;
+import database.util.DatabaseConnection;
 import gui.MainWindow;
 import gui.controller.RackController;
 import gui.controller.RobotController;
@@ -7,6 +9,8 @@ import gui.view.PackageView;
 import gui.view.dialog.PlacePackageDialog;
 import serial.SerialCommunication;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.concurrent.Executors;
@@ -57,7 +61,7 @@ public class RobotQueue {
                 if (!CheckIfLoadInRack(item.getLocationY(),item.getLocationX())) {
                     //item moet ingeladen worden
                     // robot gaat eerst naar beginpunt
-                    SerialCommunication.writeToSerial(6,1);
+                    SerialCommunication.writeToSerial(6,1,3);
                     //Dialoog wordt aan gemaakt voor het plaatsen van pakket op palletvork
                     PlacePackageDialog placePackageDialog = new PlacePackageDialog(item);
                 } else {
@@ -94,32 +98,32 @@ public class RobotQueue {
     public static void inladen(PackageModel packageModel) {
         int x = packageModel.getLocationX();
         int y = packageModel.getLocationY();
-        SerialCommunication.writeToSerial(x,y);
-        SerialCommunication.setMeldingRobot("A");
+        SerialCommunication.writeToSerial(x,y,1);
+
         RobotController.setLoad(packageModel);
         // Start de loop in een nieuwe thread
         Executors.newSingleThreadExecutor().execute(() -> {
-
             // Wacht op "B" van de seriële poort
             while (true) {
                 try {
                 String b = SerialCommunication.getMeldingRobot();
+                System.out.println(SerialCommunication.getMeldingRobot());
+                    Thread.sleep(1000);
                 if (b.equals("B")) {
+                    RobotQueue.removeFirstItem(packageModel);
                     RobotController.removeLoad();
                     SerialCommunication.setMeldingRobot("");
                     System.out.println("Lading is in rack");
                     RackModel.addToRack(packageModel);
-                    RobotQueue.removeFirstItem(packageModel);
                     RackModel.printRack();
                     RobotQueue.printQueue();
                     executeQueue();
                     break;
-
-                }else {
-                    System.out.println(SerialCommunication.getMeldingRobot());
                 }
                 }catch (NullPointerException ex){
                     System.err.println("b=null");
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
 
