@@ -43,7 +43,7 @@ public class SerialCommunication2 implements SerialPortEventListener {
                 String completeData;
                 if (receivedDataBuilder.toString().contains("\n")) {
                     completeData = receivedDataBuilder.toString().trim();
-                    System.out.println("Ontvangen gegevens: " + completeData);
+                    //System.out.println("Ontvangen gegevens: " + completeData);
                     if (completeData.startsWith("Y:")) {
                         // Ontvangen Y-waarde
                         try {

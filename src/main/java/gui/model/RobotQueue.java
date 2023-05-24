@@ -95,30 +95,31 @@ public class RobotQueue {
         int x = packageModel.getLocationX();
         int y = packageModel.getLocationY();
         SerialCommunication.writeToSerial(x,y,1);
-        SerialCommunication.setMeldingRobot("A");
+
         RobotController.setLoad(packageModel);
         // Start de loop in een nieuwe thread
         Executors.newSingleThreadExecutor().execute(() -> {
-
             // Wacht op "B" van de seriële poort
             while (true) {
                 try {
                 String b = SerialCommunication.getMeldingRobot();
-                    System.out.println(SerialCommunication.getMeldingRobot());
+                System.out.println(SerialCommunication.getMeldingRobot());
+                    Thread.sleep(1000);
                 if (b.equals("B")) {
+                    RobotQueue.removeFirstItem(packageModel);
                     RobotController.removeLoad();
-                    SerialCommunication.setMeldingRobot("A");
+                    SerialCommunication.setMeldingRobot("");
                     System.out.println("Lading is in rack");
                     RackModel.addToRack(packageModel);
-                    RobotQueue.removeFirstItem(packageModel);
                     RackModel.printRack();
                     RobotQueue.printQueue();
                     executeQueue();
                     break;
-
                 }
                 }catch (NullPointerException ex){
                     System.err.println("b=null");
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
 
