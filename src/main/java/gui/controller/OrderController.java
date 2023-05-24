@@ -42,7 +42,7 @@ public class OrderController {
             for (OrderLine orderLine : selectedOrder.getOrderLines()) {
                 if (orderLine.getOrderId() == selectedOrder.getOrderId()) {
                     JPanel itemPanel = new JPanel();
-                    itemPanel.setLayout(new GridLayout(3, 1));
+                    itemPanel.setLayout(new GridLayout(3,1));
                     itemPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                     itemPanel.add(new JLabel("Product ID:"));
                     itemPanel.add(new JLabel(String.valueOf(orderLine.getStockItemId())));
@@ -180,8 +180,5 @@ public class OrderController {
         // not very pretty but this refreshed the dialog
         this.editOrderDialog.setVisible(false);
     }
-
-
-
 }
 

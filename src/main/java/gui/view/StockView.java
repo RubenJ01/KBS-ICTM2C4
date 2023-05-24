@@ -5,6 +5,8 @@ import database.dao.StockItemDao;
 import database.model.StockItem;
 import database.util.DatabaseConnection;
 import gui.ViewBuilder;
+import gui.controller.StockController;
+import gui.view.dialog.UpdateStockDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +17,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,13 +28,19 @@ public class StockView extends JPanel implements ViewBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(StockView.class);
     private final NavbarView navbarView;
-    private final StockItemDao stockitemsDao;
+    private final StockItemDao stockitemsDao = StockItemDao.getInstance();
+    private final JDialog updateStockDialog;
+    private final VoorraadModel voorraadModel;
+    private final JTable table;
     private JTextField searchStockItemID, searchStockItemName;
     private int rowCount;
 
     public StockView(CardLayout layout, JPanel root) {
+        List<StockItem> allStocks = getStockitemsFromDatabase();
+        voorraadModel = new VoorraadModel(allStocks);
+        table = new JTable(voorraadModel);
         this.navbarView = new NavbarView(layout, root);
-        this.stockitemsDao = StockItemDao.getInstance();
+        this.updateStockDialog = new UpdateStockDialog(table);
         buildAndShowView();
     }
 
@@ -39,17 +49,16 @@ public class StockView extends JPanel implements ViewBuilder {
         this.setLayout(new BorderLayout());
         this.add(navbarView, BorderLayout.NORTH);
 
-        List<StockItem> allStocks = getStockitemsFromDatabase();
-
-        //Create Table
-        VoorraadModel voorraadModel = new VoorraadModel(allStocks);
-        JTable table = new JTable(voorraadModel);
 
         //Search panel
         JPanel stockBottomBar = new JPanel();
         stockBottomBar.setLayout(new FlowLayout(FlowLayout.LEFT));
         stockBottomBar.setSize(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT/10);
         add(stockBottomBar, BorderLayout.SOUTH);
+
+        JButton bewerken = new JButton("Bewerken");
+        bewerken.addActionListener(e -> updateStockDialog.setVisible(!updateStockDialog.isActive() && !updateStockDialog.isVisible()));
+        stockBottomBar.add(bewerken);
 
         JLabel jl_StockItemID = new JLabel("Zoek op ID");
         stockBottomBar.add(jl_StockItemID);

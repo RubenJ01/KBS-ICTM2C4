@@ -48,4 +48,7 @@ public class EditOrderController {
         });
     }
 
+    public void cancelButton(JDialog editOrderDialog) {
+        editOrderDialog.dispose();
+    }
 }
