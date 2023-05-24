@@ -28,7 +28,7 @@ public class OrderController {
         this.layout = layout;
         this.root = root;
         this.packingSlipDialog = new PackingSlipDialog(layout, root);
-        this.addOrderDialog = new AddOrderDialog();
+        this.addOrderDialog = new AddOrderDialog(totalOrders, orderListModel, currentVisibleOrders);
         this.editOrderDialog = new EditOrderDialog();
     }
 
