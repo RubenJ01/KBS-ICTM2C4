@@ -1,5 +1,7 @@
 package gui.model;
 
+import database.dao.RackDao;
+import database.util.DatabaseConnection;
 import gui.MainWindow;
 import gui.controller.RackController;
 import gui.controller.RobotController;
@@ -7,6 +9,8 @@ import gui.view.PackageView;
 import gui.view.dialog.PlacePackageDialog;
 import serial.SerialCommunication;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.concurrent.Executors;

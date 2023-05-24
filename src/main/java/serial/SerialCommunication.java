@@ -20,7 +20,7 @@ public class SerialCommunication implements SerialPortEventListener {
 
     public SerialCommunication() {
         // Initialisatie van de seriële communicatie
-        serialPort = new SerialPort("COM6"); // Pas de poortnaam aan indien nodig
+        serialPort = new SerialPort("COM4"); // Pas de poortnaam aan indien nodig
         try {
             serialPort.openPort();
             serialPort.setParams(SerialPort.BAUDRATE_9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);

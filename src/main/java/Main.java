@@ -29,7 +29,7 @@ public class Main {
         //aanmaken van class die luisteren naar de serial input
         SerialCommunication serialListener = new SerialCommunication();
         SerialCommunication2 serialListener2 = new SerialCommunication2();
-
+        RackModel.getRack();
 
 
 
