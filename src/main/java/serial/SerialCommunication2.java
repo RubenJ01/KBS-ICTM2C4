@@ -1,10 +1,13 @@
 package serial;
 
+import gui.MainFrame;
 import gui.controller.RobotController;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
+
+import javax.swing.*;
 
 
 //ontvangen van gegevens van arduino die gaat over X-as
@@ -16,13 +19,15 @@ public class SerialCommunication2 implements SerialPortEventListener {
 
     public SerialCommunication2() {
         // Initialisatie van de seriële communicatie
-        serialPort = new SerialPort("COM5"); // Pas de poortnaam aan indien nodig
+        serialPort = new SerialPort("COM3"); // Pas de poortnaam aan indien nodig
         try {
             serialPort.openPort();
             serialPort.setParams(SerialPort.BAUDRATE_9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
             serialPort.addEventListener(this, SerialPort.MASK_RXCHAR);
         } catch (SerialPortException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(MainFrame.mainWindow, "Geen verbinding met Arduino 2", "Waarschuwing", JOptionPane.ERROR_MESSAGE);
+
         }
     }
 
