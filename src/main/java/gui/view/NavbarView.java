@@ -43,9 +43,6 @@ public class NavbarView extends JPanel implements ViewBuilder {
         loadButton.addActionListener(navbarController::loadButton);
         this.add(loadButton);
 
-        JButton packingSlipButton = new JButton("Pakbon");
-        packingSlipButton.addActionListener((navbarController::packingSlipButton));
-
         this.setVisible(true);
     }
 }

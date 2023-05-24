@@ -40,8 +40,6 @@ public class NavbarController {
         cardLayout.show(root, "loadView");
     }
 
-    public void packingSlipButton(ActionEvent e) {
-        cardLayout.show(root, "packingSlipView");
-    }
+
 
 }

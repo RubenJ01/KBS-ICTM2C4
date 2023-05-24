@@ -3,21 +3,14 @@ package gui.controller;
 import database.dao.OrderDao;
 import database.model.Order;
 import database.model.OrderLine;
-import database.util.DatabaseConnection;
-import database.util.RowLockType;
-import gui.view.OrderView;
+import gui.view.PackingSlipDialog;//added
 import gui.view.dialog.AddOrderDialog;
 import gui.view.dialog.EditOrderDialog;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +19,18 @@ public class OrderController {
     private final CardLayout layout;
     private final JPanel root;
     private final JDialog editOrderDialog;
-
+    private final PackingSlipDialog packingSlipDialog;
     private final JDialog addOrderDialog;
     private OrderDao orderDao;
+
+    public OrderController(CardLayout layout, JPanel root, JLabel totalOrders, DefaultListModel<Order> orderListModel ,
+                           JLabel currentVisibleOrders) {
+        this.layout = layout;
+        this.root = root;
+        this.packingSlipDialog = new PackingSlipDialog(layout, root);
+        this.addOrderDialog = new AddOrderDialog();
+        this.editOrderDialog = new EditOrderDialog();
+    }
 
     public void listSelected(ListSelectionEvent e, JList<Order> orderList, JPanel singleOrder) {
         int selectedIndex = orderList.getSelectedIndex();
@@ -40,7 +42,7 @@ public class OrderController {
             for (OrderLine orderLine : selectedOrder.getOrderLines()) {
                 if (orderLine.getOrderId() == selectedOrder.getOrderId()) {
                     JPanel itemPanel = new JPanel();
-                    itemPanel.setLayout(new GridLayout(3,1));
+                    itemPanel.setLayout(new GridLayout(3, 1));
                     itemPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                     itemPanel.add(new JLabel("Product ID:"));
                     itemPanel.add(new JLabel(String.valueOf(orderLine.getStockItemId())));
@@ -54,14 +56,8 @@ public class OrderController {
             }
             singleOrder.revalidate();
             singleOrder.repaint();
+
         }
-    }
-    public OrderController(CardLayout layout, JPanel root, JLabel totalOrders, DefaultListModel<Order> orderListModel ,
-                           JLabel currentVisibleOrders) {
-        this.layout = layout;
-        this.root = root;
-        this.addOrderDialog = new AddOrderDialog();
-        this.editOrderDialog = new EditOrderDialog();
     }
 
     /**
@@ -87,6 +83,16 @@ public class OrderController {
             this.addOrderDialog.setVisible(true);
         }
     }
+
+    public void packingSlipButton() {
+        if(PackingSlipDialog.selectedOrder == null) {
+            JOptionPane.showMessageDialog(null, "Selecteer een order om een pakbon weer te geven.");
+            return;
+        }
+        packingSlipDialog.refreshPanel();
+        packingSlipDialog.setVisible(!packingSlipDialog.isVisible() && !packingSlipDialog.isActive());
+    }
+
     /**
      * This method is used to search for an order by order id.
      *
@@ -168,9 +174,14 @@ public class OrderController {
         if (orderList.getSelectedIndex() == -1) {
             return;
         }
-        EditOrderDialog.order = orderList.getSelectedValue();
+        Order selectedValue = orderList.getSelectedValue();
+        EditOrderDialog.order = selectedValue;
+        PackingSlipDialog.selectedOrder = selectedValue;
         // not very pretty but this refreshed the dialog
         this.editOrderDialog.setVisible(false);
     }
+
+
+
 }
 

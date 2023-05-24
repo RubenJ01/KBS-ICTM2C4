@@ -1,5 +1,7 @@
 package database.model;
 
+import ch.qos.logback.core.net.server.AbstractServerSocketAppender;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -205,4 +207,13 @@ public class Order {
     public String toString() {
         return String.format("Order ID: %d - Order Date: %s", orderId, orderDate);
     }
+
+   //added
+//    public AbstractServerSocketAppender<Object> getCustomer() {
+//        return customerId;
+//    }
+//
+//    public void setCustomer(AbstractServerSocketAppender<Object> customer) {
+//        this.customer = customer;
+//    }
 }
