@@ -84,6 +84,10 @@ public class OrderView extends JPanel implements ViewBuilder {
         editOrder.addActionListener(e -> orderController.editButton(orderList));
         orderBottomBarButtons.add(editOrder);
 
+        JButton packingSlip = new JButton("Pakbon");
+        packingSlip.addActionListener(e -> orderController.packingSlipButton());
+        orderBottomBarButtons.add(packingSlip);
+
         JLabel filterOrder = new JLabel("Filters:");
         JCheckBox filterPickedOrder = new JCheckBox("Niet Gepickt");
         filterPickedOrder.addActionListener(e -> orderController.filterPickedOrder(orderList, filterPickedOrder.isSelected(),

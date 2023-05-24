@@ -40,4 +40,6 @@ public class NavbarController {
         cardLayout.show(root, "loadView");
     }
 
+
+
 }
