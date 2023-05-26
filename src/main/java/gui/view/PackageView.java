@@ -92,10 +92,6 @@ public class PackageView extends JPanel implements ViewBuilder {
         JLabel wachtrijTitle = new JLabel("NR:");
         loadList.add(wachtrijTitle, BorderLayout.NORTH);
 
-        JButton cancelLoad = new JButton("Stop");
-        cancelLoad.addActionListener(loadController::CancelLoadButton);
-        loadQueue.add(cancelLoad, BorderLayout.SOUTH);
-
         // wachtrij inladen
         this.add(loadQueue, BorderLayout.EAST);
 

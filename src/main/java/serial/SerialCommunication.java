@@ -2,6 +2,9 @@ package serial;
 
 import gui.MainFrame;
 import gui.controller.RobotController;
+import gui.model.PackageModel;
+import gui.model.RobotQueue;
+import gui.view.dialog.PlacePackageDialog;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
@@ -41,7 +44,7 @@ public class SerialCommunication implements SerialPortEventListener {
 
                 // Controleer of het volledige getal is ontvangen
                 String completeData;
-                if (receivedDataBuilder.toString().contains("\n")) {
+                if (receivedDataBuilder.toString().contains("\n")||receivedDataBuilder.toString().contains("\r")) {
                     completeData = receivedDataBuilder.toString().trim();
                    //System.out.println("Ontvangen gegevens: " + completeData);
                     if (completeData.startsWith("Y:")) {
@@ -50,29 +53,16 @@ public class SerialCommunication implements SerialPortEventListener {
                             String yString = completeData.substring(2);
                             int yValue = Integer.parseInt(yString);
                             RobotController.setYpositie(yValue);
-                            //System.out.println("Y-waarde: " + yValue);
-
-                        }catch (NumberFormatException e){
-                            //System.err.println("Lees Error");
-                        }
-                    } else if (completeData.startsWith("X:")) {
-                        // Ontvangen X-waarde
-                        try {
-                            String xString = completeData.substring(2);
-                            int xValue = Integer.parseInt(xString);
-                            RobotController.setXpositie(xValue);
-                            //System.out.println("X-waarde: " + xValue);
+                            System.out.println("Y-waarde: " + yValue);
 
                         }catch (NumberFormatException e){
                             System.err.println("Lees Error");
                         }
-
-
                     } else {
                         System.out.println("Melding Robot: " + completeData);
-                        setMeldingRobot(completeData);
+                        System.out.println(completeData);
+                        StringToAction(completeData);
                     }
-
                     // Reset de StringBuilder
                     receivedDataBuilder.setLength(0);
                 } else {
@@ -105,5 +95,37 @@ public class SerialCommunication implements SerialPortEventListener {
 
     public static String getMeldingRobot() {
         return meldingRobot;
+    }
+
+
+    public static void StringToAction(String tekst){
+        switch (tekst) {
+            // Case 1
+            case "BEREIKT":
+                System.out.println("BEREIKT");
+                RobotQueue.RobotBereikt(RobotController.getLoad());
+                break;
+
+            // Case 2
+            case "NOODSTOP":
+                System.out.println("NOODSTOP");
+                JOptionPane.showMessageDialog(MainFrame.mainWindow, "Noodstop is ingedrukt", "Waarschuwing", JOptionPane.ERROR_MESSAGE);
+                break;
+
+            // Case 3
+            case "OPSTARTEN":
+                System.out.println("OPSTARTEN");
+                JOptionPane.showMessageDialog(MainFrame.mainWindow, "Robot is aan het opstarten", "opstarten", JOptionPane.WARNING_MESSAGE);
+                break;
+
+            case "INLADEN":
+                System.out.println("INLADEN");
+                //Dialoog wordt aan gemaakt voor het plaatsen van pakket op palletvork
+                PackageModel item=RobotQueue.queue.get(0);
+                PlacePackageDialog placePackageDialog = new PlacePackageDialog(item);
+            //default
+            default:
+                System.out.println("no match");
+        }
     }
 }

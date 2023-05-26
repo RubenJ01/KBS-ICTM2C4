@@ -34,17 +34,18 @@ public class RobotQueue {
         }
     }
 
-    public static void addQueue(PackageModel loadmodel, boolean inladen){
+    public static void addQueue(PackageModel packageModel, boolean inladen){
+        //voegt pakketje toe aan wachtrij en als de wachtrij 0 is dan voert die de opdracht meteen uit
         if(inladen){
-            queue.add(loadmodel);
+            queue.add(packageModel);
             printQueue();
-            PackageView.model.addElement("Inladen Product Id: "+loadmodel.getItemnummer()+" X:"+loadmodel.getLocationX()+" Y:"+loadmodel.getLocationY());
+            PackageView.model.addElement("Inladen Product Id: "+packageModel.getItemnummer()+" X:"+packageModel.getLocationX()+" Y:"+packageModel.getLocationY());
         } else if (!inladen) {
-            queue.add(loadmodel);
+            queue.add(packageModel);
             printQueue();
-            PackageView.model.addElement("Uitladen Product Id: "+loadmodel.getItemnummer()+" X:"+loadmodel.getLocationX()+" Y:"+loadmodel.getLocationY());
+            PackageView.model.addElement("Uitladen Product Id: "+packageModel.getItemnummer()+" X:"+packageModel.getLocationX()+" Y:"+packageModel.getLocationY());
         }
-        System.out.println(queue.size());
+        System.out.println("Lengte wachtrij: "+queue.size());
         if(queue.size()==1){
             executeQueue();
         }
@@ -58,16 +59,10 @@ public class RobotQueue {
         if(queue.size()>=1) {
                 PackageModel item=queue.get(0);
                 //kijkt of item al in het magazijn staat of niet
-                if (!CheckIfLoadInRack(item.getLocationY(),item.getLocationX())) {
-                    //item moet ingeladen worden
-                    // robot gaat eerst naar beginpunt
-                    SerialCommunication.writeToSerial(6,1,3);
-                    //Dialoog wordt aan gemaakt voor het plaatsen van pakket op palletvork
-                    PlacePackageDialog placePackageDialog = new PlacePackageDialog(item);
-                } else {
-                    //item moet worden uitgeladen
 
-                }
+                    SerialCommunication.writeToSerial(item.getLocationX(), item.getLocationY(),2);
+                    RobotController.setLoad(item);
+
 
             } else {
                 System.out.println("wachtrij is leeg");
@@ -99,38 +94,7 @@ public class RobotQueue {
         int x = packageModel.getLocationX();
         int y = packageModel.getLocationY();
         SerialCommunication.writeToSerial(x,y,1);
-
         RobotController.setLoad(packageModel);
-        // Start de loop in een nieuwe thread
-        Executors.newSingleThreadExecutor().execute(() -> {
-            // Wacht op "B" van de seriële poort
-            while (true) {
-                try {
-                String b = SerialCommunication.getMeldingRobot();
-                System.out.println(SerialCommunication.getMeldingRobot());
-                    Thread.sleep(1000);
-                if (b.equals("B")) {
-                    RobotQueue.removeFirstItem(packageModel);
-                    RobotController.removeLoad();
-                    SerialCommunication.setMeldingRobot("");
-                    System.out.println("Lading is in rack");
-                    RackModel.addToRack(packageModel);
-                    RackModel.printRack();
-                    RobotQueue.printQueue();
-                    executeQueue();
-                    break;
-                }
-                }catch (NullPointerException ex){
-                    System.err.println("b=null");
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-
-        });
-
-
     }
 
     public static boolean CheckIfLoadInRack(int x,int y) {
@@ -140,6 +104,17 @@ public class RobotQueue {
             }
         }
         return false;
+    }
+
+    public static void RobotBereikt(PackageModel packageModel){
+        RobotQueue.removeFirstItem(packageModel);
+        RobotController.removeLoad();
+        SerialCommunication.setMeldingRobot("");
+        System.out.println("Robot heeft opdracht voltooid");
+        RackModel.addToRack(packageModel);
+        RackModel.printRack();
+        RobotQueue.printQueue();
+        executeQueue();
     }
 
 

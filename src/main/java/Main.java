@@ -2,6 +2,7 @@
 //import gui.model.LoadModel;
 
 import gui.*;
+import gui.controller.TSP;
 import gui.model.PackageModel;
 import gui.model.RackModel;
 import org.slf4j.Logger;
@@ -30,6 +31,15 @@ public class Main {
         SerialCommunication serialListener = new SerialCommunication();
         SerialCommunication2 serialListener2 = new SerialCommunication2();
         RackModel.getRack();
+        TSP tsp = new TSP();
+
+        tsp.addCoordinate(1, 5);
+        tsp.addCoordinate(5, 1);
+        tsp.addCoordinate(3, 3);
+        tsp.addCoordinate(2,3);
+
+        tsp.startAlgorithm();
+
 
 
 
