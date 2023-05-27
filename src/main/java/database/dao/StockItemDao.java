@@ -39,7 +39,7 @@ public class StockItemDao {
                 "SELECT SI.stockItemID, QuantityOnHand, stockItemName " +
                 "FROM stockitems AS SI " +
                 "LEFT JOIN stockitemholdings AS SIH ON SIH.stockItemID = SI.stockItemID " +
-                "WHERE StockItemID = ? "
+                "WHERE SI.StockItemID = ? "
         );
         try(PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, stockItemID);

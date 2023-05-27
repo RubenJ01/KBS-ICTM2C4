@@ -41,6 +41,10 @@ public class NavbarView extends JPanel implements ViewBuilder {
         loadButton.addActionListener(navbarController::loadButton);
         this.add(loadButton);
 
+        JButton binPacking = new JButton("Inpakken ");
+        binPacking.addActionListener(navbarController::binPackingButton);
+        this.add(binPacking);
+
         this.setVisible(true);
     }
 }

@@ -48,7 +48,7 @@ public class StockView extends JPanel implements ViewBuilder {
         //Search panel
         JPanel stockBottomBar = new JPanel();
         stockBottomBar.setLayout(new FlowLayout(FlowLayout.LEFT));
-        stockBottomBar.setSize(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT/10);
+        stockBottomBar.setSize(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT / 10);
         add(stockBottomBar, BorderLayout.SOUTH);
 
         JLabel jl_StockItemID = new JLabel("Zoek op ID");
@@ -73,7 +73,7 @@ public class StockView extends JPanel implements ViewBuilder {
 
         //https://www.codejava.net/java-se/swing/setting-column-width-and-row-height-for-jtable
         //Custom rowheights
-        table.setRowHeight(Constants.SCREEN_HEIGHT/27);
+        table.setRowHeight(Constants.SCREEN_HEIGHT / 27);
 
         table.getColumnModel().getColumn(0).setCellRenderer(new LeftTableCellRenderer());
         table.getColumnModel().getColumn(2).setCellRenderer(new MiddleTableCellRenderer());

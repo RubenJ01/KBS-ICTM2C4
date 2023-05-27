@@ -6,12 +6,8 @@ public class PackageModel {
     private  int locationX;
     private  int locationY;
     private  int itemnummer;
-
     private int grootte;
-
     private boolean inMagazijn;
-
-    private Color color;
 
     public PackageModel(int locationY, int locationX, int itemnummer, int grootte,boolean inMagazijn) {
         this.locationY = locationY;
@@ -50,10 +46,6 @@ public class PackageModel {
 
     public int getGrootte() {
         return grootte;
-    }
-
-    public Color getColor() {
-        return color;
     }
 
     public String toString() {

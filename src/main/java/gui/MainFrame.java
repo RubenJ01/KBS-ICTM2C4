@@ -1,10 +1,10 @@
 package gui;
 
 import constants.Constants;
+import gui.view.BinPackingView;
 import gui.view.PackageView;
 import gui.view.OrderView;
 import gui.view.StockView;
-import serial.SerialCommunication;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,6 +66,7 @@ public class MainFrame implements ViewBuilder {
         root.add("main", new MainWindow(cardLayout, root));
         root.add("orderView", new OrderView(cardLayout, root));
         root.add("stockView", new StockView(cardLayout, root));
+        root.add("binPackingView", new BinPackingView(cardLayout, root));
         root.add("loadView", new PackageView(cardLayout, root));
 
         return splitPane;

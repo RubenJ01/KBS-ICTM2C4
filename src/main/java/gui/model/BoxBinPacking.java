@@ -1,0 +1,79 @@
+package gui.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class BoxBinPacking {
+    //Hierin staat de informatie over welke pakketten in de doos zitten
+    //Hoeveel ruimte er nog in de doos is en of de doos nog open is.
+    //Ook wordt hier het doosnummer meegegeven.
+    private int openSpace;
+    private boolean boxIsOpen;
+    private final int boxNumber;
+    private int boxLocation;
+    private List<PackageBinPacking> packagesInBox;
+
+    public BoxBinPacking(int boxNumber, int boxLocation) {
+        this.openSpace = 10;
+        this.boxIsOpen = true;
+        this.boxNumber = boxNumber;
+        this.packagesInBox = new ArrayList<>();
+        this.boxLocation = boxLocation;
+
+    }
+
+    public void setNewPackageInBox(PackageBinPacking packageBinPacking) {
+        if (openSpace >= packageBinPacking.getWeight()) {
+            packagesInBox.add(packageBinPacking);
+            //packageBinPacking uit robotQueue halen
+            openSpace -= packageBinPacking.getWeight();
+            if (openSpace >= 9) {
+                boxIsOpen = false;
+            }
+        }
+    }
+    public int getBoxLocation(){
+        return this.boxLocation;
+    }
+    public void setBoxLocation(int location){
+        this.boxLocation = location;
+    }
+
+    public boolean getBoxIsOpen() {
+        return this.boxIsOpen;
+    }
+
+    public int getOpenSpace() {
+        return openSpace;
+    }
+
+    public void setOpenSpace(int openSpace) {
+        this.openSpace = openSpace;
+    }
+
+    public void setBoxIsOpen(boolean boxIsOpen) {
+        this.boxIsOpen = boxIsOpen;
+    }
+
+    public int getBoxNumber() {
+        return boxNumber;
+    }
+
+
+    public List<PackageBinPacking> getPackagesInBox() {
+        return packagesInBox;
+    }
+
+    public void addPackageInBox(PackageBinPacking packageBinPacking) {
+        this.packagesInBox.add(packageBinPacking);
+        this.openSpace -= packageBinPacking.getWeight();
+    }
+
+    public String toString(){
+        String string = "";
+        for(int i = 0; i < packagesInBox.size(); i++){
+            string += packagesInBox.get(i) + "\n";
+        }
+        return string;
+    }
+}
