@@ -19,23 +19,13 @@ public class BoxBinPacking {
         this.boxNumber = boxNumber;
         this.packagesInBox = new ArrayList<>();
         this.boxLocation = boxLocation;
-
     }
 
-    public void setNewPackageInBox(PackageBinPacking packageBinPacking) {
-        if (openSpace >= packageBinPacking.getWeight()) {
-            packagesInBox.add(packageBinPacking);
-            //packageBinPacking uit robotQueue halen
-            openSpace -= packageBinPacking.getWeight();
-            if (openSpace >= 9) {
-                boxIsOpen = false;
-            }
-        }
-    }
-    public int getBoxLocation(){
+    public int getBoxLocation() {
         return this.boxLocation;
     }
-    public void setBoxLocation(int location){
+
+    public void setBoxLocation(int location) {
         this.boxLocation = location;
     }
 
@@ -45,10 +35,6 @@ public class BoxBinPacking {
 
     public int getOpenSpace() {
         return openSpace;
-    }
-
-    public void setOpenSpace(int openSpace) {
-        this.openSpace = openSpace;
     }
 
     public void setBoxIsOpen(boolean boxIsOpen) {
@@ -64,14 +50,20 @@ public class BoxBinPacking {
         return packagesInBox;
     }
 
+    /**
+     * Function to add a package inside the list of packages in a box
+     *
+     * @param packageBinPacking
+     */
     public void addPackageInBox(PackageBinPacking packageBinPacking) {
         this.packagesInBox.add(packageBinPacking);
         this.openSpace -= packageBinPacking.getWeight();
+
     }
 
-    public String toString(){
+    public String toString() {
         String string = "";
-        for(int i = 0; i < packagesInBox.size(); i++){
+        for (int i = 0; i < packagesInBox.size(); i++) {
             string += packagesInBox.get(i) + "\n";
         }
         return string;

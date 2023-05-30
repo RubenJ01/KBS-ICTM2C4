@@ -28,6 +28,15 @@ public class RackDao {
             return instance;
         }
 
+    /**
+     * Function to get a package info on a certain location from the database
+     * @param con
+     * @param x
+     * @param y
+     * @param rowLockType
+     * @return either null or the package info of a certain location
+     * @throws SQLException
+     */
         public Rack getRackByLocation(Connection con, int x, int y, RowLockType rowLockType) throws SQLException {
             String query = rowLockType.getQueryWithLock(
                     "SELECT * FROM rack WHERE positionX = ? AND positionY = ?"
@@ -44,18 +53,28 @@ public class RackDao {
                 }
             }
         }
-    public void deletePackageOnLocation(Connection con, int x, int y, RowLockType rowLockType) throws SQLException {
-        String query = rowLockType.getQueryWithLock(
-                "UPDATE rack " +
-                        "SET productID = null, weight = null " +
-                        "WHERE positionX = ? AND positionY = ?"
-        );
-        try(PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setInt(1, x);
-            ps.setInt(2, y);
-            ps.executeUpdate();
-        }
-    }
+
+        // wordt dit al ergens ander gedaan?
+//    /**
+//     * Function to remove a package from a location in the database
+//     * @param con
+//     * @param x
+//     * @param y
+//     * @param rowLockType
+//     * @throws SQLException
+//     */
+//    public void deletePackageOnLocation(Connection con, int x, int y, RowLockType rowLockType) throws SQLException {
+//        String query = rowLockType.getQueryWithLock(
+//                "UPDATE rack " +
+//                        "SET productID = null, weight = null " +
+//                        "WHERE positionX = ? AND positionY = ?"
+//        );
+//        try(PreparedStatement ps = con.prepareStatement(query)) {
+//            ps.setInt(1, x);
+//            ps.setInt(2, y);
+//            ps.executeUpdate();
+//        }
+//    }
 
         private static Rack getRack(ResultSet rs) throws SQLException {
             return new Rack(

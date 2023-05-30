@@ -71,7 +71,6 @@ public class StockView extends JPanel implements ViewBuilder {
         table.setRowSorter(sorter);
 
 
-        //https://www.codejava.net/java-se/swing/setting-column-width-and-row-height-for-jtable
         //Custom rowheights
         table.setRowHeight(Constants.SCREEN_HEIGHT / 27);
 
@@ -231,7 +230,7 @@ public class StockView extends JPanel implements ViewBuilder {
          * Class to get the type of the columns.
          * Needed for being able to sort correctly
          * @param column  the column being queried
-         * @return
+         * @return class type of the column
          */
         //https://stackoverflow.com/questions/6592192/why-does-my-jtable-sort-an-integer-column-incorrectly
         @Override

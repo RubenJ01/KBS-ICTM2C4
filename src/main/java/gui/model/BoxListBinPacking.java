@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoxListBinPacking {
-    //Hierin staat een lijst van de dozen die er zijn gemaakt.
     private int boxCount;
     private List<BoxBinPacking> boxBinPackingsList;
 
 
-    public BoxListBinPacking(){
+    public BoxListBinPacking() {
         startNewOrder();
     }
 
@@ -25,11 +24,14 @@ public class BoxListBinPacking {
         return boxBinPacking;
     }
 
-    public List<BoxBinPacking> getBoxBinPackingsList(){
+    public List<BoxBinPacking> getBoxBinPackingsList() {
         return boxBinPackingsList;
     }
 
-    public void startNewOrder(){
+    /**
+     * Function to clear the data from the robotarmqueue (fork) and the boxes
+     */
+    public void startNewOrder() {
         this.boxCount = 0;
         this.boxBinPackingsList = new ArrayList<>();
         addNewBox(1);

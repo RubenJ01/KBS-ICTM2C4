@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class PackageBinPacking {
-    //Hierin wordt de informatie over een pakket weergegeven: Een productID en een gewicht
     private static final Logger logger = LoggerFactory.getLogger(PackageBinPacking.class);
     private int weight;
     private int productID;
@@ -27,25 +26,15 @@ public class PackageBinPacking {
         this.stockItemDao = StockItemDao.getInstance();
     }
 
+    public PackageBinPacking(int weight, int productID){
+        this(weight, productID, 2, 3);
+    }
+
     public int getWeight(){
         return this.weight;
     }
     public int getProductID(){
         return this.productID;
-    }
-    public void setWeight(String color){
-        if(color.equals("green")){
-            this.weight = 2;
-        }
-        else if(color.equals("blue")){
-            this.weight = 5;
-        }
-        else if(color.equals("red")){
-            this.weight = 7;
-        }
-        else{
-            this.weight = 0;
-        }
     }
 
     @Override
