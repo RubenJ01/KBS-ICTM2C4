@@ -44,18 +44,7 @@ public class SerialCommunication2 implements SerialPortEventListener {
                 if (receivedDataBuilder.toString().contains("\n")) {
                     completeData = receivedDataBuilder.toString().trim();
                     //System.out.println("Ontvangen gegevens: " + completeData);
-                    if (completeData.startsWith("Y:")) {
-                        // Ontvangen Y-waarde
-                        try {
-                            String yString = completeData.substring(2);
-                            int yValue = Integer.parseInt(yString);
-                            RobotController.setYpositie(yValue);
-                            //System.out.println("Y-waarde: " + yValue);
-
-                        }catch (NumberFormatException e){
-                            System.err.println("Lees Error");
-                        }
-                    } else if (completeData.startsWith("X:")) {
+                 if (completeData.startsWith("X:")) {
                         // Ontvangen X-waarde
                         try {
                             String xString = completeData.substring(2);

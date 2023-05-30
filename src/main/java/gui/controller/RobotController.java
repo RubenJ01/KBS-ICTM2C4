@@ -9,17 +9,21 @@ public class RobotController extends RobotView{
     private static float Xpositie=0;
     private static float Ypositie=0;
 
+    private static int XpositieTSP=0;
+    private static int YpositieTSP=0;
+
     private static PackageModel load;
 
 
     public static void setXpositie(int xpositie) {
         Xpositie = (float) ((xpositie/9.6)+40);
-
+        XpositieTSP=xpositie;
     }
 
 
     public static void setYpositie(int ypositie) {
         Ypositie = (float) (ypositie/9.6);
+        YpositieTSP=ypositie;
 
 
     }
@@ -46,5 +50,13 @@ public class RobotController extends RobotView{
 
     public static void paintLoad(Graphics g, float xpositie, float ypositie){
         load.paintComponent(g,ypositie,xpositie);
+    }
+
+    public static int getXpositieTSP() {
+        return XpositieTSP;
+    }
+
+    public static int getYpositieTSP() {
+        return YpositieTSP;
     }
 }

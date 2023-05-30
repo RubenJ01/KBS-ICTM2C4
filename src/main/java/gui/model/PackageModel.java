@@ -25,14 +25,14 @@ public class PackageModel extends JPanel {
         this.weight=weight;
         locationConvertToPanel(locationY,locationX);
         this.inMagazijn=inMagazijn;
-        if(weight==1){
-            this.color=Color.red;
-        } else if (weight==2) {
+        if(weight==2){
             this.color=Color.green;
-        } else if (weight==3) {
+        } else if (weight==5) {
             this.color=Color.blue;
+        } else if (weight==7) {
+            this.color=Color.red;
         }else{
-            this.color=Color.blue;
+            this.color=Color.red;
         }
 
     }
@@ -42,14 +42,14 @@ public class PackageModel extends JPanel {
         this.itemnummer = itemnummer;
         this.weight=weight;
         locationConvertToPanel(1,8);
-        if(weight==1){
-            this.color=Color.red;
-        } else if (weight==2) {
+        if(weight==2){
             this.color=Color.green;
-        } else if (weight==3) {
+        } else if (weight==5) {
             this.color=Color.blue;
+        } else if (weight==7) {
+            this.color=Color.red;
         }else{
-            this.color=Color.blue;
+            this.color=Color.red;
         }
 
     }
