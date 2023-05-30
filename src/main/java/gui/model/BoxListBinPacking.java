@@ -17,11 +17,10 @@ public class BoxListBinPacking {
         return boxCount;
     }
 
-    public BoxBinPacking addNewBox(int location) {
+    public void addNewBox(int location) {
         this.boxCount += 1;
         BoxBinPacking boxBinPacking = new BoxBinPacking(boxCount, location);
         this.boxBinPackingsList.add(boxBinPacking);
-        return boxBinPacking;
     }
 
     public List<BoxBinPacking> getBoxBinPackingsList() {

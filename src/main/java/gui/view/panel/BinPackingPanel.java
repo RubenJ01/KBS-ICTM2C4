@@ -3,7 +3,6 @@ package gui.view.panel;
 import constants.Constants;
 import gui.model.BinPackingModel;
 import gui.model.BoxBinPacking;
-import gui.model.BoxListBinPacking;
 import gui.model.PackageBinPacking;
 
 import javax.swing.*;

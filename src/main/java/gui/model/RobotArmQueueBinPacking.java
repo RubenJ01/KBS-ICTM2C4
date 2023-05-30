@@ -5,7 +5,7 @@ import java.util.List;
 
 public class RobotArmQueueBinPacking {
 
-    private List<PackageBinPacking> robotArmQueuePackages;
+    private final List<PackageBinPacking> robotArmQueuePackages;
 
 
     public RobotArmQueueBinPacking() {

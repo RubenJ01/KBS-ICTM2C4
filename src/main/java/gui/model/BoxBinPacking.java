@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoxBinPacking {
-    //Hierin staat de informatie over welke pakketten in de doos zitten
-    //Hoeveel ruimte er nog in de doos is en of de doos nog open is.
-    //Ook wordt hier het doosnummer meegegeven.
     private int openSpace;
     private boolean boxIsOpen;
     private final int boxNumber;
     private int boxLocation;
-    private List<PackageBinPacking> packagesInBox;
+    private final List<PackageBinPacking> packagesInBox;
 
     public BoxBinPacking(int boxNumber, int boxLocation) {
         this.openSpace = 10;

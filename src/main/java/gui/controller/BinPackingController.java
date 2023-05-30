@@ -1,32 +1,21 @@
 package gui.controller;
 
 import gui.model.BinPackingModel;
-import gui.model.BoxListBinPacking;
 import gui.model.PackageBinPacking;
 import gui.view.BinPackingView;
-import gui.view.panel.BinPackingBoxesPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class BinPackingController {
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
-    private final CardLayout layout;
-    private final JPanel root;
     private final BinPackingView binPackingView;
-    private final BoxListBinPacking boxListBinPacking;
-    private final BinPackingBoxesPanel binPackingBoxesPanel;
     private final BinPackingModel binPackingModel;
 
-    public BinPackingController(CardLayout layout, JPanel root, BinPackingView binPackingView, BoxListBinPacking boxListBinPacking, BinPackingBoxesPanel binPackingBoxesPanel, BinPackingModel binPackingModel) {
-        this.layout = layout;
-        this.root = root;
+    public BinPackingController(BinPackingView binPackingView, BinPackingModel binPackingModel) {
         this.binPackingView = binPackingView;
-        this.boxListBinPacking = boxListBinPacking;
-        this.binPackingBoxesPanel = binPackingBoxesPanel;
         this.binPackingModel = binPackingModel;
     }
 

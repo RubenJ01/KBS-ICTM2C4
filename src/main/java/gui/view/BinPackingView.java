@@ -16,16 +16,15 @@ public class BinPackingView extends JPanel implements ViewBuilder {
     private static final Logger logger = LoggerFactory.getLogger(BinPackingView.class);
     private final NavbarView navbarView;
     private final BinPackingController binPackingController;
-    private final BinPackingModel binPackingModel;
     private final BinPackingBoxesPanel binPackingBoxesPanel;
     private final BinPackingPanel binPackingPanel;
 
     public BinPackingView(CardLayout layout, JPanel root) {
         this.navbarView = new NavbarView(layout, root);
-        this.binPackingModel = new BinPackingModel();
+        BinPackingModel binPackingModel = new BinPackingModel();
         this.binPackingBoxesPanel = new BinPackingBoxesPanel(binPackingModel);
-        this.binPackingPanel = new BinPackingPanel(this.binPackingModel);
-        this.binPackingController = new BinPackingController(layout, root, this, this.binPackingModel.getBoxListBinPacking(), binPackingBoxesPanel, binPackingModel);
+        this.binPackingPanel = new BinPackingPanel(binPackingModel);
+        this.binPackingController = new BinPackingController(this, binPackingModel);
         buildAndShowView();
 
     }
@@ -80,10 +79,6 @@ public class BinPackingView extends JPanel implements ViewBuilder {
         this.add(scrollPanePanel, BorderLayout.EAST);
 
         this.setVisible(true);
-    }
-
-    public BinPackingBoxesPanel getBinPackingBoxesPanel() {
-        return binPackingBoxesPanel;
     }
 
     /**

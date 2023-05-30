@@ -5,6 +5,7 @@ import database.dao.StockItemDao;
 import database.model.StockItem;
 import database.util.DatabaseConnection;
 import gui.ViewBuilder;
+import gui.model.StockModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,8 +43,8 @@ public class StockView extends JPanel implements ViewBuilder {
         List<StockItem> allStocks = getStockitemsFromDatabase();
 
         //Create Table
-        VoorraadModel voorraadModel = new VoorraadModel(allStocks);
-        JTable table = new JTable(voorraadModel);
+        StockModel stockModel = new StockModel(allStocks);
+        JTable table = new JTable(stockModel);
 
         //Search panel
         JPanel stockBottomBar = new JPanel();
@@ -65,7 +66,7 @@ public class StockView extends JPanel implements ViewBuilder {
 
 
         //Sorting and searching
-        TableRowSorter<VoorraadModel> sorter = new TableRowSorter<>(voorraadModel);
+        TableRowSorter<StockModel> sorter = new TableRowSorter<>(stockModel);
         searchStockItemID.getDocument().addDocumentListener(getDocumentListenerStockItemID(table, sorter));
         searchStockItemName.getDocument().addDocumentListener(getDocumentListenerStockItemName(table, sorter));
         table.setRowSorter(sorter);
@@ -90,7 +91,7 @@ public class StockView extends JPanel implements ViewBuilder {
      * @param jtable
      * @param sorter
      */
-    private DocumentListener getDocumentListenerStockItemName(JTable jtable, TableRowSorter<VoorraadModel> sorter) {
+    private DocumentListener getDocumentListenerStockItemName(JTable jtable, TableRowSorter<StockModel> sorter) {
         return new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -131,7 +132,7 @@ public class StockView extends JPanel implements ViewBuilder {
      * @param jtable
      * @param sorter
      */
-    private DocumentListener getDocumentListenerStockItemID(JTable jtable, TableRowSorter<VoorraadModel> sorter) {
+    private DocumentListener getDocumentListenerStockItemID(JTable jtable, TableRowSorter<StockModel> sorter) {
         return new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -205,67 +206,10 @@ public class StockView extends JPanel implements ViewBuilder {
     }
 
     /**
-     * Class to make a table model with the following data: "Product ID", "Product naam" and "Voorraad"
-     */
-    class VoorraadModel extends AbstractTableModel {
-
-        private String[] columnNames = {"Product ID", "Product naam", "Voorraad"};
-
-        private final Object[][] data;
-        private final int rowCount;
-
-        private VoorraadModel(List<StockItem> stockitemsList) {
-            data = new Object[stockitemsList.size()][3];
-            this.rowCount = stockitemsList.size();
-            for(int i = 0; i < stockitemsList.size(); i++) {
-                StockItem item = stockitemsList.get(i);
-                data[i][0] = item.getStockItemID();
-                data[i][1] = item.getStockItemName();
-                data[i][2] = item.getStockitemholdings().getQuantityOnHand();
-            }
-
-        }
-
-        /**
-         * Class to get the type of the columns.
-         * Needed for being able to sort correctly
-         * @param column  the column being queried
-         * @return class type of the column
-         */
-        //https://stackoverflow.com/questions/6592192/why-does-my-jtable-sort-an-integer-column-incorrectly
-        @Override
-        public Class getColumnClass(int column) {
-            switch (column) {
-                case 0:
-                    return Integer.class;
-                case 1:
-                    return String.class;
-                case 2:
-                    return Integer.class;
-                default:
-                    return String.class;
-            }
-        }
-
-        public int getColumnCount() {
-            return 3;
-        }
-        public int getRowCount() {
-            return rowCount;
-        }
-        public String getColumnName(int column) {
-            return columnNames[column];
-        }
-        public Object getValueAt(int row, int column) {
-            return data[row][column];
-        }
-    };
-
-    /**
      * Class to set the alignment of the text in a column to the left
      */
     //https://stackoverflow.com/questions/3467052/set-right-alignment-in-jtable-column
-    public class LeftTableCellRenderer extends DefaultTableCellRenderer {
+    public static class LeftTableCellRenderer extends DefaultTableCellRenderer {
         protected LeftTableCellRenderer() {
             setHorizontalAlignment(JLabel.LEFT);  }
 
@@ -274,7 +218,7 @@ public class StockView extends JPanel implements ViewBuilder {
     /**
      * Class to set the alignment of the text in a column to the center
      */
-    public class MiddleTableCellRenderer extends DefaultTableCellRenderer {
+    public static class MiddleTableCellRenderer extends DefaultTableCellRenderer {
         protected MiddleTableCellRenderer() {
             setHorizontalAlignment(JLabel.CENTER);  }
 

@@ -23,13 +23,5 @@ public class Main {
         }
         logger.info("INFO - dit is een test");
         new MainFrame();
-
-        //StockView stockView = new StockView();
-
-
-
-        //this is for sending the locations of the products to the robot.
-
-        //sending product location ends here.
     }
 }

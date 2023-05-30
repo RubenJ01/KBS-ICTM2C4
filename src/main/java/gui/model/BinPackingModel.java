@@ -1,30 +1,14 @@
 package gui.model;
 
-import database.dao.RackDao;
-import database.model.Rack;
-import database.util.DatabaseConnection;
-import database.util.RowLockType;
-import gui.view.OrderView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import java.sql.Array;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class BinPackingModel {
 
-    private static final Logger logger = LoggerFactory.getLogger(BinPackingModel.class);
-    private BoxListBinPacking boxListBinPacking;
-    private RobotArmQueueBinPacking robotArmQueueBinPacking;
-    private RackDao rackDao;
-    private boolean locationReached;
+    private final BoxListBinPacking boxListBinPacking;
+    private final RobotArmQueueBinPacking robotArmQueueBinPacking;
 
     public BinPackingModel() {
         this.boxListBinPacking = new BoxListBinPacking();
         this.robotArmQueueBinPacking = new RobotArmQueueBinPacking();
-        this.rackDao = RackDao.getInstance();
     }
 
     public BoxListBinPacking getBoxListBinPacking() {
@@ -54,15 +38,12 @@ public class BinPackingModel {
      * Also removes the package from the robotarmqueue list.
      */
     public void processPackageFromFork() {
-        if (getRobotArmQueueBinPacking().getRobotArmQueuePackages().size() > 1) {
-            PackageBinPacking packageBinPacking = getRobotArmQueueBinPacking().getRobotArmQueuePackages().get((getRobotArmQueueBinPacking().getRobotArmQueuePackages().size() - 1));
+        if (getRobotArmQueueBinPacking().getRobotArmQueuePackages().size() > 0) {
+            int packageIndex = getRobotArmQueueBinPacking().getRobotArmQueuePackages().size()-1;
+            PackageBinPacking packageBinPacking = getRobotArmQueueBinPacking().getRobotArmQueuePackages().get(packageIndex);
             addPackageInBox(packageBinPacking);
-            getRobotArmQueueBinPacking().getRobotArmQueuePackages().remove((getRobotArmQueueBinPacking().getRobotArmQueuePackages().size() - 1));
-        } else if (getRobotArmQueueBinPacking().getRobotArmQueuePackages().size() == 1) {
-            PackageBinPacking packageBinPacking = getRobotArmQueueBinPacking().getRobotArmQueuePackages().get(0);
-            addPackageInBox(packageBinPacking);
-            getRobotArmQueueBinPacking().getRobotArmQueuePackages().remove(0);
-        }
+            getRobotArmQueueBinPacking().getRobotArmQueuePackages().remove(packageIndex);
+       }
     }
 
     /**
