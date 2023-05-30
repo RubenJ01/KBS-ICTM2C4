@@ -5,6 +5,7 @@ import database.model.Order;
 import database.model.OrderLine;
 import gui.view.dialog.AddOrderDialog;
 import gui.view.dialog.EditOrderDialog;
+import gui.view.dialog.ProcessOrderDialog;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -19,6 +20,8 @@ public class OrderController {
     private final JPanel root;
     private final JDialog editOrderDialog;
 
+    private final JDialog processOrderDialog;
+
     private final JDialog addOrderDialog;
     private OrderDao orderDao;
 
@@ -28,7 +31,9 @@ public class OrderController {
         this.root = root;
         this.addOrderDialog = new AddOrderDialog(totalOrders, orderListModel, currentVisibleOrders);
         this.editOrderDialog = new EditOrderDialog();
+        this.processOrderDialog = new ProcessOrderDialog();
     }
+
 
     public void listSelected(ListSelectionEvent e, JList<Order> orderList, JPanel singleOrder) {
         int selectedIndex = orderList.getSelectedIndex();
@@ -69,6 +74,18 @@ public class OrderController {
             }
             EditOrderDialog.order = orderList.getSelectedValue();
             this.editOrderDialog.setVisible(true);
+        }
+    }
+
+
+    public void processOrderButton(JList<Order> orderList) {
+        if (!this.processOrderDialog.isActive() || !this.processOrderDialog.isVisible()) {
+            if(orderList.getSelectedIndex() == -1) {
+                JOptionPane.showMessageDialog(null, "Selecteer een order om te verwerken.");
+                return;
+            }
+            ProcessOrderDialog.order = orderList.getSelectedValue();
+            this.processOrderDialog.setVisible(true);
         }
     }
 
@@ -163,8 +180,10 @@ public class OrderController {
             return;
         }
         EditOrderDialog.order = orderList.getSelectedValue();
+        ProcessOrderDialog.order = orderList.getSelectedValue();
         // not very pretty but this refreshed the dialog
         this.editOrderDialog.setVisible(false);
+        this.processOrderDialog.setVisible(false);
     }
 }
 
