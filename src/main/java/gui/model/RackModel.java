@@ -1,6 +1,7 @@
 package gui.model;
 
 import database.dao.RackDao;
+import database.model.OrderLine;
 import database.util.DatabaseConnection;
 import gui.view.RackView;
 
@@ -32,6 +33,16 @@ public  class  RackModel  extends RackView {
             }
         }
         return true;
+    }
+
+    public static boolean CheckPackage(int itemnummer){
+
+        for (PackageModel item : rack) {
+            if (item.getItemnummer()==itemnummer){
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void addToRack(PackageModel loadmodel){
