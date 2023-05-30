@@ -1,6 +1,7 @@
 package gui.model;
 
 import database.dao.RackDao;
+import database.model.OrderLine;
 import database.util.DatabaseConnection;
 import gui.view.RackView;
 
