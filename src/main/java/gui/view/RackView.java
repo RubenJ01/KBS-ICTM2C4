@@ -23,8 +23,10 @@ public class RackView extends JPanel {
     }
 
     public void paintPackages(Graphics g){
-        for (PackageModel item : rack) {
-            item.paintComponent(g);
+        if(rack.size()>0) {
+            for (PackageModel item : rack) {
+                item.paintComponent(g);
+            }
         }
     }
 

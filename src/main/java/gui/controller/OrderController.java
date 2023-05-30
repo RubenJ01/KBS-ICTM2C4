@@ -22,6 +22,7 @@ public class OrderController {
 
     private final JDialog processOrderDialog;
 
+    private final PackingSlipDialog packingSlipDialog;
     private final JDialog addOrderDialog;
     private OrderDao orderDao;
 
@@ -29,6 +30,7 @@ public class OrderController {
                            JLabel currentVisibleOrders) {
         this.layout = layout;
         this.root = root;
+        this.packingSlipDialog = new PackingSlipDialog(layout, root);
         this.addOrderDialog = new AddOrderDialog(totalOrders, orderListModel, currentVisibleOrders);
         this.editOrderDialog = new EditOrderDialog();
         this.processOrderDialog = new ProcessOrderDialog();
@@ -59,9 +61,9 @@ public class OrderController {
             }
             singleOrder.revalidate();
             singleOrder.repaint();
+
         }
     }
-
 
     /**
      * This method is used to open the JDialog to edit an order.
@@ -98,6 +100,16 @@ public class OrderController {
             this.addOrderDialog.setVisible(true);
         }
     }
+
+    public void packingSlipButton() {
+        if(PackingSlipDialog.selectedOrder == null) {
+            JOptionPane.showMessageDialog(null, "Selecteer een order om een pakbon weer te geven.");
+            return;
+        }
+        packingSlipDialog.refreshPanel();
+        packingSlipDialog.setVisible(!packingSlipDialog.isVisible() && !packingSlipDialog.isActive());
+    }
+
     /**
      * This method is used to search for an order by order id.
      *
@@ -179,6 +191,9 @@ public class OrderController {
         if (orderList.getSelectedIndex() == -1) {
             return;
         }
+        Order selectedValue = orderList.getSelectedValue();
+        EditOrderDialog.order = selectedValue;
+        PackingSlipDialog.selectedOrder = selectedValue;
         EditOrderDialog.order = orderList.getSelectedValue();
         ProcessOrderDialog.order = orderList.getSelectedValue();
         // not very pretty but this refreshed the dialog

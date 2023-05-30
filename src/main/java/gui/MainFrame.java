@@ -4,7 +4,6 @@ import constants.Constants;
 import gui.view.PackageView;
 import gui.view.OrderView;
 import gui.view.StockView;
-import serial.SerialCommunication;
 
 import javax.swing.*;
 import java.awt.*;

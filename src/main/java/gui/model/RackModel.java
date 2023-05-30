@@ -1,7 +1,11 @@
 package gui.model;
 
+import database.dao.RackDao;
+import database.util.DatabaseConnection;
 import gui.view.RackView;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public  class  RackModel  extends RackView {
@@ -20,8 +24,11 @@ public  class  RackModel  extends RackView {
         for (PackageModel item : rack) {
             if(x==item.getLocationX()&&y==item.getLocationY()){
                 return false;
-            }else{
-                return true;
+            }
+        }
+        for (PackageModel item : RobotQueue.queue) {
+            if(x==item.getLocationX()&&y==item.getLocationY()){
+                return false;
             }
         }
         return true;
@@ -29,9 +36,29 @@ public  class  RackModel  extends RackView {
 
     public static void addToRack(PackageModel loadmodel){
         rack.add(loadmodel);
+        try (Connection con = DatabaseConnection.getConnection()) {
+            RackDao.getInstance().addPackage(con, loadmodel.getItemnummer(), loadmodel.getWeight(), loadmodel.getLocationX(), loadmodel.getLocationY());
+        } catch (SQLException e) {
+            System.err.println("kon pakket niet toevoegen aan magazijn");
+        }
     }
-    public static void removeFromRack(){
+    public static void removeFromRack(PackageModel loadmodel){
+        rack.remove(loadmodel);
+        try (Connection con = DatabaseConnection.getConnection()) {
+            RackDao.getInstance().removePackage(con, loadmodel.getLocationX(), loadmodel.getLocationY());
+        } catch (SQLException e) {
+            System.err.println("kon pakket niet verwijderen uit magazijn");
+        }
 
     }
+
+    public static void getRack(){
+        try (Connection con = DatabaseConnection.getConnection()) {
+            RackDao.getInstance().fillRackStartUp(con);
+        } catch (SQLException e) {
+            System.err.println("kon magazijn niet ophalen");
+        }
+    }
+
 }
 
