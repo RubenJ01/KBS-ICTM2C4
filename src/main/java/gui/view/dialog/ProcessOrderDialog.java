@@ -2,15 +2,20 @@ package gui.view.dialog;
 
 import database.dao.OrderDao;
 import database.model.Order;
+import database.model.OrderLine;
 import gui.ViewBuilder;
 import gui.controller.ProcessOrderController;
+import gui.model.RackModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
-public class ProcessOrderDialog extends JDialog implements ViewBuilder {
+public class ProcessOrderDialog extends JDialog implements ViewBuilder, ActionListener {
 
     private static final Logger logger = LoggerFactory.getLogger(ProcessOrderDialog.class);
     private final ProcessOrderController processOrderController = new ProcessOrderController();
@@ -18,6 +23,8 @@ public class ProcessOrderDialog extends JDialog implements ViewBuilder {
     public static Order order;
     private JLabel header;
     private Order copy;
+    private JButton confirmButton;
+    private List<OrderLine> list;
 
     private JPanel scrollablePanel;
 
@@ -100,11 +107,33 @@ public class ProcessOrderDialog extends JDialog implements ViewBuilder {
 
         this.scrollablePanel.add(centerContent);
 
-        JButton confirmButton = new JButton("Bevestigen");
-        confirmButton.addActionListener(processOrderController::processButton);
+        confirmButton = new JButton("Bevestigen");
+        confirmButton.addActionListener(this);
 
         this.add(confirmButton, BorderLayout.SOUTH);
+        list = copy.getOrderLines();
 
 
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == confirmButton) {
+            setVisible(false);
+            for(OrderLine item : list) {
+                int itemID = item.getStockItemId();
+                System.out.println(itemID);
+
+                if(RackModel.CheckPackage(itemID)) {
+                    System.out.println("In magazijn");
+                    RackModel.getYCoordinates(itemID);
+                    RackModel.getXCoordinates(itemID);
+                    tsp
+                } else {
+                    System.out.println("Niet in magazijn");
+                }
+            }
+        }
     }
 }

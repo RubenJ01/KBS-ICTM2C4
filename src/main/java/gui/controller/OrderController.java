@@ -3,6 +3,7 @@ package gui.controller;
 import database.dao.OrderDao;
 import database.model.Order;
 import database.model.OrderLine;
+import gui.view.PackingSlipDialog;
 import gui.view.dialog.AddOrderDialog;
 import gui.view.dialog.EditOrderDialog;
 import gui.view.dialog.ProcessOrderDialog;

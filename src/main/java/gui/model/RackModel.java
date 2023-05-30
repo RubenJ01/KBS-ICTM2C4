@@ -19,7 +19,7 @@ public  class  RackModel  extends RackView {
             }
         }
     }
-    public boolean CheckLocationPossession(int x, int y){
+    public static boolean CheckLocationPossession(int x, int y){
 
         for (PackageModel item : rack) {
             if(x==item.getLocationX()&&y==item.getLocationY()){
@@ -32,6 +32,16 @@ public  class  RackModel  extends RackView {
             }
         }
         return true;
+    }
+
+    public static boolean CheckPackage(int itemnummer){
+
+        for (PackageModel item : rack) {
+            if (item.getItemnummer()==itemnummer){
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void addToRack(PackageModel loadmodel){
@@ -58,6 +68,26 @@ public  class  RackModel  extends RackView {
         } catch (SQLException e) {
             System.err.println("kon magazijn niet ophalen");
         }
+    }
+
+    public static int getXCoordinates(int itemNummer) {
+        for (PackageModel item : rack) {
+            if (item.getItemnummer()==itemNummer){
+                System.out.println(item.getLocationX());
+                return item.getLocationX();
+            }
+        }
+        return 0;
+    }
+
+    public static int getYCoordinates(int itemNummer) {
+        for (PackageModel item : rack) {
+            if (item.getItemnummer()==itemNummer){
+                System.out.println(item.getLocationY());
+                return item.getLocationY();
+            }
+        }
+        return 0;
     }
 
 }
