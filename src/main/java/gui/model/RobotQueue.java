@@ -59,9 +59,13 @@ public class RobotQueue {
         if(queue.size()>=1) {
                 PackageModel item=queue.get(0);
                 //kijkt of item al in het magazijn staat of niet
-
+                if (item.isInMagazijn()){
                     SerialCommunication.writeToSerial(item.getLocationX(), item.getLocationY(),2);
                     RobotController.setLoad(item);
+                }else {
+                    RobotController.setLoad(item);
+                    SerialCommunication.writeToSerial(6,1,3);
+                }
 
 
             } else {
@@ -106,11 +110,22 @@ public class RobotQueue {
         return false;
     }
 
-    public static void RobotBereikt(PackageModel packageModel){
+    public static void RobotBereiktInladen(PackageModel packageModel){
         RobotQueue.removeFirstItem(packageModel);
         RobotController.removeLoad();
         SerialCommunication.setMeldingRobot("");
-        System.out.println("Robot heeft opdracht voltooid");
+        packageModel.setInMagazijn(true);
+        System.out.println("Robot heeft inladen voltooid");
+        RackModel.addToRack(packageModel);
+        RackModel.printRack();
+        RobotQueue.printQueue();
+        executeQueue();
+    }
+    public static void RobotBereiktUitladen(PackageModel packageModel){
+        RobotQueue.removeFirstItem(packageModel);
+        RobotController.removeLoad();
+        SerialCommunication.setMeldingRobot("");
+        System.out.println("Robot heeft uitladen voltooid");
         RackModel.addToRack(packageModel);
         RackModel.printRack();
         RobotQueue.printQueue();
