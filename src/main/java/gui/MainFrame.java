@@ -69,6 +69,7 @@ public class MainFrame implements ViewBuilder {
         root.add("binPackingView", new BinPackingView(cardLayout, root));
         root.add("loadView", new PackageView(cardLayout, root));
 
+
         return splitPane;
     }
 }

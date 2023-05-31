@@ -28,13 +28,16 @@ public class OrderView extends JPanel implements ViewBuilder {
     private final OrderController orderController;
     private final List<Order> allOrders = new ArrayList<>();
     private final DefaultListModel<Order> orderListModel;
-    private JLabel totalOrders;
+    private final JLabel totalOrders;
+    private final JLabel currentVisibleOrders;
 
     public OrderView(CardLayout layout, JPanel root) {
         this.navbarView = new NavbarView(layout, root);
         this.orderDao = OrderDao.getInstance();
-        this.orderController = new OrderController(layout, root);
+        this.totalOrders = new JLabel();
+        this.currentVisibleOrders = new JLabel();
         this.orderListModel = new DefaultListModel<>();
+        this.orderController = new OrderController(layout, root, totalOrders, orderListModel, currentVisibleOrders);
         buildAndShowView();
     }
 
@@ -46,9 +49,24 @@ public class OrderView extends JPanel implements ViewBuilder {
         JList<Order> orderList = new JList<>();
         orderList.setModel(orderListModel);
         orderList.setSelectionBackground(Color.GRAY);
+        orderList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        orderList.addListSelectionListener(e -> orderController.listSelectionListener(orderList));
         JScrollPane scrollPane = new JScrollPane(orderList);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         this.add(scrollPane, BorderLayout.CENTER);
+
+        JPanel singleOrder = new JPanel();
+        singleOrder.setBackground(Color.WHITE);
+
+        orderList.addListSelectionListener(e -> orderController.listSelected(e, orderList, singleOrder));
+        orderList.setSelectionBackground(Color.GRAY);
+
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        JPanel centralPanel = new JPanel();
+        centralPanel.setLayout(new GridLayout(1, 2));
+        centralPanel.add(scrollPane);
+        this.add(centralPanel, BorderLayout.CENTER);
+        centralPanel.add(singleOrder);
 
         JPanel orderBottomBarButtons = new JPanel();
         orderBottomBarButtons.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -63,12 +81,21 @@ public class OrderView extends JPanel implements ViewBuilder {
         orderBottomBarButtons.add(addOrder);
 
         JButton editOrder = new JButton("Bewerken");
-        editOrder.addActionListener(orderController::editButton);
+        editOrder.addActionListener(e -> orderController.editButton(orderList));
         orderBottomBarButtons.add(editOrder);
+
+        JButton processOrder = new JButton("Verwerken");
+        processOrder.addActionListener(e -> orderController.processOrderButton(orderList));
+        orderBottomBarButtons.add(processOrder);
+
+        JButton packingSlip = new JButton("Pakbon");
+        packingSlip.addActionListener(e -> orderController.packingSlipButton());
+        orderBottomBarButtons.add(packingSlip);
 
         JLabel filterOrder = new JLabel("Filters:");
         JCheckBox filterPickedOrder = new JCheckBox("Niet Gepickt");
-        filterPickedOrder.addActionListener(e -> orderController.filterPickedOrder(orderList, filterPickedOrder.isSelected(), orderListModel));
+        filterPickedOrder.addActionListener(e -> orderController.filterPickedOrder(orderList, filterPickedOrder.isSelected(),
+                orderListModel ,currentVisibleOrders));
 
         JTextField searchOrderTextField = new JTextField();
         searchOrderTextField.setText("Zoeken...");
@@ -76,15 +103,18 @@ public class OrderView extends JPanel implements ViewBuilder {
         searchOrderTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                orderController.searchTextField(orderList, orderListModel, searchOrderTextField.getText(), filterPickedOrder);
+                orderController.searchTextField(orderList, orderListModel, searchOrderTextField.getText(),
+                        filterPickedOrder, currentVisibleOrders);
             }
             @Override
             public void removeUpdate(DocumentEvent e) {
-               orderController.searchTextField(orderList, orderListModel, searchOrderTextField.getText(), filterPickedOrder);
+               orderController.searchTextField(orderList, orderListModel, searchOrderTextField.getText(),
+                       filterPickedOrder, currentVisibleOrders);
             }
             @Override
             public void changedUpdate(DocumentEvent e) {
-                orderController.searchTextField(orderList, orderListModel, searchOrderTextField.getText(), filterPickedOrder);
+                orderController.searchTextField(orderList, orderListModel, searchOrderTextField.getText(),
+                        filterPickedOrder, currentVisibleOrders);
             }
         });
 
@@ -103,15 +133,15 @@ public class OrderView extends JPanel implements ViewBuilder {
         });
 
         orderBottomBarButtons.add(searchOrderTextField);
-
-
         orderBottomBarButtons.add(filterOrder);
         orderBottomBarButtons.add(filterPickedOrder);
 
-        this.totalOrders = new JLabel(String.format("Totaal aantal orders: %d", allOrders.size()));
+        this.totalOrders.setText(String.format("Totaal aantal orders: %d", allOrders.size()));
+        this.currentVisibleOrders.setText(String.format("Aantal zichtbare orders: %d", orderList.getVisibleRowCount()));
 
         JPanel orderBottomBarText = new JPanel();
         orderBottomBarText.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        orderBottomBarText.add(currentVisibleOrders);
         orderBottomBarText.add(totalOrders);
 
         orderBottomBar.add(orderBottomBarText);
@@ -130,7 +160,7 @@ public class OrderView extends JPanel implements ViewBuilder {
      */
     public void loadAllOrders(DefaultListModel<Order> orderDefaultListModel) {
         try (Connection con = DatabaseConnection.getConnection()) {
-            this.allOrders.addAll(this.orderDao.getAllOrders(con, orderDefaultListModel, totalOrders));
+            this.allOrders.addAll(this.orderDao.getAllOrders(con, orderDefaultListModel, totalOrders, currentVisibleOrders));
         } catch (SQLException e) {
             logger.error(e.getMessage());
         }

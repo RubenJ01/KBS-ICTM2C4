@@ -7,13 +7,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+/**
+ * This class is responsible for all the queries made to the database regarding orders.
+ */
 public class OrderDao {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderDao.class);
@@ -63,14 +69,15 @@ public class OrderDao {
     /**
      * Retrieves all orders from the database and adds them to the list model.
      * This method should never be used outside of OrderView.
-     * It blocks the EDT for a long time.
-     * @param con the database connection object.
+     *
+     * @param con                   the database connection object.
      * @param orderDefaultListModel the list model to add the orders to.
-     * @param orderAmount the label to set the amount of orders to.
+     * @param orderAmount           the label to set the amount of orders to.
      * @return a list of all orders.
      * @throws SQLException if the query failed.
      */
-    public List<Order> getAllOrders(Connection con, DefaultListModel<Order> orderDefaultListModel, JLabel orderAmount) throws SQLException {
+    public List<Order> getAllOrders(Connection con, DefaultListModel<Order> orderDefaultListModel, JLabel orderAmount,
+                                    JLabel currentVisibleOrders) throws SQLException {
         String getAllOrders = "SELECT * FROM orders ORDER BY OrderID";
         String getAllOrderLines = "SELECT * FROM orderlines WHERE OrderID = ?";
         List<Order> allOrders = new ArrayList<>();
@@ -85,15 +92,27 @@ public class OrderDao {
                     addOrdersToDefaultListModel(allOrders, orderDefaultListModel);
                     allOrders.clear();
                     orderAmount.setText(String.format("Totaal aantal orders: %d", orderDefaultListModel.size()));
-                    Thread.sleep(100);
+                    currentVisibleOrders.setText(String.format("Aantal zichtbare orders: %d", orderDefaultListModel.size()));
                 }
             }
-        } catch (InterruptedException e) {
+            addOrdersToDefaultListModel(allOrders, orderDefaultListModel);
+            orderAmount.setText(String.format("Totaal aantal orders: %d", orderDefaultListModel.size()));
+            currentVisibleOrders.setText(String.format("Aantal zichtbare orders: %d", orderDefaultListModel.size()));
+        } catch (ArrayIndexOutOfBoundsException e) {
             logger.error(e.getMessage());
         }
         return allOrders;
     }
 
+    /**
+     * Retrieves all order lines from a specific order.
+     *
+     * @param con     the database connection object.
+     * @param query   the query to execute.
+     * @param orderId the id of the order you want to retrieve the order lines from.
+     * @return a list of order lines.
+     * @throws SQLException if the query failed.
+     */
     private List<OrderLine> getOrderLines(Connection con, String query, int orderId) throws SQLException {
         List<OrderLine> orderLines = new ArrayList<>();
         try (PreparedStatement ps = con.prepareStatement(query)) {
@@ -103,11 +122,21 @@ public class OrderDao {
                     OrderLine orderLine = createOrderLineFromResultSet(rs);
                     orderLines.add(orderLine);
                 }
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
             }
         }
         return orderLines;
     }
 
+    /**
+     * Creates an order from a result set.
+     *
+     * @param rs         the result set to create the order from.
+     * @param orderLines the order lines to add to the order.
+     * @return the order as an object.
+     * @throws SQLException if the query failed.
+     */
     private Order createOrderFromResultSet(ResultSet rs, List<OrderLine> orderLines) throws SQLException {
         return new Order(
                 rs.getInt("OrderID"),
@@ -130,8 +159,15 @@ public class OrderDao {
         );
     }
 
+    /**
+     * Creates an order line from a result set.
+     *
+     * @param rs the result set to create the order line from.
+     * @return the order line as an object.
+     * @throws SQLException if the query failed.
+     */
     private OrderLine createOrderLineFromResultSet(ResultSet rs) throws SQLException {
-        OrderLine orderLine = new OrderLine(
+        return new OrderLine(
                 rs.getInt("OrderLineID"),
                 rs.getInt("OrderID"),
                 rs.getInt("StockItemID"),
@@ -145,13 +181,25 @@ public class OrderDao {
                 rs.getInt("LastEditedBy"),
                 rs.getDate("LastEditedWhen")
         );
-        return orderLine;
     }
 
+    /**
+     * Adds orders to the list model.
+     *
+     * @param orders                the orders to add.
+     * @param orderDefaultListModel the list model to add the orders to.
+     */
     private void addOrdersToDefaultListModel(List<Order> orders, DefaultListModel<Order> orderDefaultListModel) {
-        orders.forEach(orderDefaultListModel::addElement);
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                for (Order order : orders) {
+                    orderDefaultListModel.addElement(order);
+                }
+            });
+        } catch (InterruptedException | InvocationTargetException e) {
+            logger.error(e.getMessage());
+        }
     }
-
 
     /**
      * Adds an order to the database.
@@ -162,9 +210,8 @@ public class OrderDao {
      */
     public void addOrder(Connection con, Order order) throws SQLException {
         String query = "INSERT INTO orders(CustomerID, OrderDate, ExpectedDeliveryDate, IsUndersupplyBackordered, " +
-                "LastEditedBy, LastEditedWhen, SalespersonPersonID, ContactPersonID) VALUES (?,?,?,?,?,?,?,?)";
+                "LastEditedBy, LastEditedWhen, SalespersonPersonID, ContactPersonID, OrderID) VALUES (?,?,?,?,?,?,?,?,?)";
         try (PreparedStatement ps = con.prepareStatement(query)) {
-            System.out.println(order);
             ps.setInt(1, order.getCustomerId());
             ps.setDate(2, order.getOrderDate());
             ps.setDate(3, order.getExpectedDeliveryDate());
@@ -173,9 +220,100 @@ public class OrderDao {
             ps.setDate(6, order.getLastEditedWhen());
             ps.setInt(7, order.getSalespersonPersonId());
             ps.setInt(8, order.getContactPersonId());
+            ps.setInt(9, order.getOrderId());
             ps.executeUpdate();
         }
     }
 
+    /**
+     * Retrieves the newest order from the database.
+     *
+     * @param con         the database connection object.
+     * @param rowLockType the row lock type.
+     * @return the newest order.
+     * @throws SQLException if the query failed.
+     */
+    public Order getNewestOrder(Connection con, RowLockType rowLockType) throws SQLException {
+        String getLatestOrderQuery = rowLockType.getQueryWithLock("SELECT * FROM orders ORDER BY OrderID DESC LIMIT 1");
+        String getAllOrderLines = rowLockType.getQueryWithLock("SELECT * FROM orderlines WHERE OrderID = ?");
+        try (PreparedStatement ps = con.prepareStatement(getLatestOrderQuery)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int orderId = rs.getInt("OrderID");
+                List<OrderLine> orderLines = getOrderLines(con, getAllOrderLines, orderId);
+                return createOrderFromResultSet(rs, orderLines);
+            }
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Updates an order in the database.
+     *
+     * @param con   the database connection object.
+     * @param order the order you want to update.
+     * @throws SQLException if the query failed.
+     */
+    public void updateOrder(Connection con, Order order) throws SQLException {
+        String query = "UPDATE orders SET CustomerID = ?, OrderDate = ?, ExpectedDeliveryDate = ?, IsUndersupplyBackordered = ?, " +
+                "LastEditedBy = ?, LastEditedWhen = ?, SalespersonPersonID = ?, ContactPersonID = ?, OrderID = ? WHERE OrderID = ?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, order.getCustomerId());
+            ps.setDate(2, order.getOrderDate());
+            ps.setDate(3, order.getExpectedDeliveryDate());
+            ps.setInt(4, order.getIsUndersupplyBackordered());
+            ps.setInt(5, order.getLastEditedBy());
+            ps.setDate(6, order.getLastEditedWhen());
+            ps.setInt(7, order.getSalespersonPersonId());
+            ps.setInt(8, order.getContactPersonId());
+            ps.setInt(9, order.getOrderId());
+            ps.setInt(10, order.getOrderId());
+
+            for (OrderLine orderLine : order.getOrderLines()) {
+                updateOrderLine(con, orderLine);
+            }
+            ps.executeUpdate();
+        }
+
+    }
+
+    /**
+     * Updates an order line in the database.
+     *
+     * @param con       the database connection object.
+     * @param orderLine the order line you want to update.
+     */
+    private void updateOrderLine(Connection con, OrderLine orderLine) {
+        String query = "UPDATE orderlines SET OrderID = ?, StockItemID = ?, Description = ?, PackageTypeID = ?, Quantity = ?, UnitPrice = ?, TaxRate = ?, PickedQuantity = ?, PickingCompletedWhen = ?, LastEditedBy = ?, LastEditedWhen = ? WHERE OrderLineID = ?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, orderLine.getOrderId());
+            ps.setInt(2, orderLine.getStockItemId());
+            ps.setString(3, orderLine.getDescription());
+            ps.setInt(4, orderLine.getPackageTypeId());
+            ps.setInt(5, orderLine.getQuantity());
+            ps.setFloat(6, orderLine.getUnitPrice());
+            ps.setFloat(7, orderLine.getTaxRate());
+            ps.setInt(8, orderLine.getPickedQuantity());
+            ps.setDate(9, orderLine.getPickingCompletedWhen());
+            ps.setInt(10, orderLine.getLastEditedBy());
+            ps.setDate(11, orderLine.getLastEditedWhen());
+            ps.setInt(12, orderLine.getOrderLineId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    public static void setPicked(Connection con, int orderID) {
+        String query = "UPDATE orderlines SET PickingCompletedWhen = '2013-01-02 11:00:00' WHERE OrderID = ?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, orderID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
+    }
 
 }

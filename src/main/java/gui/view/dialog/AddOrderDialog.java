@@ -2,8 +2,11 @@ package gui.view.dialog;
 
 import database.dao.CustomerDao;
 import database.dao.PeopleDao;
+import database.dao.StockItemDao;
 import database.model.Customer;
+import database.model.Order;
 import database.model.Person;
+import database.model.StockItem;
 import database.util.DatabaseConnection;
 import gui.ViewBuilder;
 import gui.controller.AddOrderController;
@@ -16,6 +19,8 @@ import utility.DateLabelFormatter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,10 +33,11 @@ public class AddOrderDialog extends JDialog implements ViewBuilder {
 
     private final CustomerDao customerDao = CustomerDao.getInstance();
     private final PeopleDao peopleDao = PeopleDao.getInstance();
-    private final AddOrderController addOrderController = new AddOrderController();
+    private final AddOrderController addOrderController;
 
-    public AddOrderDialog() {
+    public AddOrderDialog(JLabel totalOrders, DefaultListModel<Order> orderListModel, JLabel currentVisibleOrders) {
         buildAndShowView();
+        this.addOrderController = new AddOrderController(totalOrders, this, orderListModel, currentVisibleOrders);
     }
 
     @Override
@@ -113,8 +119,12 @@ public class AddOrderDialog extends JDialog implements ViewBuilder {
         centerContent.add(isUndersupplyBackorderedField);
 
         JButton addButton = new JButton("Toevoegen");
-        addButton.addActionListener(e -> addOrderController.addOrder(e, klantIdField, salesPersonIdField,
-                contactPersonIdField, orderDateField, expectedDeliveryDateField, isUndersupplyBackorderedField));
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addOrderController.addOrder(e, klantIdField, salesPersonIdField, contactPersonIdField, orderDateField, expectedDeliveryDateField, isUndersupplyBackorderedField);
+            }
+        });
         this.add(addButton, BorderLayout.SOUTH);
 
         this.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - getHeight()/2);

@@ -1,11 +1,12 @@
 package gui.view;
 
-import constants.Constants;
-import gui.ViewBuilder;
-import gui.controller.PackageController;
+import constants.*;
+import gui.*;
+import gui.controller.*;
 
 import javax.swing.*;
 import java.awt.*;
+
 
 public class PackageView extends JPanel implements ViewBuilder {
 
@@ -16,8 +17,9 @@ public class PackageView extends JPanel implements ViewBuilder {
     public static JTextField SizeInput;
 
     public static DefaultListModel<String> model = new DefaultListModel<>();
-    private final NavbarView navbarView;
     private final PackageController loadController;
+    private final NavbarView navbarView;
+
 
 
     public PackageView(CardLayout layout, JPanel root) {
@@ -59,7 +61,7 @@ public class PackageView extends JPanel implements ViewBuilder {
         YInput = new JTextField(20);
         loadInput.add(YInput);
 
-        JLabel SizeText = new JLabel("Grootte: ");
+        JLabel SizeText = new JLabel("Gewicht: ");
         SizeText.setFont(new Font("Calibri", Font.BOLD, 20));
         loadInput.add(SizeText);
         SizeInput = new JTextField(20);
@@ -89,10 +91,6 @@ public class PackageView extends JPanel implements ViewBuilder {
 
         JLabel wachtrijTitle = new JLabel("NR:");
         loadList.add(wachtrijTitle, BorderLayout.NORTH);
-
-        JButton cancelLoad = new JButton("Stop");
-        cancelLoad.addActionListener(loadController::CancelLoadButton);
-        loadQueue.add(cancelLoad, BorderLayout.SOUTH);
 
         // wachtrij inladen
         this.add(loadQueue, BorderLayout.EAST);

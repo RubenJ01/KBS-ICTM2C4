@@ -55,8 +55,9 @@ public class PlacePackageDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==verderButton){
             gaVerder=true;
-            RobotQueue.inladen(packageModel);
             setVisible(false);
+            RobotQueue.inladen(packageModel);
+
         }
         if(e.getSource()==cancelButton){
             gaVerder=false;
