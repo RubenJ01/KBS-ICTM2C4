@@ -3,9 +3,11 @@ package gui.controller;
 import database.dao.OrderDao;
 import database.model.Order;
 import database.model.OrderLine;
-import gui.view.PackingSlipDialog;//added
+import gui.MainFrame;
+import gui.view.PackingSlipDialog;
 import gui.view.dialog.AddOrderDialog;
 import gui.view.dialog.EditOrderDialog;
+import gui.view.dialog.ProcessOrderDialog;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -19,6 +21,9 @@ public class OrderController {
     private final CardLayout layout;
     private final JPanel root;
     private final JDialog editOrderDialog;
+
+    private final JDialog processOrderDialog;
+
     private final PackingSlipDialog packingSlipDialog;
     private final JDialog addOrderDialog;
     private OrderDao orderDao;
@@ -30,7 +35,9 @@ public class OrderController {
         this.packingSlipDialog = new PackingSlipDialog(layout, root);
         this.addOrderDialog = new AddOrderDialog(totalOrders, orderListModel, currentVisibleOrders);
         this.editOrderDialog = new EditOrderDialog();
+        this.processOrderDialog = new ProcessOrderDialog();
     }
+
 
     public void listSelected(ListSelectionEvent e, JList<Order> orderList, JPanel singleOrder) {
         int selectedIndex = orderList.getSelectedIndex();
@@ -72,6 +79,26 @@ public class OrderController {
             EditOrderDialog.order = orderList.getSelectedValue();
             this.editOrderDialog.setVisible(true);
         }
+    }
+
+
+    public void processOrderButton(JList<Order> orderList) {
+        Order order = orderList.getSelectedValue();
+        if(order.getPickingCompletedWhen()==null){
+            if (!this.processOrderDialog.isActive() || !this.processOrderDialog.isVisible()) {
+                if(orderList.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(null, "Selecteer een order om te verwerken.");
+                    return;
+                }
+                ProcessOrderDialog.order = orderList.getSelectedValue();
+                this.processOrderDialog.setVisible(true);
+            }
+        } else {
+            String text = "Order is al verwerkt";
+            JOptionPane.showMessageDialog(MainFrame.mainWindow, text, "Waarschuwing", JOptionPane.ERROR_MESSAGE);
+        }
+
+
     }
 
     /**
@@ -177,8 +204,11 @@ public class OrderController {
         Order selectedValue = orderList.getSelectedValue();
         EditOrderDialog.order = selectedValue;
         PackingSlipDialog.selectedOrder = selectedValue;
+        EditOrderDialog.order = orderList.getSelectedValue();
+        ProcessOrderDialog.order = orderList.getSelectedValue();
         // not very pretty but this refreshed the dialog
         this.editOrderDialog.setVisible(false);
+        this.processOrderDialog.setVisible(false);
     }
 }
 

@@ -84,6 +84,10 @@ public class OrderView extends JPanel implements ViewBuilder {
         editOrder.addActionListener(e -> orderController.editButton(orderList));
         orderBottomBarButtons.add(editOrder);
 
+        JButton processOrder = new JButton("Verwerken");
+        processOrder.addActionListener(e -> orderController.processOrderButton(orderList));
+        orderBottomBarButtons.add(processOrder);
+
         JButton packingSlip = new JButton("Pakbon");
         packingSlip.addActionListener(e -> orderController.packingSlipButton());
         orderBottomBarButtons.add(packingSlip);
