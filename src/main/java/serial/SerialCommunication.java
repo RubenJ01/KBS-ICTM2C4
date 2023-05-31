@@ -16,6 +16,8 @@ import javax.swing.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static gui.model.RobotQueue.executeQueue;
+import static gui.model.RobotQueue.queue;
 
 
 // voor het ontvangen en versturen van gegevens naar de hoofd arduino die gaat over Z en Y as
@@ -85,12 +87,17 @@ public class SerialCommunication implements SerialPortEventListener {
     public static void writeToSerial(int x, int y,int uitladen) {
         try {
             serialPort.writeByte((byte) y);
+            Thread.sleep(10);
             serialPort.writeByte((byte) x);
+            Thread.sleep(10);
             serialPort.writeByte((byte) uitladen);
+            Thread.sleep(10);
             System.out.println("Data naar seriële poort geschreven: " + x+" "+y+" "+uitladen);
 
         } catch (SerialPortException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -128,13 +135,26 @@ public class SerialCommunication implements SerialPortEventListener {
                 //Dialoog wordt aan gemaakt voor het plaatsen van pakket op palletvork
                 PackageModel item=RobotQueue.queue.get(0);
                 PlacePackageDialog placePackageDialog = new PlacePackageDialog(item);
+                break;
 
+
+            case "ORDER":
+                System.out.println("ORDER");
+                SerialCommunication.writeToSerial(6,1,4);
+                RobotController.setLoad(queue.get(0));
+                RobotQueue.RobotBereiktUitladen(RobotController.getLoad());
+                break;
 
             case "VERWERKT":
                 System.out.println("VERWERKT");
-                RobotQueue.RobotBereiktUitladen(RobotController.getLoad());
-                SerialCommunication.writeToSerial(6,1,3);
+                RobotController.setLoad(null);
+                if(queue.size()<=0){
+                    SerialCommunication.writeToSerial(1,1,3);
+                }else{
+                    executeQueue();
+                }
                 break;
+
 
             //default
             default:
