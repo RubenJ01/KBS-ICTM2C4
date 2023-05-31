@@ -3,6 +3,7 @@ package gui.controller;
 import database.dao.OrderDao;
 import database.model.Order;
 import database.model.OrderLine;
+import gui.MainFrame;
 import gui.view.PackingSlipDialog;
 import gui.view.dialog.AddOrderDialog;
 import gui.view.dialog.EditOrderDialog;
@@ -82,14 +83,22 @@ public class OrderController {
 
 
     public void processOrderButton(JList<Order> orderList) {
-        if (!this.processOrderDialog.isActive() || !this.processOrderDialog.isVisible()) {
-            if(orderList.getSelectedIndex() == -1) {
-                JOptionPane.showMessageDialog(null, "Selecteer een order om te verwerken.");
-                return;
+        Order order = orderList.getSelectedValue();
+        if(order.getPickingCompletedWhen()==null){
+            if (!this.processOrderDialog.isActive() || !this.processOrderDialog.isVisible()) {
+                if(orderList.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(null, "Selecteer een order om te verwerken.");
+                    return;
+                }
+                ProcessOrderDialog.order = orderList.getSelectedValue();
+                this.processOrderDialog.setVisible(true);
             }
-            ProcessOrderDialog.order = orderList.getSelectedValue();
-            this.processOrderDialog.setVisible(true);
+        } else {
+            String text = "Order is al verwerkt";
+            JOptionPane.showMessageDialog(MainFrame.mainWindow, text, "Waarschuwing", JOptionPane.ERROR_MESSAGE);
         }
+
+
     }
 
     /**

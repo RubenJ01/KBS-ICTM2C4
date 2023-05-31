@@ -12,7 +12,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -298,6 +300,16 @@ public class OrderDao {
             ps.setInt(10, orderLine.getLastEditedBy());
             ps.setDate(11, orderLine.getLastEditedWhen());
             ps.setInt(12, orderLine.getOrderLineId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    public static void setPicked(Connection con, int orderID) {
+        String query = "UPDATE orderlines SET PickingCompletedWhen = '2013-01-02 11:00:00' WHERE OrderID = ?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, orderID);
             ps.executeUpdate();
         } catch (SQLException e) {
             logger.error(e.getMessage());

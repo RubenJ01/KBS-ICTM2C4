@@ -3,8 +3,11 @@ package gui.view.dialog;
 import database.dao.OrderDao;
 import database.model.Order;
 import database.model.OrderLine;
+import database.util.DatabaseConnection;
+import gui.MainFrame;
 import gui.ViewBuilder;
 import gui.controller.ProcessOrderController;
+import gui.controller.TSP;
 import gui.model.RackModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +16,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 public class ProcessOrderDialog extends JDialog implements ViewBuilder, ActionListener {
@@ -25,6 +30,7 @@ public class ProcessOrderDialog extends JDialog implements ViewBuilder, ActionLi
     private Order copy;
     private JButton confirmButton;
     private List<OrderLine> list;
+    TSP tsp = new TSP();
 
     private JPanel scrollablePanel;
 
@@ -123,17 +129,28 @@ public class ProcessOrderDialog extends JDialog implements ViewBuilder, ActionLi
             setVisible(false);
             for(OrderLine item : list) {
                 int itemID = item.getStockItemId();
+                int orderID= item.getOrderId();
                 System.out.println(itemID);
 
                 if(RackModel.CheckPackage(itemID)) {
                     System.out.println("In magazijn");
                     RackModel.getYCoordinates(itemID);
                     RackModel.getXCoordinates(itemID);
-                    tsp
+                    tsp.addCoordinate(RackModel.getXCoordinates(itemID), RackModel.getYCoordinates(itemID));
+                    System.out.println("VERWERKT");
+                    try (Connection con = DatabaseConnection.getConnection()) {
+                        OrderDao.setPicked(con, orderID);
+                    } catch (SQLException f) {
+                        System.err.println("geen verbinding");
+                    }
                 } else {
                     System.out.println("Niet in magazijn");
+                    String text = "Artikel: " + itemID + " staat niet in het magazijn";
+                    JOptionPane.showMessageDialog(MainFrame.mainWindow, text, "Waarschuwing", JOptionPane.ERROR_MESSAGE);
+
                 }
             }
+            tsp.startAlgorithm();
         }
     }
 }

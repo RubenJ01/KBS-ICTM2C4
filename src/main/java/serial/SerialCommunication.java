@@ -1,5 +1,7 @@
 package serial;
 
+import database.dao.OrderDao;
+import database.util.DatabaseConnection;
 import gui.MainFrame;
 import gui.controller.RobotController;
 import gui.model.PackageModel;
@@ -11,6 +13,9 @@ import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
 import javax.swing.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 
 
 // voor het ontvangen en versturen van gegevens naar de hoofd arduino die gaat over Z en Y as
@@ -123,6 +128,10 @@ public class SerialCommunication implements SerialPortEventListener {
                 //Dialoog wordt aan gemaakt voor het plaatsen van pakket op palletvork
                 PackageModel item=RobotQueue.queue.get(0);
                 PlacePackageDialog placePackageDialog = new PlacePackageDialog(item);
+
+
+            case "VERWERKT":
+
             //default
             default:
                 System.out.println("no match");
