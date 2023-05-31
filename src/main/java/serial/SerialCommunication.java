@@ -28,7 +28,7 @@ public class SerialCommunication implements SerialPortEventListener {
 
     public SerialCommunication() {
         // Initialisatie van de seriële communicatie
-        serialPort = new SerialPort("COM4"); // Pas de poortnaam aan indien nodig
+        serialPort = new SerialPort("COM6"); // Pas de poortnaam aan indien nodig
         try {
             serialPort.openPort();
             serialPort.setParams(SerialPort.BAUDRATE_9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
@@ -108,7 +108,7 @@ public class SerialCommunication implements SerialPortEventListener {
             // Case 1
             case "BEREIKT":
                 System.out.println("BEREIKT");
-                RobotQueue.RobotBereikt(RobotController.getLoad());
+                RobotQueue.RobotBereiktInladen(RobotController.getLoad());
                 break;
 
             // Case 2
@@ -131,6 +131,10 @@ public class SerialCommunication implements SerialPortEventListener {
 
 
             case "VERWERKT":
+                System.out.println("VERWERKT");
+                RobotQueue.RobotBereiktUitladen(RobotController.getLoad());
+                SerialCommunication.writeToSerial(6,1,3);
+                break;
 
             //default
             default:

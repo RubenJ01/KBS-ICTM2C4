@@ -1,7 +1,6 @@
 package gui.model;
 
 import database.dao.RackDao;
-import database.model.OrderLine;
 import database.util.DatabaseConnection;
 import gui.view.RackView;
 
@@ -89,6 +88,15 @@ public  class  RackModel  extends RackView {
             }
         }
         return 0;
+    }
+
+    public static PackageModel getPackageFromRack(int x, int y){
+        for (PackageModel item : rack) {
+            if (x==item.getLocationX()&&y== item.getLocationY()){
+                return item;
+            }
+        }
+        return null;
     }
 
 }

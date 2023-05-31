@@ -137,7 +137,6 @@ public class ProcessOrderDialog extends JDialog implements ViewBuilder, ActionLi
                     RackModel.getYCoordinates(itemID);
                     RackModel.getXCoordinates(itemID);
                     tsp.addCoordinate(RackModel.getXCoordinates(itemID), RackModel.getYCoordinates(itemID));
-                    System.out.println("VERWERKT");
                     try (Connection con = DatabaseConnection.getConnection()) {
                         OrderDao.setPicked(con, orderID);
                     } catch (SQLException f) {

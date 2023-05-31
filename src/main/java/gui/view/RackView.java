@@ -59,6 +59,9 @@ public class RackView extends JPanel {
 
         //tekenen Robot
         RobotView.paintRobot(g);
+
+
+        //refresh
         repaint();
     }
 }

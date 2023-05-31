@@ -1,5 +1,6 @@
 package gui.controller;
 import gui.model.PackageModel;
+import gui.model.RackModel;
 import gui.model.RobotQueue;
 
 import java.util.ArrayList;
@@ -69,7 +70,9 @@ public class TSP {
             moveToCoordinate(closestCoordinate);
             //increments the visit count in the
             // counter map and removes the coordinate from the list.
-            RobotQueue.addQueue(new PackageModel(closestCoordinate.y,closestCoordinate.x,22,2,true),false);
+            int y=PulsToCoordinateY(closestCoordinate.y);
+            int x=PulsToCoordinateX(closestCoordinate.x);
+            RobotQueue.addQueue(RackModel.getPackageFromRack(x,y),false);
             checkCoordinate(closestCoordinate);
         }
         System.out.println("Algorithm finished. All coordinates have been visited.");
@@ -131,6 +134,39 @@ public class TSP {
         // This record class encapsulates the x-coordinate and y-coordinate of a point
         // and automatically generates useful methods for accessing and manipulating coordinate objects.
     }
+    public int PulsToCoordinateY(int pulsY){
+        if(pulsY==566){
+            return 1;
+        }else if(pulsY==1652){
+            return 2;
+        }else if(pulsY==2664){
+            return 3;
+        }else if(pulsY==3606){
+            return 4;
+        }else if(pulsY==4606){
+            return 5;
+        }else if(pulsY==5606){
+            return 6;
+        }
+        return 0;
+    }
+    public int PulsToCoordinateX(int pulsX){
+        if(pulsX==566){
+            return 1;
+        }else if(pulsX==1652){
+            return 2;
+        }else if(pulsX==2664){
+            return 3;
+        }else if(pulsX==3606){
+            return 4;
+        }else if(pulsX==4606){
+            return 5;
+        }else if(pulsX==5606){
+            return 6;
+        }
+        return 0;
+    }
+
 
 
 }
