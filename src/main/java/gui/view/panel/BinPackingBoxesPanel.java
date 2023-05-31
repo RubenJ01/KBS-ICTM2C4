@@ -45,7 +45,7 @@ public class BinPackingBoxesPanel extends JPanel implements ViewBuilder {
 
             //for loop to get the packages in the list of packages of a box
             for (int j = 0; j < binPackingModel.getBoxListBinPacking().getBoxBinPackingsList().get(i).getPackagesInBox().size(); j++) {
-                packages[j] = binPackingModel.getBoxListBinPacking().getBoxBinPackingsList().get(i).getPackagesInBox().get(j).toString();
+                packages[j] = binPackingModel.getBoxListBinPacking().getBoxBinPackingsList().get(i).getPackagesInBox().get(j).getNameAndIDFromProductPackage();
             }
             packageList.setListData(packages);
             JScrollPane jScrollPane = new JScrollPane(packageList);

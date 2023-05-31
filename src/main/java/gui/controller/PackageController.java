@@ -31,7 +31,7 @@ public class PackageController extends RackModel {
             int weight = Integer.parseInt(PackageView.SizeInput.getText());
             int y = Integer.parseInt(PackageView.YInput.getText());
             int x = Integer.parseInt(PackageView.XInput.getText());
-            int item = Integer.parseInt(PackageView.itemnummerInput.getText());
+            int item = Integer.parseInt(PackageView.productIDInput.getText());
             if (weight == 2 || weight == 5 || weight == 7){
                 if (x > 0 && x < 6 && y > 0 && y < 7) {
                     if (CheckLocationPossession(x, y)) {

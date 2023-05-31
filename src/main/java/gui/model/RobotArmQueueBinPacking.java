@@ -5,7 +5,7 @@ import java.util.List;
 
 public class RobotArmQueueBinPacking {
 
-    private final List<PackageBinPacking> robotArmQueuePackages;
+    private final List<PackageModel> robotArmQueuePackages;
 
 
     public RobotArmQueueBinPacking() {
@@ -13,7 +13,7 @@ public class RobotArmQueueBinPacking {
 
     }
 
-    public List<PackageBinPacking> getRobotArmQueuePackages() {
+    public List<PackageModel> getRobotArmQueuePackages() {
         return robotArmQueuePackages;
     }
 

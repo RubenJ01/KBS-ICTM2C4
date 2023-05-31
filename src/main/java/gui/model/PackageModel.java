@@ -1,30 +1,43 @@
 package gui.model;
 
+import database.dao.StockItemDao;
+import database.model.StockItem;
+import database.util.DatabaseConnection;
+import database.util.RowLockType;
 import gui.controller.RobotController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class PackageModel extends JPanel {
+
+    private static final Logger logger = LoggerFactory.getLogger(PackageModel.class);
     private  int locationX;
     private  int locationY;
     private  int locationPanelX;
     private  int locationPanelY;
-    private  int itemnummer;
+    private  int productID;
 
     private int weight;
 
-    private boolean inMagazijn;
+    private boolean inRack;
 
     private Color color;
 
-    public PackageModel(int locationY, int locationX, int itemnummer, int weight,boolean inMagazijn) {
+    private final StockItemDao stockItemDao;
+
+    public PackageModel(int locationY, int locationX, int productID, int weight,boolean inRack) {
         this.locationY = locationY;
         this.locationX = locationX;
-        this.itemnummer = itemnummer;
+        this.productID = productID;
         this.weight=weight;
+        this.stockItemDao = StockItemDao.getInstance();
         locationConvertToPanel(locationY,locationX);
-        this.inMagazijn=inMagazijn;
+        this.inRack=inRack;
         if(weight==2){
             this.color=Color.green;
         } else if (weight==5) {
@@ -36,22 +49,8 @@ public class PackageModel extends JPanel {
         }
 
     }
-    public PackageModel(int itemnummer, int weight) {
-        this.locationY = 1;
-        this.locationX = 8;
-        this.itemnummer = itemnummer;
-        this.weight=weight;
-        locationConvertToPanel(1,8);
-        if(weight==2){
-            this.color=Color.green;
-        } else if (weight==5) {
-            this.color=Color.blue;
-        } else if (weight==7) {
-            this.color=Color.red;
-        }else{
-            this.color=Color.red;
-        }
-
+    public PackageModel(int productID, int weight) {
+        this(1, 8, productID, weight, false);
     }
 
     public void locationConvertToPanel(int locationY,int locationX){
@@ -59,12 +58,12 @@ public class PackageModel extends JPanel {
         locationPanelY=600-(100*(locationY)+5);
     }
 
-    public boolean isInMagazijn() {
-        return inMagazijn;
+    public boolean isInRack() {
+        return inRack;
     }
 
-    public void setInMagazijn(boolean inMagazijn) {
-        this.inMagazijn = inMagazijn;
+    public void setInRack(boolean inRack) {
+        this.inRack = inRack;
     }
 
     public  int getLocationX() {
@@ -74,16 +73,28 @@ public class PackageModel extends JPanel {
     public  int getLocationY() {
         return locationY;
     }
-    public int getItemnummer() {
-        return itemnummer;
+    public int getProductID() {
+        return productID;
     }
 
     public int getWeight() {
         return weight;
     }
+    public String getNameAndIDFromProductPackage(){
+        String productName = "";
+        try (Connection con = DatabaseConnection.getConnection()) {
+            StockItem stockItem = stockItemDao.getStockByStockItemID(con, productID, RowLockType.NONE);
+            productName = stockItem.getStockItemName();
+        }
+        catch (SQLException e) {
+            logger.error(e.getMessage());
+            productName = "Data niet ontvangen";
+        }
+        return "ID " + productID + ": " +  productName;
+    }
 
     public String toString() {
-       return "itemnummer: " + itemnummer + " X: " + locationX + " Y: " + locationY+" Grootte: "+weight;
+       return "productID: " + productID + " X: " + locationX + " Y: " + locationY+" Grootte: "+weight;
     }
 
     public void paintComponent(Graphics g) {
@@ -95,7 +106,7 @@ public class PackageModel extends JPanel {
         g.setColor(Color.black);
         Font font = new Font("Calibri", Font.BOLD, 16);
         g.setFont(font);
-        g.drawString("ID: "+String.valueOf(itemnummer),locationPanelX,locationPanelY+25);
+        g.drawString("ID: "+String.valueOf(productID),locationPanelX,locationPanelY+25);
     }
 
     public void paintComponent(Graphics g,float y,float x) {
@@ -107,7 +118,7 @@ public class PackageModel extends JPanel {
         g.setColor(Color.black);
         Font font = new Font("Calibri", Font.BOLD, 16);
         g.setFont(font);
-        g.drawString("ID: "+String.valueOf(itemnummer),(int) x-(packageWidth/2),(int) y);
+        g.drawString("ID: "+String.valueOf(productID),(int) x-(packageWidth/2),(int) y);
     }
 
 }

@@ -8,7 +8,7 @@ public class BoxBinPacking {
     private boolean boxIsOpen;
     private final int boxNumber;
     private int boxLocation;
-    private final List<PackageBinPacking> packagesInBox;
+    private final List<PackageModel> packagesInBox;
 
     public BoxBinPacking(int boxNumber, int boxLocation) {
         this.openSpace = 10;
@@ -43,18 +43,18 @@ public class BoxBinPacking {
     }
 
 
-    public List<PackageBinPacking> getPackagesInBox() {
+    public List<PackageModel> getPackagesInBox() {
         return packagesInBox;
     }
 
     /**
      * Function to add a package inside the list of packages in a box
      *
-     * @param packageBinPacking
+     * @param packageModel
      */
-    public void addPackageInBox(PackageBinPacking packageBinPacking) {
-        this.packagesInBox.add(packageBinPacking);
-        this.openSpace -= packageBinPacking.getWeight();
+    public void addPackageInBox(PackageModel packageModel) {
+        this.packagesInBox.add(packageModel);
+        this.openSpace -= packageModel.getWeight();
 
     }
 

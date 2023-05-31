@@ -40,8 +40,8 @@ public class BinPackingModel {
     public void processPackageFromFork() {
         if (getRobotArmQueueBinPacking().getRobotArmQueuePackages().size() > 0) {
             int packageIndex = getRobotArmQueueBinPacking().getRobotArmQueuePackages().size()-1;
-            PackageBinPacking packageBinPacking = getRobotArmQueueBinPacking().getRobotArmQueuePackages().get(packageIndex);
-            addPackageInBox(packageBinPacking);
+            PackageModel packageModel = getRobotArmQueueBinPacking().getRobotArmQueuePackages().get(packageIndex);
+            addPackageInBox(packageModel);
             getRobotArmQueueBinPacking().getRobotArmQueuePackages().remove(packageIndex);
        }
     }
@@ -49,16 +49,17 @@ public class BinPackingModel {
     /**
      * Function to check if a package can be added to the list of packages from a box.
      * if it's not possible, closeFullestBox() will be called on.
+     * This program uses the first fit algorithm to solve the bin packing problem
      *
-     * @param packageBinPacking
+     * @param packageModel
      */
-    public void addPackageInBox(PackageBinPacking packageBinPacking) {
+    public void addPackageInBox(PackageModel packageModel) {
         boolean isPackageAddedInBox = false;
         while (!isPackageAddedInBox) {
             for (int i = 0; i < boxListBinPacking.getBoxBinPackingsList().size(); i++) {
                 BoxBinPacking box = boxListBinPacking.getBoxBinPackingsList().get(i);
-                if (box.getBoxIsOpen() && box.getOpenSpace() >= packageBinPacking.getWeight()) {
-                    box.addPackageInBox(packageBinPacking);
+                if (box.getBoxIsOpen() && box.getOpenSpace() >= packageModel.getWeight()) {
+                    box.addPackageInBox(packageModel);
                     isPackageAddedInBox = true;
                     //#todo
                     //send message to arduino to process the next package for the packing process

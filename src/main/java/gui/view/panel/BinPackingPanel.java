@@ -3,7 +3,7 @@ package gui.view.panel;
 import constants.Constants;
 import gui.model.BinPackingModel;
 import gui.model.BoxBinPacking;
-import gui.model.PackageBinPacking;
+import gui.model.PackageModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,13 +47,13 @@ public class BinPackingPanel extends JPanel {
      */
     public void paintRobotArmQueue(Graphics g, Graphics2D g2) {
         for (int i = 0; i < binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().size(); i++) {
-            PackageBinPacking packageBinPacking = binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().get(i);
+            PackageModel packageModel = binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().get(i);
             if (i == 0) {
-                paintPackage(packageBinPacking.getWeight(), packageBinPacking.getProductID(), 12.8, 8, 11.13, 7.27, g, g2);
+                paintPackage(packageModel.getWeight(), packageModel.getProductID(), 12.8, 8, 11.13, 7.27, g, g2);
             } else if (i == 1) {
-                paintPackage(packageBinPacking.getWeight(), packageBinPacking.getProductID(), 5.12, 8, 4.83, 7.27, g, g2);
+                paintPackage(packageModel.getWeight(), packageModel.getProductID(), 5.12, 8, 4.83, 7.27, g, g2);
             } else if (i == 2) {
-                paintPackage(packageBinPacking.getWeight(), packageBinPacking.getProductID(), 3.2, 8, 3.08, 7.27, g, g2);
+                paintPackage(packageModel.getWeight(), packageModel.getProductID(), 3.2, 8, 3.08, 7.27, g, g2);
             }
         }
 
@@ -205,7 +205,7 @@ public class BinPackingPanel extends JPanel {
         double yRefactor;
         double xRefactorText = 0;
         double yRefactorText;
-        List<PackageBinPacking> packageList = boxBinPacking.getPackagesInBox();
+        List<PackageModel> packageList = boxBinPacking.getPackagesInBox();
 
 
         for (int i = 0; i < packageList.size(); i++) {

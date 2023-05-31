@@ -1,7 +1,7 @@
 package gui.controller;
 
 import gui.model.BinPackingModel;
-import gui.model.PackageBinPacking;
+import gui.model.PackageModel;
 import gui.view.BinPackingView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class BinPackingController {
      */
     public void fork1Button(ActionEvent e) {
         binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().clear();
-        binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().add(new PackageBinPacking(7, 216, 4, 2));
+        binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().add(new PackageModel(2, 5));
         binPackingView.repaintScreen();
     }
 
@@ -49,8 +49,8 @@ public class BinPackingController {
      */
     public void fork2Button(ActionEvent e) {
         binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().clear();
-        binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().add(new PackageBinPacking(2, 110, 4, 2));
-        binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().add(new PackageBinPacking(5, 1, 3, 2));
+        binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().add(new PackageModel(110, 2));
+        binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().add(new PackageModel(1, 5));
         binPackingView.repaintScreen();
     }
 
@@ -61,9 +61,9 @@ public class BinPackingController {
      */
     public void fork3Button(ActionEvent e) {
         binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().clear();
-        binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().add(new PackageBinPacking(2, 24, 4, 2));
-        binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().add(new PackageBinPacking(7, 29, 3, 2));
-        binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().add(new PackageBinPacking(7, 30, 2, 2));
+        binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().add(new PackageModel(210, 2));
+        binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().add(new PackageModel(29, 7));
+        binPackingModel.getRobotArmQueueBinPacking().getRobotArmQueuePackages().add(new PackageModel(30, 7));
         binPackingView.repaintScreen();
     }
 
