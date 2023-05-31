@@ -31,15 +31,5 @@ public class Main {
         SerialCommunication serialListener = new SerialCommunication();
         SerialCommunication2 serialListener2 = new SerialCommunication2();
         RackModel.getRack();
-
-
-
-        //StockView stockView = new StockView();
-
-
-
-        //this is for sending the locations of the products to the robot.
-
-        //sending product location ends here.
     }
 }

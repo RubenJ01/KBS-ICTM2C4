@@ -19,18 +19,6 @@ public class StockItemHolding {
 
     }
 
-    public StockItemHolding(int stockItemID, int quantityOnHand, String binLocation, int lastStocktakeQuantity, double lastCostPrice, int reorderLevel, int targetStockLevel, int lastEditedBy, Date lastEditedWhen) {
-        this.stockItemID = stockItemID;
-        this.quantityOnHand = quantityOnHand;
-        this.binLocation = binLocation;
-        this.lastStocktakeQuantity = lastStocktakeQuantity;
-        this.lastCostPrice = lastCostPrice;
-        this.reorderLevel = reorderLevel;
-        this.targetStockLevel = targetStockLevel;
-        this.lastEditedBy = lastEditedBy;
-        this.lastEditedWhen = lastEditedWhen;
-    }
-
     public int getStockItemID() {
         return stockItemID;
     }

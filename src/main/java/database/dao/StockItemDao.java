@@ -39,9 +39,9 @@ public class StockItemDao {
     public StockItem getStockByStockItemID(Connection con, int stockItemID, RowLockType rowLockType) throws SQLException {
         String query = rowLockType.getQueryWithLock(
                 "SELECT SI.stockItemID, QuantityOnHand, stockItemName " +
-                        "FROM stockitems AS SI " +
-                        "LEFT JOIN stockitemholdings AS SIH ON SIH.stockItemID = SI.stockItemID " +
-                        "WHERE StockItemID = ? "
+                "FROM stockitems AS SI " +
+                "LEFT JOIN stockitemholdings AS SIH ON SIH.stockItemID = SI.stockItemID " +
+                "WHERE SI.StockItemID = ? "
         );
         try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, stockItemID);
