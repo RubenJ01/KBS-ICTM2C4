@@ -39,11 +39,11 @@ public class RobotQueue {
         if(inladen){
             queue.add(packageModel);
             printQueue();
-            PackageView.model.addElement("Inladen Product Id: "+packageModel.getItemnummer()+" X:"+packageModel.getLocationX()+" Y:"+packageModel.getLocationY());
+            PackageView.model.addElement("Inladen Product Id: "+packageModel.getProductID()+" X:"+packageModel.getLocationX()+" Y:"+packageModel.getLocationY());
         } else if (!inladen) {
             queue.add(packageModel);
             printQueue();
-            PackageView.model.addElement("Uitladen Product Id: "+packageModel.getItemnummer()+" X:"+packageModel.getLocationX()+" Y:"+packageModel.getLocationY());
+            PackageView.model.addElement("Uitladen Product Id: "+packageModel.getProductID()+" X:"+packageModel.getLocationX()+" Y:"+packageModel.getLocationY());
         }
         System.out.println("Lengte wachtrij: "+queue.size());
         if(queue.size()==1){
@@ -59,7 +59,7 @@ public class RobotQueue {
         if(queue.size()>=1) {
                 PackageModel item=queue.get(0);
                 //kijkt of item al in het magazijn staat of niet
-                if (item.isInMagazijn()){
+                if (item.isInRack()){
                     SerialCommunication.writeToSerial(item.getLocationX(), item.getLocationY(),2);
                 }else {
                     SerialCommunication.writeToSerial(6,1,3);
@@ -112,7 +112,7 @@ public class RobotQueue {
         RobotQueue.removeFirstItem(packageModel);
         RobotController.removeLoad();
         SerialCommunication.setMeldingRobot("");
-        packageModel.setInMagazijn(true);
+        packageModel.setInRack(true);
         System.out.println("Robot heeft inladen voltooid");
         RackModel.addToRack(packageModel);
         RackModel.printRack();

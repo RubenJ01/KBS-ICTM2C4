@@ -33,13 +33,12 @@ public class NavbarController {
      */
     public void stockButton(ActionEvent e) {
         cardLayout.show(root, "stockView");
-
     }
-
     public void loadButton(ActionEvent e) {
         cardLayout.show(root, "loadView");
     }
 
-
-
+    public void binPackingButton(ActionEvent e) {
+        cardLayout.show(root, "binPackingView");
+    }
 }

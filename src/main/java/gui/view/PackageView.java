@@ -11,7 +11,7 @@ import java.awt.*;
 public class PackageView extends JPanel implements ViewBuilder {
 
 
-    public static JTextField itemnummerInput;
+    public static JTextField productIDInput;
     public static JTextField YInput;
     public static JTextField XInput;
     public static JTextField SizeInput;
@@ -40,12 +40,12 @@ public class PackageView extends JPanel implements ViewBuilder {
 
 
 
-        JLabel itemnummerText = new JLabel("Product Id: ");
-        itemnummerText.setFont(new Font("Calibri", Font.BOLD, 20));
-        loadInput.add(itemnummerText);
+        JLabel productIDText = new JLabel("Product ID: ");
+        productIDText.setFont(new Font("Calibri", Font.BOLD, 20));
+        loadInput.add(productIDText);
 
-        itemnummerInput = new JTextField(20);
-        loadInput.add(itemnummerInput);
+        productIDInput = new JTextField(20);
+        loadInput.add(productIDInput);
 
         JLabel XText = new JLabel("X: ");
         XText.setFont(new Font("Calibri", Font.BOLD, 20));

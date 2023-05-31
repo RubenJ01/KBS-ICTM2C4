@@ -34,10 +34,10 @@ public  class  RackModel  extends RackView {
         return true;
     }
 
-    public static boolean CheckPackage(int itemnummer){
+    public static boolean CheckPackage(int productID){
 
         for (PackageModel item : rack) {
-            if (item.getItemnummer()==itemnummer){
+            if (item.getProductID()==productID){
                 return true;
             }
         }
@@ -47,7 +47,7 @@ public  class  RackModel  extends RackView {
     public static void addToRack(PackageModel loadmodel){
         rack.add(loadmodel);
         try (Connection con = DatabaseConnection.getConnection()) {
-            RackDao.getInstance().addPackage(con, loadmodel.getItemnummer(), loadmodel.getWeight(), loadmodel.getLocationX(), loadmodel.getLocationY());
+            RackDao.getInstance().addPackage(con, loadmodel.getProductID(), loadmodel.getWeight(), loadmodel.getLocationX(), loadmodel.getLocationY());
         } catch (SQLException e) {
             System.err.println("kon pakket niet toevoegen aan magazijn");
         }
@@ -70,9 +70,9 @@ public  class  RackModel  extends RackView {
         }
     }
 
-    public static int getXCoordinates(int itemNummer) {
+    public static int getXCoordinates(int productID) {
         for (PackageModel item : rack) {
-            if (item.getItemnummer()==itemNummer){
+            if (item.getProductID()==productID){
                 System.out.println(item.getLocationX());
                 return item.getLocationX();
             }
@@ -80,9 +80,9 @@ public  class  RackModel  extends RackView {
         return 0;
     }
 
-    public static int getYCoordinates(int itemNummer) {
+    public static int getYCoordinates(int productID) {
         for (PackageModel item : rack) {
-            if (item.getItemnummer()==itemNummer){
+            if (item.getProductID()==productID){
                 System.out.println(item.getLocationY());
                 return item.getLocationY();
             }
