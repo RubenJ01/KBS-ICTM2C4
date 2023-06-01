@@ -1,10 +1,12 @@
 package serial;
 
 import database.dao.OrderDao;
+import database.dao.RackDao;
 import database.util.DatabaseConnection;
 import gui.MainFrame;
 import gui.controller.RobotController;
 import gui.model.PackageModel;
+import gui.model.RackModel;
 import gui.model.RobotQueue;
 import gui.view.dialog.PlacePackageDialog;
 import jssc.SerialPort;
@@ -133,8 +135,12 @@ public class SerialCommunication implements SerialPortEventListener {
             case "INLADEN":
                 System.out.println("INLADEN");
                 //Dialoog wordt aan gemaakt voor het plaatsen van pakket op palletvork
-                PackageModel item=RobotQueue.queue.get(0);
-                PlacePackageDialog placePackageDialog = new PlacePackageDialog(item);
+                try {
+                    PackageModel item = RobotQueue.queue.get(0);
+                    PlacePackageDialog placePackageDialog = new PlacePackageDialog(item);
+                }catch (IndexOutOfBoundsException e){
+                    System.err.println("niks in wachtrij");
+                }
                 break;
 
 
@@ -142,11 +148,12 @@ public class SerialCommunication implements SerialPortEventListener {
                 System.out.println("ORDER");
                 SerialCommunication.writeToSerial(6,1,4);
                 RobotController.setLoad(queue.get(0));
-                RobotQueue.RobotBereiktUitladen(RobotController.getLoad());
+                RackModel.removeFromRack(RobotController.getLoad());
                 break;
 
             case "VERWERKT":
                 System.out.println("VERWERKT");
+                RobotQueue.RobotBereiktUitladen(RobotController.getLoad());
                 RobotController.setLoad(null);
                 if(queue.size()<=0){
                     SerialCommunication.writeToSerial(1,1,3);
