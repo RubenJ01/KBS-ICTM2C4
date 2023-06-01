@@ -156,7 +156,7 @@ public class SerialCommunication implements SerialPortEventListener {
                 RobotQueue.RobotBereiktUitladen(RobotController.getLoad());
                 RobotController.setLoad(null);
                 if(queue.size()<=0){
-                    SerialCommunication.writeToSerial(1,1,3);
+                    SerialCommunication.writeToSerial(1,1,5);
                 }else{
                     executeQueue();
                 }
