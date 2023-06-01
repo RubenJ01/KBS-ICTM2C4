@@ -1,10 +1,12 @@
 package serial;
 
 import database.dao.OrderDao;
+import database.dao.RackDao;
 import database.util.DatabaseConnection;
 import gui.MainFrame;
 import gui.controller.RobotController;
 import gui.model.PackageModel;
+import gui.model.RackModel;
 import gui.model.RobotQueue;
 import gui.view.dialog.PlacePackageDialog;
 import jssc.SerialPort;
@@ -16,6 +18,8 @@ import javax.swing.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static gui.model.RobotQueue.executeQueue;
+import static gui.model.RobotQueue.queue;
 
 
 // voor het ontvangen en versturen van gegevens naar de hoofd arduino die gaat over Z en Y as
@@ -85,12 +89,17 @@ public class SerialCommunication implements SerialPortEventListener {
     public static void writeToSerial(int x, int y,int uitladen) {
         try {
             serialPort.writeByte((byte) y);
+            Thread.sleep(10);
             serialPort.writeByte((byte) x);
+            Thread.sleep(10);
             serialPort.writeByte((byte) uitladen);
+            Thread.sleep(10);
             System.out.println("Data naar seriële poort geschreven: " + x+" "+y+" "+uitladen);
 
         } catch (SerialPortException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -126,15 +135,33 @@ public class SerialCommunication implements SerialPortEventListener {
             case "INLADEN":
                 System.out.println("INLADEN");
                 //Dialoog wordt aan gemaakt voor het plaatsen van pakket op palletvork
-                PackageModel item=RobotQueue.queue.get(0);
-                PlacePackageDialog placePackageDialog = new PlacePackageDialog(item);
+                try {
+                    PackageModel item = RobotQueue.queue.get(0);
+                    PlacePackageDialog placePackageDialog = new PlacePackageDialog(item);
+                }catch (IndexOutOfBoundsException e){
+                    System.err.println("niks in wachtrij");
+                }
+                break;
 
+
+            case "ORDER":
+                System.out.println("ORDER");
+                SerialCommunication.writeToSerial(6,1,4);
+                RobotController.setLoad(queue.get(0));
+                RackModel.removeFromRack(RobotController.getLoad());
+                break;
 
             case "VERWERKT":
                 System.out.println("VERWERKT");
                 RobotQueue.RobotBereiktUitladen(RobotController.getLoad());
-                SerialCommunication.writeToSerial(6,1,3);
+                RobotController.setLoad(null);
+                if(queue.size()<=0){
+                    SerialCommunication.writeToSerial(1,1,5);
+                }else{
+                    executeQueue();
+                }
                 break;
+
 
             //default
             default:

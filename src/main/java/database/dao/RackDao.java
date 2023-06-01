@@ -79,7 +79,7 @@ public class RackDao {
         }
     }
 
-    public void removePackage(Connection con,int x,int y){
+    public static void removePackage(Connection con, int x, int y){
         String query = "UPDATE rack SET productID=NULL, weight=NULL WHERE positionX= ?  AND positionY= ? ";
         try (PreparedStatement ps = con.prepareStatement(query)) {
             ps.setInt(1, x);

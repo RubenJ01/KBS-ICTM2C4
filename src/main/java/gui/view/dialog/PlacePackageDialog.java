@@ -1,5 +1,6 @@
 package gui.view.dialog;
 
+import gui.controller.RobotController;
 import gui.model.PackageModel;
 import gui.model.RobotQueue;
 
@@ -56,6 +57,7 @@ public class PlacePackageDialog extends JDialog implements ActionListener {
         if(e.getSource()==verderButton){
             gaVerder=true;
             setVisible(false);
+            RobotController.setLoad(packageModel);
             RobotQueue.inladen(packageModel);
 
         }

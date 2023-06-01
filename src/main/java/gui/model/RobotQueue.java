@@ -61,9 +61,7 @@ public class RobotQueue {
                 //kijkt of item al in het magazijn staat of niet
                 if (item.isInRack()){
                     SerialCommunication.writeToSerial(item.getLocationX(), item.getLocationY(),2);
-                    RobotController.setLoad(item);
                 }else {
-                    RobotController.setLoad(item);
                     SerialCommunication.writeToSerial(6,1,3);
                 }
 
@@ -98,7 +96,7 @@ public class RobotQueue {
         int x = packageModel.getLocationX();
         int y = packageModel.getLocationY();
         SerialCommunication.writeToSerial(x,y,1);
-        RobotController.setLoad(packageModel);
+        System.out.println("Robot is aan het inladen");
     }
 
     public static boolean CheckIfLoadInRack(int x,int y) {
@@ -126,10 +124,8 @@ public class RobotQueue {
         RobotController.removeLoad();
         SerialCommunication.setMeldingRobot("");
         System.out.println("Robot heeft uitladen voltooid");
-        RackModel.addToRack(packageModel);
         RackModel.printRack();
         RobotQueue.printQueue();
-        executeQueue();
     }
 
 

@@ -121,6 +121,7 @@ public class ProcessOrderDialog extends JDialog implements ViewBuilder, ActionLi
 
 
 
+
     }
 
     @Override
@@ -128,6 +129,7 @@ public class ProcessOrderDialog extends JDialog implements ViewBuilder, ActionLi
         if(e.getSource() == confirmButton) {
             setVisible(false);
             for(OrderLine item : list) {
+                System.out.println(list);
                 int itemID = item.getStockItemId();
                 int orderID= item.getOrderId();
                 System.out.println(itemID);

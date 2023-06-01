@@ -151,17 +151,17 @@ public class TSP {
         return 0;
     }
     public int PulsToCoordinateX(int pulsX){
-        if(pulsX==566){
+        if(pulsX==184){
             return 1;
-        }else if(pulsX==1652){
+        }else if(pulsX==1500){
             return 2;
-        }else if(pulsX==2664){
+        }else if(pulsX==3000){
             return 3;
-        }else if(pulsX==3606){
+        }else if(pulsX==4684){
             return 4;
-        }else if(pulsX==4606){
+        }else if(pulsX==6000){
             return 5;
-        }else if(pulsX==5606){
+        }else if(pulsX==7684){
             return 6;
         }
         return 0;
