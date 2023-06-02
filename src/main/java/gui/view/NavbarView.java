@@ -28,8 +28,6 @@ public class NavbarView extends JPanel implements ViewBuilder {
         homeButton.addActionListener(navbarController::homeButton);
         this.add(homeButton);
 
-        JButton settingsButton = new JButton("Instellingen");
-        this.add(settingsButton);
 
         JButton orderButton = new JButton("Orders");
         orderButton.addActionListener(navbarController::orderButton);
